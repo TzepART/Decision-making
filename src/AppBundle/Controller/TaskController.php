@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 
 /**
@@ -46,6 +47,14 @@ class TaskController extends Controller
      * @Route("/new", name="task.create")
      * @Method("POST")
      * @Template("AppBundle:Task:new.html.twig")
+     * @ApiDoc(
+     *  description="Create new task",
+     *  resource=true,
+     *  filters={
+     *      {"name"="name", "dataType"="string", "description"="Name of task"}
+     *  },
+     *  section="Task"
+     * )
      */
     public function createAction(Request $request)
     {
