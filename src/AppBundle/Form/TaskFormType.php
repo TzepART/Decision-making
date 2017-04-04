@@ -10,6 +10,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TaskFormType extends AbstractType
 {
+
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name')
