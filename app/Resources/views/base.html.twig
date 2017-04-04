@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>{% block title %}Symfony Demo application{% endblock %}</title>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('css/bootstrap-flatly-3.3.7.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/font-awesome-4.6.3.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/font-lato.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/highlight-solarized-light.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/bootstrap-tagsinput.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    {% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+</head>
     <body>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
