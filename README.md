@@ -5,14 +5,15 @@ touch .git/hooks/post-merge
 
 echo "#!/usr/bin/env bash\n
 DIR='$(cd '$(dirname '${BASH_SOURCE[0]}')' && pwd)'\n
-cd '$DIR'\n
+cd '$DIR/../..'\n
 composer install --no-interaction --optimize-autoloader --prefer-dist\n
 php bin/console doctrine:migrations:migrate --no-interaction\n
 php bin/console assets:install\n" > .git/hooks/post-merge
 
 chmod -R 777 .git/hooks/post-merge 
 
-
+On Ubuntu 16.04 - cd '$DIR'
+On Centos 7 - cd '$DIR/../..'
 
 
 Symfony Standard Edition
