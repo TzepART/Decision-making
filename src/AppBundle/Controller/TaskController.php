@@ -61,6 +61,7 @@ class TaskController extends Controller
     public function createAction(Request $request)
     {
         $entity = new Task();
+        $user = $this->getUser();
 
         $form = $this->createForm(TaskFormType::class, $entity, [
             'action' => $this->generateUrl('task.create'),
@@ -71,6 +72,7 @@ class TaskController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $entity->setUser($user);
             $em->persist($entity);
             $em->flush();
 
