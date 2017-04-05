@@ -12,8 +12,8 @@ Exact in root project
 
 > chmod -R 777 .git/hooks/post-merge 
 
-- On Ubuntu 16.04 - cd '$DIR'
-- On Centos 7 - cd '$DIR/../..'
+- On Ubuntu 16.04 - cd "$DIR"
+- On Centos 7 - cd "$DIR/../.."
 
 
 Symfony Standard Edition
