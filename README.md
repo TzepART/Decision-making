@@ -4,8 +4,8 @@ Exact in root project
 > nano .git/hooks/post-merge 
 
 + #!/usr/bin/env bash
-+ DIR='$(cd '$(dirname '${BASH_SOURCE[0]}')' && pwd)'
-+ cd '$DIR/../..'
++ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
++ cd "$DIR/../.."
 + composer install --no-interaction --optimize-autoloader --prefer-dist
 + php bin/console doctrine:migrations:migrate --no-interaction
 + php bin/console assets:install
