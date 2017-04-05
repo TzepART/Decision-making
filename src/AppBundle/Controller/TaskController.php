@@ -22,9 +22,11 @@ class TaskController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function indexAction($name)
+    public function listAction()
     {
-        return $this->render('', array('name' => $name));
+        $tasks = $this->getDoctrine()->getRepository(Task::class)->findAll();
+
+        return ['tasks' => $tasks];
     }
 
     /**
