@@ -22,9 +22,11 @@ class TaskController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function indexAction($name)
+    public function listAction()
     {
-        return $this->render('', array('name' => $name));
+        $tasks = $this->getDoctrine()->getRepository(Task::class)->findAll();
+
+        return ['tasks' => $tasks];
     }
 
     /**
@@ -59,6 +61,7 @@ class TaskController extends Controller
     public function createAction(Request $request)
     {
         $entity = new Task();
+        $user = $this->getUser();
 
         $form = $this->createForm(TaskFormType::class, $entity, [
             'action' => $this->generateUrl('task.create'),
@@ -69,6 +72,7 @@ class TaskController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $entity->setUser($user);
             $em->persist($entity);
             $em->flush();
 
