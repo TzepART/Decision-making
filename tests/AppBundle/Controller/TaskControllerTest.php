@@ -5,6 +5,7 @@ namespace Tests\AppBundle\Controller;
 use AppBundle\Entity\Task;
 use AppBundle\Entity\User;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Promo\PuppyKitten\AppBundle\Tests\AppBundle\CommonAppTest;
 use Symfony\Bundle\FrameworkBundle\Client;
 
 class TaskControllerTest extends WebTestCase
@@ -12,10 +13,6 @@ class TaskControllerTest extends WebTestCase
     const EXAMPLE_TASK_NAME = 'test_example_task';
     const CREATE_URL = '/task/new/';
     const LIST_URL = '/task/list/';
-
-    const EXAMPLE_LOGIN = 'expert';
-    const EXAMPLE_PASSWORD = '123';
-    const LOGIN_URL = '/login';
 
 
     public function testCreateTask()
@@ -26,7 +23,7 @@ class TaskControllerTest extends WebTestCase
 
         $client = static::createClient();
 
-        $client = $this->login($client);
+        $client = CommonAppTest::loginUser($client);
 
         $crawler = $client->request('GET', self::CREATE_URL);
 
@@ -69,34 +66,6 @@ class TaskControllerTest extends WebTestCase
 
     }
 
-
-    /**
-     * @param Client $client
-     * @return Client
-     */
-    private function login(Client $client)
-    {
-        $this->loadFixtures(array(
-            'AppBundle\DataFixtures\ORM\LoadUserData',
-        ));
-
-        $crawler = $client->request('GET', self::LOGIN_URL);
-
-        // Get the form.
-        $form = $crawler->filter('form')->form();
-
-        $values = array(
-            '_username' => self::EXAMPLE_LOGIN,
-            '_password' => self::EXAMPLE_PASSWORD,
-            '_csrf_token' => $form->getValues()['_csrf_token']
-        );
-
-        // Submit the data.
-        $client->request($form->getMethod(), $form->getUri(),
-            $values);
-
-        return $client;
-    }
 
     private function countTask(){
         $tasks = $this->getContainer()->get('doctrine')->getRepository(Task::class)->findAll();
