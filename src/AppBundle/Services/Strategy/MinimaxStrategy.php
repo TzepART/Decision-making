@@ -6,7 +6,7 @@
  * Time: 18:00
  */
 
-namespace AppBundle\Services;
+namespace AppBundle\Services\Strategy;
 
 
 class MinimaxStrategy extends AbstractStrategy

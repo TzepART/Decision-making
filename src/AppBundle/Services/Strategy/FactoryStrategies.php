@@ -6,18 +6,21 @@
  * Time: 18:24
  */
 
-namespace AppBundle\Services;
+namespace AppBundle\Services\Strategy;
 
 
 abstract class FactoryStrategies
 {
 
-    public function __construct() {
+    private $strategyName;
 
+    public function __construct(string $strategyName) {
+
+        $this->strategyName = $strategyName;
     }
 
-    public static function getStrategy($strategyName) {
-        switch ($strategyName) {
+    public function getStrategy() {
+        switch ($this->strategyName) {
             case SevidgStrategy::STRATEGY_NAME:
                 $strategy = new SevidgStrategy();
                 break;
@@ -40,6 +43,5 @@ abstract class FactoryStrategies
         return $strategy;
     }
 
-    public abstract function getOptimalSolution($matrix, $coefficient = 0);
 
 }

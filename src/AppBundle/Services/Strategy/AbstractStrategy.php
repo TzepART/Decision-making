@@ -6,11 +6,13 @@
  * Time: 17:55
  */
 
-namespace AppBundle\Services;
+namespace AppBundle\Services\Strategy;
 
 
-abstract class AbstractStrategy extends FactoryStrategies
+abstract class AbstractStrategy
 {
+
+    public abstract function getOptimalSolution($matrix, $coefficient = 0);
 
     /**
      * @param $array

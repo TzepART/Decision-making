@@ -6,8 +6,8 @@ Search_DIR=src/AppBundle/Services
 file_names=file_names.txt
 update_files=update_files.txt
 
-find_pattern='namespace Controllers'
-replace_pattern='namespace AppBundle\\Services'
+find_pattern='namespace AppBundle\\Services'
+replace_pattern='namespace AppBundle\\Services\\Strategy'
 
 check_file () {
 if [ ! -e "$1" ] ; then
