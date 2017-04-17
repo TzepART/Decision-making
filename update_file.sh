@@ -7,7 +7,7 @@ file_names=file_names.txt
 update_files=update_files.txt
 
 find_pattern='namespace Controllers'
-replace_pattern='namespace AppBundle/Services'
+replace_pattern='namespace AppBundle\\Services'
 
 check_file () {
 if [ ! -e "$1" ] ; then
@@ -26,7 +26,7 @@ while read -r file_path
 do
    echo "- "$file_path >> $update_files
    #replace old paths
-#   sed -i "s,$find_pattern,$replace_pattern,g" file_path
+   sed -i "s,$find_pattern,$replace_pattern,g" $file_path
 done < "$file_names"
 
 #delete unusing files

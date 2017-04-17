@@ -6,7 +6,7 @@
  * Time: 18:24
  */
 
-namespace Controllers;
+namespace AppBundle\Services;
 
 
 abstract class FactoryStrategies

@@ -6,7 +6,7 @@
  * Time: 17:55
  */
 
-namespace Controllers;
+namespace AppBundle\Services;
 
 
 abstract class AbstractStrategy extends FactoryStrategies

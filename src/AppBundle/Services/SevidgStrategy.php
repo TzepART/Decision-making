@@ -6,7 +6,7 @@
  * Time: 18:04
  */
 
-namespace Controllers;
+namespace AppBundle\Services;
 
 
 class SevidgStrategy extends AbstractStrategy
