@@ -3,3 +3,6 @@ services:
         class:     AppBundle\Services\Strategy\FactoryStrategies
         arguments:
 
+    app.strategy_manager:
+        class: AppBundle\Services\StrategyManager
+        arguments: ["@service_container"]

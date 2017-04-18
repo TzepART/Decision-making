@@ -12,15 +12,8 @@ namespace AppBundle\Services\Strategy;
 abstract class FactoryStrategies
 {
 
-    private $strategyName;
-
-    public function __construct(string $strategyName) {
-
-        $this->strategyName = $strategyName;
-    }
-
-    public function getStrategy() {
-        switch ($this->strategyName) {
+    public function getStrategy($strategyName) {
+        switch ($strategyName) {
             case SevidgStrategy::STRATEGY_NAME:
                 $strategy = new SevidgStrategy();
                 break;
