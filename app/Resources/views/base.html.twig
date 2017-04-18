@@ -28,9 +28,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li class="active"><a href="{{ path('homepage') }}">Home</a></li>
+                <li><a href="{{ path('tasks.simple_strategy') }}">Simple Strategy</a></li>
+                <li><a href="">BL strategy</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -46,9 +46,9 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="task1">Task 1</a></li>
-                <li><a href="task2">Task 2</a></li>
-                <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
+                <li><a href="{{ path('fos_user_security_login') }}">Login</a></li>
+                <li><a href="{{ path('fos_user_registration_register') }}">Register</a></li>
+                <li><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>

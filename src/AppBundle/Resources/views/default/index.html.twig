@@ -1,9 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <a href="{{ path('fos_user_security_login') }}">Login</a><br>
-    <a href="{{ path('fos_user_registration_register') }}">Register</a><br>
-    <a href="{{ path('fos_user_security_logout') }}">Logout</a><br>
     <a href="{{ path('task.new') }}">Добавить задачу</a><br>
     <a href="{{ path('task.list') }}">Список задач</a><br>
     {% if(app.user) %}
