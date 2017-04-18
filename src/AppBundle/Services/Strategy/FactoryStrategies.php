@@ -9,7 +9,7 @@
 namespace AppBundle\Services\Strategy;
 
 
-abstract class FactoryStrategies
+class FactoryStrategies
 {
 
     public function getStrategy($strategyName) {
