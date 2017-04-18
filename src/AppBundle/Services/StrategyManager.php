@@ -89,20 +89,6 @@ class StrategyManager
 
             $result = $strategy->setArrayProbabilities($arProbabilities)->getOptimalSolution($matrix);
 
-//            $solution .= '<br>';
-//            foreach ($result['new_matrix'] as $index => $row) {
-//                $solution .= '| ';
-//                foreach ($row as $i => $item) {
-//                    $solution .= $item . ' | ';
-//                }
-//                $solution .= '<br>';
-//            }
-//
-//            $solution .= 'bayes-laplas <br>';
-//            $solution .= 'solution ' . $result['solution'] . '<br>';
-//            $solution .= 'value ' . $result['value'] . '<br>';
-//
-//            echo \App\AppKernel::getInstance()->getTwig()->render('solution.html.twig', ['solution' => $solution]);
         }
         return $result;
 
