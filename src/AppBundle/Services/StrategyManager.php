@@ -42,11 +42,6 @@ class StrategyManager
         /** @var \Controllers\AbstractStrategy $strategy */
         if ($strategy != null) {
             $result = $strategy->getOptimalSolution($matrix, $coefficient);
-//            $solution = '';
-//            $solution .= $strategyName . '<br>';
-//            $solution .= 'solution ' . $result['solution'] . '<br>';
-//            $solution .= 'value ' . $result['value'] . '<br>';
-//            echo \App\AppKernel::getInstance()->getTwig()->render('solution.html.twig', ['solution' => $solution]);
         }
 
         return $result;

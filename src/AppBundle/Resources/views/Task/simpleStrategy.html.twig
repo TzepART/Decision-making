@@ -9,7 +9,7 @@
         colCount: <input id='colCount' type='text' value='5' /><br />
         <button onclick="generate()">generate</button>
 
-        <form action="task1/controller.php" method="post">
+        <form action="{{ path('tasks.simple_strategy') }}" method="post">
             <div id="matrix-form"></div>
 
             <select name="strategy" id="">
