@@ -16,13 +16,6 @@ class DecisionTaskModel
     protected $arProbabilities;
     protected $blMatrix;
 
-    /**
-     * @return array
-     */
-    public function getBlMatrix()
-    {
-        return $this->blMatrix;
-    }
 
     /**
      * @param array $arCountElements
@@ -33,7 +26,7 @@ class DecisionTaskModel
      */
     public function setBlMatrix($arCountElements, $good_price, $bad_price, $cost)
     {
-        $this->blMatrix = [];
+        $this->matrix = [];
         $count = count($arCountElements);
 
         for ($i = 0; $i < $count; $i++) {
@@ -45,19 +38,11 @@ class DecisionTaskModel
                 } else {
                     $realizedCount = $payedCount;
                 }
-                $this->blMatrix[$i][$j] = $good_price * $realizedCount + $bad_price * $unrealizedCount - $cost * $payedCount;
+                $this->matrix[$i][$j] = $good_price * $realizedCount + $bad_price * $unrealizedCount - $cost * $payedCount;
             }
         }
 
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMatrix()
-    {
-        return $this->matrix;
     }
 
     /**
@@ -68,6 +53,14 @@ class DecisionTaskModel
     {
         $this->matrix = $matrix;
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMatrix()
+    {
+        return $this->matrix;
     }
 
     /**

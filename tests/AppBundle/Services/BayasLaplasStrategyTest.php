@@ -19,22 +19,21 @@ class BayasLaplasStrategyTest extends WebTestCase
         [34, 45, 33, 6, 31],
     ];
 
+    protected $probability = [0.2, 0.1, 0.25, 0.15, 0.3];
+
     public function testCheckCorrectLogic()
     {
         $decisionTaskModel = new DecisionTaskModel();
         $decisionTaskModel->setMatrix($this->matrix);
+        $decisionTaskModel->setArProbabilities($this->probability);
 
         /**
          * @var DecisionSolutionModel $result
          * */
         $result = $this->getContainer()->get('app.strategy_manager')->getSolution(BayasLaplasStrategy::STRATEGY_NAME, $decisionTaskModel);
 
-        echo "<pre>";
-        var_dump($result);
-        echo "</pre>";
-
-//        self::assertTrue($result->getSolution() == 3);
-//        self::assertTrue($result->getValue() == 0);
+        self::assertTrue($result->getSolution() == 3);
+        self::assertTrue($result->getValue() == 57.3);
 
     }
 

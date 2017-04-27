@@ -32,7 +32,7 @@ class BayasLaplasStrategy extends AbstractStrategy
         $solutionArray = [];
         $newMatrix = [];
 
-        foreach ($decisionTaskModel->getBlMatrix() as $i => $row) {
+        foreach ($decisionTaskModel->getMatrix() as $i => $row) {
             $newRow = [];
             foreach ($row as $j => $item) {
                 $newRow[] = $arProbabilities[$j]*$item;
