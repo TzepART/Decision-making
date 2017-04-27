@@ -9,10 +9,12 @@
 namespace AppBundle\Services\Strategy;
 
 
+use AppBundle\Model\DecisionTaskModel;
+
 abstract class AbstractStrategy
 {
 
-    public abstract function getOptimalSolution($matrix, $coefficient = 0);
+    public abstract function getOptimalSolution(DecisionTaskModel $decisionTaskModel);
 
     /**
      * @param $array

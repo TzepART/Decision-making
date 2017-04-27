@@ -9,23 +9,26 @@
 namespace AppBundle\Services\Strategy;
 
 
+use AppBundle\Model\DecisionTaskModel;
+
 class MinimaxStrategy extends AbstractStrategy
 {
     const STRATEGY_NAME = 'minimax';
 
     /**
-     * @param array $matrix
-     * @param int $coefficient
+     * @param DecisionTaskModel $decisionTaskModel
      * @return array
+     * @internal param array $matrix
+     * @internal param int $coefficient
      */
-    function getOptimalSolution($matrix, $coefficient = 0)
+    function getOptimalSolution(DecisionTaskModel $decisionTaskModel)
     {
         $minArray = [];
         $solutionArray = [];
         $tempArray = [];
         $result = [];
 
-        $tempArray = $this->transponirating($matrix);
+        $tempArray = $this->transponirating($decisionTaskModel->getMatrix());
 
         foreach ($tempArray as $index => $row) {
             $minValue = min($row);

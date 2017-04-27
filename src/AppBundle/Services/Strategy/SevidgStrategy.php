@@ -9,22 +9,25 @@
 namespace AppBundle\Services\Strategy;
 
 
+use AppBundle\Model\DecisionTaskModel;
+
 class SevidgStrategy extends AbstractStrategy
 {
     const STRATEGY_NAME = 'savidg';
 
     /**
-     * @param array $matrix
-     * @param int $coefficient
+     * @param DecisionTaskModel $decisionTaskModel
      * @return array
+     * @internal param array $matrix
+     * @internal param int $coefficient
      */
-    public function getOptimalSolution($matrix, $coefficient = 0)
+    function getOptimalSolution(DecisionTaskModel $decisionTaskModel)
     {
         $refactorArray = [];
         $maxArray = [];
         $result = [];
 
-        $tempArray = $this->transponirating($matrix);
+        $tempArray = $this->transponirating($decisionTaskModel->getMatrix());
 
         foreach ($tempArray as $i => $col) {
             $max = max($col);

@@ -9,25 +9,28 @@
 namespace AppBundle\Services\Strategy;
 
 
+use AppBundle\Model\DecisionTaskModel;
+
 class HurwitzStrategy extends AbstractStrategy
 {
     const STRATEGY_NAME = 'hurwitz';
 
     /**
-     * @param array $matrix
-     * @param int $coefficient
+     * @param DecisionTaskModel $decisionTaskModel
      * @return array
+     * @internal param array $matrix
+     * @internal param int $coefficient
      */
-    function getOptimalSolution($matrix, $coefficient = 0)
-    {
+    function getOptimalSolution(DecisionTaskModel $decisionTaskModel){
+
         $valueArray = [];
         $solutionArray = [];
         $result = [];
 
-        foreach ($matrix as $i => $col) {
+        foreach ($decisionTaskModel->getMatrix() as $i => $col) {
             $max = max($col);
             $min = min($col);
-            $value = $coefficient*$min+(1-$coefficient)*$max;
+            $value = $decisionTaskModel->getCoefficient()*$min+(1-$decisionTaskModel->getCoefficient())*$max;
             $valueArray[] = $value;
             $solutionArray[] = $i;
         }

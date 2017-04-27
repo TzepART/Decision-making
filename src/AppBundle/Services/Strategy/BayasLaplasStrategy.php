@@ -9,32 +9,32 @@
 namespace AppBundle\Services\Strategy;
 
 
+use AppBundle\Model\DecisionTaskModel;
+
 class BayasLaplasStrategy extends AbstractStrategy
 {
     const STRATEGY_NAME = 'bayes-laplas';
-    private $arProbabilities = [];
 
     /**
-     * @param array $matrix
-     * @param int $coefficient
+     * @param DecisionTaskModel $decisionTaskModel
      * @return array
+     * @internal param array $matrix
+     * @internal param int $coefficient
      */
-    function getOptimalSolution($matrix, $coefficient = 0)
+    function getOptimalSolution(DecisionTaskModel $decisionTaskModel)
     {
         $result = [];
 
-        if(empty($this->arProbabilities)){
-            return $result;
-        }
+        $arProbabilities = $decisionTaskModel->getArProbabilities();
 
         $valueArray = [];
         $solutionArray = [];
         $newMatrix = [];
 
-        foreach ($matrix as $i => $row) {
+        foreach ($decisionTaskModel->getBlMatrix() as $i => $row) {
             $newRow = [];
             foreach ($row as $j => $item) {
-                $newRow[] = $this->arProbabilities[$j]*$item;
+                $newRow[] = $arProbabilities[$j]*$item;
             }
             $newMatrix[]=$newRow;
             $valueArray[] = array_sum($newRow);
@@ -50,16 +50,6 @@ class BayasLaplasStrategy extends AbstractStrategy
 
 
         return $result;
-    }
-
-    /**
-     * @param $arProbabilities
-     * @return $this
-     */
-    public function setArrayProbabilities($arProbabilities)
-    {
-        $this->arProbabilities = $arProbabilities;
-        return $this;
     }
 
 }
