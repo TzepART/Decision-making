@@ -9,7 +9,9 @@
 namespace AppBundle\Services;
 
 
-use AppBundle\Services\Strategy\BayasLaplasStrategy;
+use AppBundle\Model\DecisionSolutionModel;
+use AppBundle\Model\DecisionTaskModel;
+use AppBundle\Services\Strategy\AbstractStrategy;
 use Symfony\Component\DependencyInjection\Container;
 
 class StrategyManager
@@ -21,6 +23,7 @@ class StrategyManager
 
     /**
      * StrategyManager constructor.
+     * @param Container $container
      */
     public function __construct(Container $container)
     {
@@ -28,69 +31,22 @@ class StrategyManager
     }
 
     /**
-     * Task1
      * @param string $strategyName
-     * @param array $matrix
-     * @param float $coefficient
+     * @param DecisionTaskModel $decisionTaskModel
      * @return array
+     * @internal param array $matrix
+     * @internal param float $coefficient
      */
-    function getSolution($strategyName, $matrix, $coefficient)
+    function getSolution($strategyName, DecisionTaskModel $decisionTaskModel)
     {
         $result = [];
         $strategy = $this->container->get('app.strategy')->getStrategy($strategyName);
 
-        /** @var \Controllers\AbstractStrategy $strategy */
+        /** @var AbstractStrategy $strategy */
         if ($strategy != null) {
-            $result = $strategy->getOptimalSolution($matrix, $coefficient);
+            $result = $strategy->getOptimalSolution($decisionTaskModel, new DecisionSolutionModel());
         }
 
         return $result;
-    }
-
-    /**
-     * @param $arCountElements
-     * @param $good_price
-     * @param $bad_price
-     * @param $cost
-     * @param $matrix
-     * @param $arProbabilities
-     * @return array
-     */
-    function getBLSolution($arCountElements, $good_price, $bad_price, $cost, $matrix, $arProbabilities)
-    {
-        $result = [];
-        $strategy =     $this->container->get('app.strategy')->getStrategy(BayasLaplasStrategy::STRATEGY_NAME);
-        /** @var BayasLaplasStrategy $strategy */
-        if ($strategy != null) {
-            $count = count($arCountElements);
-            $solution = '';
-
-            for ($i = 0; $i < $count; $i++) {
-                $payedCount = $arCountElements[$i];
-                foreach ($arCountElements as $j => $realizedCount) {
-                    $unrealizedCount = 0;
-                    if ($payedCount > $realizedCount) {
-                        $unrealizedCount = $realizedCount - $payedCount;
-                    } else {
-                        $realizedCount = $payedCount;
-                    }
-                    $matrix[$i][$j] = $good_price * $realizedCount + $bad_price * $unrealizedCount - $cost * $payedCount;
-                }
-            }
-
-            $solution .= '<br>';
-            foreach ($matrix as $index => $row) {
-                $solution .= '| ';
-                foreach ($row as $i => $item) {
-                    $solution .= $item . ' | ';
-                }
-                $solution .= '<br>';
-            }
-
-            $result = $strategy->setArrayProbabilities($arProbabilities)->getOptimalSolution($matrix);
-
-        }
-        return $result;
-
     }
 }

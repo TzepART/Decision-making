@@ -2,6 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Model\DecisionSolutionModel;
+use AppBundle\Model\DecisionTaskModel;
+use AppBundle\Services\Strategy\BayasLaplasStrategy;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,12 +31,18 @@ class DefaultController extends Controller
         $coefficient = !empty($request->get('coefficient')) ? $request->get('coefficient') : 0;
 
         if(!empty($matrix) && !empty($strategyName)){
-            $result = $this->get('app.strategy_manager')->getSolution($strategyName, $matrix, $coefficient);
+            $decisionTaskModel = new DecisionTaskModel();
+            $decisionTaskModel->setMatrix($matrix)
+                ->setCoefficient($coefficient);
 
-            $solution = '';
+            /**
+             * @var DecisionSolutionModel $result
+             * */
+            $result = $this->get('app.strategy_manager')->getSolution($strategyName, $decisionTaskModel);
+
             $solution .= $strategyName . '<br>';
-            $solution .= 'solution ' . $result['solution'] . '<br>';
-            $solution .= 'value ' . $result['value'] . '<br>';
+            $solution .= 'solution ' . $result->getSolution() . '<br>';
+            $solution .= 'value ' . $result->getValue() . '<br>';
             return $this->render('@App/Task/solution.html.twig', ['solution' => $solution]);
         }
 
@@ -53,12 +62,19 @@ class DefaultController extends Controller
 
         if(!empty($arCountElements) && !empty($arProbabilities)&& !empty($cost)&& !empty($good_price)&& !empty($bad_price)){
 
-            $matrix = [];
             $solution = '';
-            $result = $this->get('app.strategy_manager')->getBLSolution($arCountElements, $good_price, $bad_price, $cost, $matrix, $arProbabilities);
+
+            $decisionTaskModel = new DecisionTaskModel();
+            $decisionTaskModel->setArProbabilities($arProbabilities)
+                ->setBlMatrix($arCountElements, $good_price, $bad_price, $cost);
+
+            /**
+             * @var DecisionSolutionModel $result
+             * */
+            $result = $this->get('app.strategy_manager')->getSolution(BayasLaplasStrategy::STRATEGY_NAME, $decisionTaskModel);
 
             $solution .= '<br>';
-            foreach ($result['new_matrix'] as $index => $row) {
+            foreach ($result->getNewMatrix() as $index => $row) {
                 $solution .= '| ';
                 foreach ($row as $i => $item) {
                     $solution .= $item . ' | ';
@@ -67,8 +83,8 @@ class DefaultController extends Controller
             }
 
             $solution .= 'bayes-laplas <br>';
-            $solution .= 'solution ' . $result['solution'] . '<br>';
-            $solution .= 'value ' . $result['value'] . '<br>';
+            $solution .= 'solution ' . $result->getSolution() . '<br>';
+            $solution .= 'value ' . $result->getValue() . '<br>';
 
             return $this->render('@App/Task/solution.html.twig', ['solution' => $solution]);
 

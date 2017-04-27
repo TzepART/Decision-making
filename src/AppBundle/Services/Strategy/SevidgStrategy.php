@@ -9,22 +9,27 @@
 namespace AppBundle\Services\Strategy;
 
 
+use AppBundle\Model\DecisionSolutionModel;
+use AppBundle\Model\DecisionTaskModel;
+
 class SevidgStrategy extends AbstractStrategy
 {
     const STRATEGY_NAME = 'savidg';
 
     /**
-     * @param array $matrix
-     * @param int $coefficient
-     * @return array
+     * @param DecisionTaskModel $decisionTaskModel
+     * @param DecisionSolutionModel $decisionSolutionModel
+     * @return DecisionSolutionModel
+     * @internal param array $matrix
+     * @internal param int $coefficient
      */
-    public function getOptimalSolution($matrix, $coefficient = 0)
-    {
+    function getOptimalSolution(DecisionTaskModel $decisionTaskModel, DecisionSolutionModel $decisionSolutionModel){
+
         $refactorArray = [];
         $maxArray = [];
         $result = [];
 
-        $tempArray = $this->transponirating($matrix);
+        $tempArray = $this->transponirating($decisionTaskModel->getMatrix());
 
         foreach ($tempArray as $i => $col) {
             $max = max($col);
@@ -43,10 +48,12 @@ class SevidgStrategy extends AbstractStrategy
             }
         }
 
-        $result['solution'] = $solution;
-        $result['value'] = $solutionValue;
+        //TODO предусмотреть случай с несколькими решениями
+        $decisionSolutionModel->setSolution($solution)
+            ->setValue($solutionValue);
 
-        return $result;
+        return $decisionSolutionModel;
+
     }
 
 }

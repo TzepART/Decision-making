@@ -9,25 +9,29 @@
 namespace AppBundle\Services\Strategy;
 
 
+use AppBundle\Model\DecisionSolutionModel;
+use AppBundle\Model\DecisionTaskModel;
+
 class HurwitzStrategy extends AbstractStrategy
 {
     const STRATEGY_NAME = 'hurwitz';
 
     /**
-     * @param array $matrix
-     * @param int $coefficient
-     * @return array
+     * @param DecisionTaskModel $decisionTaskModel
+     * @param DecisionSolutionModel $decisionSolutionModel
+     * @return DecisionSolutionModel
+     * @internal param array $matrix
+     * @internal param int $coefficient
      */
-    function getOptimalSolution($matrix, $coefficient = 0)
-    {
+    function getOptimalSolution(DecisionTaskModel $decisionTaskModel, DecisionSolutionModel $decisionSolutionModel){
+
         $valueArray = [];
         $solutionArray = [];
-        $result = [];
 
-        foreach ($matrix as $i => $col) {
+        foreach ($decisionTaskModel->getMatrix() as $i => $col) {
             $max = max($col);
             $min = min($col);
-            $value = $coefficient*$min+(1-$coefficient)*$max;
+            $value = $decisionTaskModel->getCoefficient()*$min+(1-$decisionTaskModel->getCoefficient())*$max;
             $valueArray[] = $value;
             $solutionArray[] = $i;
         }
@@ -35,11 +39,10 @@ class HurwitzStrategy extends AbstractStrategy
         $solutionValue = max($valueArray);
 
         //TODO предусмотреть случай с несколькими решениями
-        $result['solution'] = $solutionArray[array_search($solutionValue,$valueArray)]+1;
-        $result['value'] = $solutionValue;
+        $decisionSolutionModel->setSolution($solutionArray[array_search($solutionValue,$valueArray)]+1)
+                              ->setValue($solutionValue);
 
-
-        return $result;
+        return $decisionSolutionModel;
     }
 
 }

@@ -9,32 +9,33 @@
 namespace AppBundle\Services\Strategy;
 
 
+use AppBundle\Model\DecisionSolutionModel;
+use AppBundle\Model\DecisionTaskModel;
+
 class BayasLaplasStrategy extends AbstractStrategy
 {
     const STRATEGY_NAME = 'bayes-laplas';
-    private $arProbabilities = [];
 
     /**
-     * @param array $matrix
-     * @param int $coefficient
-     * @return array
+     * @param DecisionTaskModel $decisionTaskModel
+     * @param DecisionSolutionModel $decisionSolutionModel
+     * @return DecisionSolutionModel
+     * @internal param array $matrix
+     * @internal param int $coefficient
      */
-    function getOptimalSolution($matrix, $coefficient = 0)
+    function getOptimalSolution(DecisionTaskModel $decisionTaskModel, DecisionSolutionModel $decisionSolutionModel)
     {
-        $result = [];
 
-        if(empty($this->arProbabilities)){
-            return $result;
-        }
+        $arProbabilities = $decisionTaskModel->getArProbabilities();
 
         $valueArray = [];
         $solutionArray = [];
         $newMatrix = [];
 
-        foreach ($matrix as $i => $row) {
+        foreach ($decisionTaskModel->getBlMatrix() as $i => $row) {
             $newRow = [];
             foreach ($row as $j => $item) {
-                $newRow[] = $this->arProbabilities[$j]*$item;
+                $newRow[] = $arProbabilities[$j]*$item;
             }
             $newMatrix[]=$newRow;
             $valueArray[] = array_sum($newRow);
@@ -44,22 +45,11 @@ class BayasLaplasStrategy extends AbstractStrategy
         $solutionValue = max($valueArray);
 
         //TODO предусмотреть случай с несколькими решениями
-        $result['solution'] = $solutionArray[array_search($solutionValue,$valueArray)]+1;
-        $result['value'] = $solutionValue;
-        $result['new_matrix'] = $newMatrix;
+        $decisionSolutionModel->setSolution($solutionArray[array_search($solutionValue,$valueArray)]+1)
+                              ->setValue($solutionValue)
+                              ->setNewMatrix($newMatrix);
 
-
-        return $result;
-    }
-
-    /**
-     * @param $arProbabilities
-     * @return $this
-     */
-    public function setArrayProbabilities($arProbabilities)
-    {
-        $this->arProbabilities = $arProbabilities;
-        return $this;
+        return $decisionSolutionModel;
     }
 
 }
