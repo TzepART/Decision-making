@@ -35,6 +35,8 @@ class TaskController extends Controller
      * @Route("/list/{id}", name="task.view")
      * @Method("GET")
      * @Template()
+     * @param Task $task
+     * @return array
      */
     public function viewAction(Task $task)
     {
@@ -98,7 +100,7 @@ class TaskController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('task.view', ['id' => $entity->getId()]);
         }
 
         return [
