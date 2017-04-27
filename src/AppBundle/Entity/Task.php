@@ -9,6 +9,7 @@
 namespace AppBundle\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -50,6 +51,12 @@ class Task
      * @ORM\Column(name="criteria", type="array", nullable=true)
      */
     private $criteria;
+
+    public function __construct()
+    {
+        $this->variants = new ArrayCollection();
+        $this->criteria = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -107,7 +114,7 @@ class Task
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getVariants()
     {
@@ -115,7 +122,7 @@ class Task
     }
 
     /**
-     * @param mixed $variants
+     * @param ArrayCollection $variants
      * @return $this
      */
     public function setVariants($variants)
@@ -125,7 +132,7 @@ class Task
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getCriteria()
     {
@@ -134,7 +141,7 @@ class Task
     }
 
     /**
-     * @param mixed $criteria
+     * @param ArrayCollection $criteria
      * @return $this
      */
     public function setCriteria($criteria)

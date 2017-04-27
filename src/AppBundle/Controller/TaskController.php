@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Task;
+use AppBundle\Entity\Variant;
 use AppBundle\Form\TaskFormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -36,7 +37,6 @@ class TaskController extends Controller
      */
     public function viewAction(Task $task)
     {
-
         return ['task' => $task];
     }
 
@@ -47,7 +47,14 @@ class TaskController extends Controller
      */
     public function newAction()
     {
-        $form = $this->createForm(TaskFormType::class, null, [
+        $task = new Task();
+
+        $variant = new Variant();
+        $variant->setName('var1');
+
+        $task->getVariants()->add($variant);
+
+        $form = $this->createForm(TaskFormType::class, $task, [
             'action' => $this->generateUrl('task.create'),
         ]);
 
