@@ -21,10 +21,12 @@ class TaskFormType extends AbstractType
     {
         $builder->add('name')
                 ->add('variants', CollectionType::class, array(
-                    'entry_type' => VariantType::class
+                    'entry_type' => VariantType::class,
+                    'allow_add' => true
                 ))
                 ->add('criteria', CollectionType::class, array(
-                    'entry_type' => CriteriaType::class
+                    'entry_type' => CriteriaType::class,
+                    'allow_add' => true
                 ))
                 ->add('save', SubmitType::class, array(
                     'attr' => array('class' => 'save'),

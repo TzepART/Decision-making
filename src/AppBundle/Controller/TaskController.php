@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Criteria;
 use AppBundle\Entity\Task;
 use AppBundle\Entity\Variant;
 use AppBundle\Form\TaskFormType;
@@ -50,9 +51,12 @@ class TaskController extends Controller
         $task = new Task();
 
         $variant = new Variant();
-        $variant->setName('var1');
-
+        $variant->setName('');
         $task->getVariants()->add($variant);
+
+        $criteria = new Criteria();
+        $criteria->setName('');
+        $task->getCriteria()->add($criteria);
 
         $form = $this->createForm(TaskFormType::class, $task, [
             'action' => $this->generateUrl('task.create'),

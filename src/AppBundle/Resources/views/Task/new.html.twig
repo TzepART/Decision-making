@@ -1,5 +1,74 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ form(form) }}
+    {{ form_start(form) }}
+    {# render the task's only field: description #}
+    {{ form_row(form.name) }}
+
+    <h3>Variants</h3>
+    <ul class="variants" data-prototype="{{ form_widget(form.variants.vars.prototype)|e('html_attr') }}">
+        {% for variant in form.variants %}
+            <li>{{ form_row(variant.name) }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Criteria</h3>
+    <ul class="criterias">
+        {% for criter in form.criteria %}
+            <li>{{ form_row(criter.name) }}</li>
+        {% endfor %}
+    </ul>
+    {{ form_end(form) }}
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var $collectionHolder;
+
+        // setup an "add a variant" link
+        var $addVariantLink = $('<a href="#" class="add_variant_link">Add a variant</a>');
+        var $newLinkLi = $('<li></li>').append($addVariantLink);
+
+        jQuery(document).ready(function() {
+            // Get the ul that holds the collection of variants
+            $collectionHolder = $('ul.variants');
+
+            // add the "add a variant" anchor and li to the variants ul
+            $collectionHolder.append($newLinkLi);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addVariantLink.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new variant form (see next code block)
+                addVariantForm($collectionHolder, $newLinkLi);
+            });
+        });
+
+        function addVariantForm($collectionHolder, $newLinkLi) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype');
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a variant" link li
+            var $newFormLi = $('<li></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+        }
+    </script>
 {% endblock %}
