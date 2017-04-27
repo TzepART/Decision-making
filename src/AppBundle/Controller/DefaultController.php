@@ -63,10 +63,11 @@ class DefaultController extends Controller
         if(!empty($arCountElements) && !empty($arProbabilities)&& !empty($cost)&& !empty($good_price)&& !empty($bad_price)){
 
             $solution = '';
+            $matrix = $this->createBLMatrix($arCountElements, $good_price, $bad_price, $cost);
 
             $decisionTaskModel = new DecisionTaskModel();
             $decisionTaskModel->setArProbabilities($arProbabilities)
-                ->setBlMatrix($arCountElements, $good_price, $bad_price, $cost);
+                ->setMatrix($matrix);
 
             /**
              * @var DecisionSolutionModel $result
@@ -92,5 +93,34 @@ class DefaultController extends Controller
 
 
         return $this->render('@App/Task/blStrategy.html.twig');
+    }
+
+
+    /**
+     * @param $arCountElements
+     * @param $good_price
+     * @param $bad_price
+     * @param $cost
+     * @return array
+     */
+    private function createBLMatrix($arCountElements, $good_price, $bad_price, $cost)
+    {
+        $matrix = [];
+        $count = count($arCountElements);
+
+        for ($i = 0; $i < $count; $i++) {
+            $payedCount = $arCountElements[$i];
+            foreach ($arCountElements as $j => $realizedCount) {
+                $unrealizedCount = 0;
+                if ($payedCount > $realizedCount) {
+                    $unrealizedCount = $realizedCount - $payedCount;
+                } else {
+                    $realizedCount = $payedCount;
+                }
+                $matrix[$i][$j] = $good_price * $realizedCount + $bad_price * $unrealizedCount - $cost * $payedCount;
+            }
+        }
+
+        return $matrix;
     }
 }
