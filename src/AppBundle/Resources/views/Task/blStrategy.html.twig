@@ -2,7 +2,7 @@
 
 
 {% block body %}
-    <a href="/">Главная</a>
+    <a href="{{ path('homepage') }}">Главная</a>
     <div>
         <form action="{{ path('tasks.bl_strategy') }}" method="post">
             <table>
