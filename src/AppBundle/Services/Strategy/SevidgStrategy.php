@@ -26,8 +26,6 @@ class SevidgStrategy extends AbstractStrategy
     function getOptimalSolution(DecisionTaskModel $decisionTaskModel, DecisionSolutionModel $decisionSolutionModel){
 
         $refactorArray = [];
-        $maxArray = [];
-        $result = [];
 
         $tempArray = $this->transponirating($decisionTaskModel->getMatrix());
 
