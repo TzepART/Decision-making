@@ -5,7 +5,7 @@ namespace Tests\AppBundle\Controller;
 use AppBundle\Entity\Task;
 use AppBundle\Entity\User;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
-use Promo\PuppyKitten\AppBundle\Tests\AppBundle\CommonAppTest;
+use Tests\AppBundle\CommonAppTest;
 use Symfony\Bundle\FrameworkBundle\Client;
 
 class TaskControllerTest extends WebTestCase

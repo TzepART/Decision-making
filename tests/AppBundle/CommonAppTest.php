@@ -1,6 +1,6 @@
 <?php
 
-namespace Promo\PuppyKitten\AppBundle\Tests\AppBundle;
+namespace Tests\AppBundle;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
