@@ -2,7 +2,7 @@
 
 
 {% block body %}
-    <a href="/">Главная</a>
+    <a href="{{ path('homepage') }}">Главная</a>
     <div>
         <form action="{{ path('tasks.bl_strategy') }}" method="post">
             <table>
@@ -17,26 +17,26 @@
                 </tr>
                 <tr>
                     <td>X</td>
-                    <td><input name="x[0]" size="5"></td>
-                    <td><input name="x[1]" size="5"></td>
-                    <td><input name="x[2]" size="5"></td>
-                    <td><input name="x[3]" size="5"></td>
-                    <td><input name="x[4]" size="5"></td>
+                    <td><input name="x[0]" size="5" value="100"></td>
+                    <td><input name="x[1]" size="5" value="150"></td>
+                    <td><input name="x[2]" size="5" value="200"></td>
+                    <td><input name="x[3]" size="5" value="300"></td>
+                    <td><input name="x[4]" size="5" value="400"></td>
                 </tr>
                 <tr>
                     <td>P(X)</td>
-                    <td><input name="p[0]" size="5"></td>
-                    <td><input name="p[1]" size="5"></td>
-                    <td><input name="p[2]" size="5"></td>
-                    <td><input name="p[3]" size="5"></td>
-                    <td><input name="p[4]" size="5"></td>
+                    <td><input name="p[0]" size="5" value="0.2"></td>
+                    <td><input name="p[1]" size="5" value="0.1"></td>
+                    <td><input name="p[2]" size="5" value="0.4"></td>
+                    <td><input name="p[3]" size="5" value="0.2"></td>
+                    <td><input name="p[4]" size="5" value="0.1"></td>
                 </tr>
                 </tbody>
             </table>
 
-            <input type="text" value="" name="cost" placeholder="Расходы">
-            <input type="text" value="" name="good_price" placeholder="Цена в начале года">
-            <input type="text" value="" name="bad_price" placeholder="Цена в конце года">
+            <input type="text" value="1000" name="cost" placeholder="Расходы">
+            <input type="text" value="10000" name="good_price" placeholder="Цена в начале года">
+            <input type="text" value="3000" name="bad_price" placeholder="Цена в конце года">
             <input type="submit" value="send">
         </form>
     </div>

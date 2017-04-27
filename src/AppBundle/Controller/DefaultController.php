@@ -25,25 +25,21 @@ class DefaultController extends Controller
      */
     public function simpleStrategyAction(Request $request)
     {
-        $solution = '';
-        $matrix = !empty($request->get('matrix')) ? $request->get('matrix') : null;
-        $strategyName = !empty($request->get('strategy')) ? $request->get('strategy') : null;
-        $coefficient = !empty($request->get('coefficient')) ? $request->get('coefficient') : 0;
+        $decisionTaskModel = $this->initialTaskModel($request);
 
-        if(!empty($matrix) && !empty($strategyName)){
-            $decisionTaskModel = new DecisionTaskModel();
-            $decisionTaskModel->setMatrix($matrix)
-                ->setCoefficient($coefficient);
+        if($request->get('strategy') && !empty($decisionTaskModel->getMatrix())){
 
             /**
              * @var DecisionSolutionModel $result
              * */
-            $result = $this->get('app.strategy_manager')->getSolution($strategyName, $decisionTaskModel);
+            $result = $this->get('app.strategy_manager')->getSolution($request->get('strategy'), $decisionTaskModel);
 
-            $solution .= $strategyName . '<br>';
-            $solution .= 'solution ' . $result->getSolution() . '<br>';
-            $solution .= 'value ' . $result->getValue() . '<br>';
-            return $this->render('@App/Task/solution.html.twig', ['solution' => $solution]);
+            return $this->render('@App/Task/solution.html.twig',
+                [
+                    'result' => $result,
+                    'initial_matrix' => $decisionTaskModel->getMatrix()
+                ]
+            );
         }
 
         return $this->render('@App/Task/simpleStrategy.html.twig');
@@ -54,40 +50,24 @@ class DefaultController extends Controller
      */
     public function blStrategyAction(Request $request)
     {
-        $arCountElements = !empty($request->get('x')) ? $request->get('x') : null;
-        $arProbabilities = !empty($request->get('p')) ? $request->get('p') : null;
-        $cost = !empty($request->get('cost')) ? $request->get('cost') : null;
-        $good_price = !empty($request->get('good_price')) ? $request->get('good_price') : null;
-        $bad_price = !empty($request->get('bad_price')) ? $request->get('bad_price') : null;
+        $matrix = $this->createBLMatrix($request);
+        $decisionTaskModel = $this->initialTaskModel($request);
 
-        if(!empty($arCountElements) && !empty($arProbabilities)&& !empty($cost)&& !empty($good_price)&& !empty($bad_price)){
+        if(!empty($matrix) && !empty($decisionTaskModel->getArProbabilities())){
 
-            $solution = '';
-            $matrix = $this->createBLMatrix($arCountElements, $good_price, $bad_price, $cost);
-
-            $decisionTaskModel = new DecisionTaskModel();
-            $decisionTaskModel->setArProbabilities($arProbabilities)
-                ->setMatrix($matrix);
+            $decisionTaskModel->setMatrix($matrix);
 
             /**
              * @var DecisionSolutionModel $result
              * */
             $result = $this->get('app.strategy_manager')->getSolution(BayasLaplasStrategy::STRATEGY_NAME, $decisionTaskModel);
 
-            $solution .= '<br>';
-            foreach ($result->getNewMatrix() as $index => $row) {
-                $solution .= '| ';
-                foreach ($row as $i => $item) {
-                    $solution .= $item . ' | ';
-                }
-                $solution .= '<br>';
-            }
-
-            $solution .= 'bayes-laplas <br>';
-            $solution .= 'solution ' . $result->getSolution() . '<br>';
-            $solution .= 'value ' . $result->getValue() . '<br>';
-
-            return $this->render('@App/Task/solution.html.twig', ['solution' => $solution]);
+            return $this->render('@App/Task/solution.html.twig',
+                [
+                    'result' => $result,
+                    'initial_matrix' => $decisionTaskModel->getMatrix()
+                ]
+            );
 
         }
 
@@ -95,31 +75,64 @@ class DefaultController extends Controller
         return $this->render('@App/Task/blStrategy.html.twig');
     }
 
+    /**
+     * @param Request $request
+     * @return DecisionTaskModel
+     */
+    protected function initialTaskModel(Request $request){
+
+        $decisionTaskModel = new DecisionTaskModel();
+
+        if($request->get('p')) {
+            $decisionTaskModel->setArProbabilities($request->get('p'));
+        }
+
+        if($request->get('matrix')) {
+            $decisionTaskModel->setMatrix($request->get('matrix'));
+        }
+
+        if($request->get('coefficient')) {
+            $decisionTaskModel->setCoefficient($request->get('coefficient'));
+        }
+
+        return $decisionTaskModel;
+    }
+
 
     /**
-     * @param $arCountElements
-     * @param $good_price
-     * @param $bad_price
-     * @param $cost
+     * @param Request $request
      * @return array
+     * @internal param $arCountElements
+     * @internal param $good_price
+     * @internal param $bad_price
+     * @internal param $cost
      */
-    private function createBLMatrix($arCountElements, $good_price, $bad_price, $cost)
+    private function createBLMatrix(Request $request)
     {
-        $matrix = [];
-        $count = count($arCountElements);
+        $arCountElements = !empty($request->get('x')) ? $request->get('x') : null;
+        $cost = !empty($request->get('cost')) ? $request->get('cost') : null;
+        $good_price = !empty($request->get('good_price')) ? $request->get('good_price') : null;
+        $bad_price = !empty($request->get('bad_price')) ? $request->get('bad_price') : null;
 
-        for ($i = 0; $i < $count; $i++) {
-            $payedCount = $arCountElements[$i];
-            foreach ($arCountElements as $j => $realizedCount) {
-                $unrealizedCount = 0;
-                if ($payedCount > $realizedCount) {
-                    $unrealizedCount = $realizedCount - $payedCount;
-                } else {
-                    $realizedCount = $payedCount;
+        $matrix = [];
+
+        if(!empty($arCountElements) && !empty($cost)&& !empty($good_price)&& !empty($bad_price)){
+            $count = count($arCountElements);
+
+            for ($i = 0; $i < $count; $i++) {
+                $payedCount = $arCountElements[$i];
+                foreach ($arCountElements as $j => $realizedCount) {
+                    $unrealizedCount = 0;
+                    if ($payedCount > $realizedCount) {
+                        $unrealizedCount = $realizedCount - $payedCount;
+                    } else {
+                        $realizedCount = $payedCount;
+                    }
+                    $matrix[$i][$j] = $good_price * $realizedCount + $bad_price * $unrealizedCount - $cost * $payedCount;
                 }
-                $matrix[$i][$j] = $good_price * $realizedCount + $bad_price * $unrealizedCount - $cost * $payedCount;
             }
         }
+
 
         return $matrix;
     }
