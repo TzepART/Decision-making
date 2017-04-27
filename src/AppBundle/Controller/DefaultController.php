@@ -60,7 +60,6 @@ class DefaultController extends Controller
         $good_price = !empty($request->get('good_price')) ? $request->get('good_price') : null;
         $bad_price = !empty($request->get('bad_price')) ? $request->get('bad_price') : null;
 
-
         if(!empty($arCountElements) && !empty($arProbabilities)&& !empty($cost)&& !empty($good_price)&& !empty($bad_price)){
 
             $solution = '';
