@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Model\DecisionSolutionModel;
 use AppBundle\Model\DecisionTaskModel;
 use AppBundle\Services\Strategy\BayasLaplasStrategy;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -33,11 +34,15 @@ class DefaultController extends Controller
             $decisionTaskModel = new DecisionTaskModel();
             $decisionTaskModel->setMatrix($matrix)
                 ->setCoefficient($coefficient);
+
+            /**
+             * @var DecisionSolutionModel $result
+             * */
             $result = $this->get('app.strategy_manager')->getSolution($strategyName, $decisionTaskModel);
 
             $solution .= $strategyName . '<br>';
-            $solution .= 'solution ' . $result['solution'] . '<br>';
-            $solution .= 'value ' . $result['value'] . '<br>';
+            $solution .= 'solution ' . $result->getSolution() . '<br>';
+            $solution .= 'value ' . $result->getValue() . '<br>';
             return $this->render('@App/Task/solution.html.twig', ['solution' => $solution]);
         }
 
@@ -64,10 +69,13 @@ class DefaultController extends Controller
             $decisionTaskModel->setArProbabilities($arProbabilities)
                 ->setBlMatrix($arCountElements, $good_price, $bad_price, $cost);
 
+            /**
+             * @var DecisionSolutionModel $result
+             * */
             $result = $this->get('app.strategy_manager')->getSolution(BayasLaplasStrategy::STRATEGY_NAME, $decisionTaskModel);
 
             $solution .= '<br>';
-            foreach ($result['new_matrix'] as $index => $row) {
+            foreach ($result->getNewMatrix() as $index => $row) {
                 $solution .= '| ';
                 foreach ($row as $i => $item) {
                     $solution .= $item . ' | ';
@@ -76,8 +84,8 @@ class DefaultController extends Controller
             }
 
             $solution .= 'bayes-laplas <br>';
-            $solution .= 'solution ' . $result['solution'] . '<br>';
-            $solution .= 'value ' . $result['value'] . '<br>';
+            $solution .= 'solution ' . $result->getSolution() . '<br>';
+            $solution .= 'value ' . $result->getValue() . '<br>';
 
             return $this->render('@App/Task/solution.html.twig', ['solution' => $solution]);
 

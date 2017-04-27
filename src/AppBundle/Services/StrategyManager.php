@@ -9,6 +9,7 @@
 namespace AppBundle\Services;
 
 
+use AppBundle\Model\DecisionSolutionModel;
 use AppBundle\Model\DecisionTaskModel;
 use AppBundle\Services\Strategy\AbstractStrategy;
 use Symfony\Component\DependencyInjection\Container;
@@ -43,7 +44,7 @@ class StrategyManager
 
         /** @var AbstractStrategy $strategy */
         if ($strategy != null) {
-            $result = $strategy->getOptimalSolution($decisionTaskModel);
+            $result = $strategy->getOptimalSolution($decisionTaskModel, new DecisionSolutionModel());
         }
 
         return $result;

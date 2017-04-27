@@ -9,6 +9,7 @@
 namespace AppBundle\Services\Strategy;
 
 
+use AppBundle\Model\DecisionSolutionModel;
 use AppBundle\Model\DecisionTaskModel;
 
 class SevidgStrategy extends AbstractStrategy
@@ -17,12 +18,13 @@ class SevidgStrategy extends AbstractStrategy
 
     /**
      * @param DecisionTaskModel $decisionTaskModel
-     * @return array
+     * @param DecisionSolutionModel $decisionSolutionModel
+     * @return DecisionSolutionModel
      * @internal param array $matrix
      * @internal param int $coefficient
      */
-    function getOptimalSolution(DecisionTaskModel $decisionTaskModel)
-    {
+    function getOptimalSolution(DecisionTaskModel $decisionTaskModel, DecisionSolutionModel $decisionSolutionModel){
+
         $refactorArray = [];
         $maxArray = [];
         $result = [];
@@ -46,10 +48,12 @@ class SevidgStrategy extends AbstractStrategy
             }
         }
 
-        $result['solution'] = $solution;
-        $result['value'] = $solutionValue;
+        //TODO предусмотреть случай с несколькими решениями
+        $decisionSolutionModel->setSolution($solution)
+            ->setValue($solutionValue);
 
-        return $result;
+        return $decisionSolutionModel;
+
     }
 
 }

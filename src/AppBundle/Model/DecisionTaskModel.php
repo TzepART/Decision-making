@@ -17,7 +17,7 @@ class DecisionTaskModel
     protected $blMatrix;
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getBlMatrix()
     {
@@ -25,10 +25,10 @@ class DecisionTaskModel
     }
 
     /**
-     * @param $arCountElements
-     * @param $good_price
-     * @param $bad_price
-     * @param $cost
+     * @param array $arCountElements
+     * @param float $good_price
+     * @param float $bad_price
+     * @param float $cost
      * @return $this
      */
     public function setBlMatrix($arCountElements, $good_price, $bad_price, $cost)
@@ -53,7 +53,7 @@ class DecisionTaskModel
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getMatrix()
     {
@@ -61,7 +61,7 @@ class DecisionTaskModel
     }
 
     /**
-     * @param mixed $matrix
+     * @param array $matrix
      * @return $this
      */
     public function setMatrix($matrix)
@@ -71,7 +71,7 @@ class DecisionTaskModel
     }
 
     /**
-     * @return mixed
+     * @return float
      */
     public function getCoefficient()
     {
@@ -79,7 +79,7 @@ class DecisionTaskModel
     }
 
     /**
-     * @param mixed $coefficient
+     * @param float $coefficient
      * @return $this
      */
     public function setCoefficient($coefficient)
@@ -89,7 +89,7 @@ class DecisionTaskModel
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getArProbabilities()
     {
@@ -97,7 +97,7 @@ class DecisionTaskModel
     }
 
     /**
-     * @param mixed $arProbabilities
+     * @param array $arProbabilities
      * @return $this
      */
     public function setArProbabilities($arProbabilities)

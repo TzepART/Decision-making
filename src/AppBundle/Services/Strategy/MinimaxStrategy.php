@@ -9,6 +9,7 @@
 namespace AppBundle\Services\Strategy;
 
 
+use AppBundle\Model\DecisionSolutionModel;
 use AppBundle\Model\DecisionTaskModel;
 
 class MinimaxStrategy extends AbstractStrategy
@@ -17,12 +18,13 @@ class MinimaxStrategy extends AbstractStrategy
 
     /**
      * @param DecisionTaskModel $decisionTaskModel
-     * @return array
+     * @param DecisionSolutionModel $decisionSolutionModel
+     * @return DecisionSolutionModel
      * @internal param array $matrix
      * @internal param int $coefficient
      */
-    function getOptimalSolution(DecisionTaskModel $decisionTaskModel)
-    {
+    function getOptimalSolution(DecisionTaskModel $decisionTaskModel, DecisionSolutionModel $decisionSolutionModel){
+
         $minArray = [];
         $solutionArray = [];
         $tempArray = [];
@@ -39,10 +41,11 @@ class MinimaxStrategy extends AbstractStrategy
         $solutionValue = max($minArray);
 
         //TODO предусмотреть случай с несколькими решениями
-        $result['solution'] = $solutionArray[array_search($solutionValue,$minArray)]+1;
-        $result['value'] = $solutionValue;
+        $decisionSolutionModel->setSolution($solutionArray[array_search($solutionValue,$minArray)]+1)
+            ->setValue($solutionValue);
 
-        return $result;
+        return $decisionSolutionModel;
+
     }
 
 }
