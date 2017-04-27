@@ -40,6 +40,17 @@ class Task
      */
     private $user;
 
+
+    /**
+     * @ORM\Column(name="variants", type="array", nullable=true)
+     */
+    private $variants;
+
+    /**
+     * @ORM\Column(name="criteria", type="array", nullable=true)
+     */
+    private $criteria;
+
     /**
      * @return mixed
      */
@@ -92,6 +103,45 @@ class Task
     {
         return $this->user;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVariants()
+    {
+        return $this->variants;
+    }
+
+    /**
+     * @param mixed $variants
+     * @return $this
+     */
+    public function setVariants($variants)
+    {
+        $this->variants = $variants;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCriteria()
+    {
+        return $this->criteria;
+
+    }
+
+    /**
+     * @param mixed $criteria
+     * @return $this
+     */
+    public function setCriteria($criteria)
+    {
+        $this->criteria = $criteria;
+        return $this;
+
+    }
+
 
 
 }
