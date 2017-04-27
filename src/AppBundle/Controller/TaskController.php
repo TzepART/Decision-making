@@ -30,6 +30,17 @@ class TaskController extends Controller
     }
 
     /**
+     * @Route("/list/{id}", name="task.view")
+     * @Method("GET")
+     * @Template()
+     */
+    public function viewAction(Task $task)
+    {
+
+        return ['task' => $task];
+    }
+
+    /**
      * @Route("/new/", name="task.new")
      * @Method("GET")
      * @Template()

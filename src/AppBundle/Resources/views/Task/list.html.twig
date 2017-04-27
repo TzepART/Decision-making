@@ -4,7 +4,7 @@
     {% if tasks %}
         <ul class="tasks_list">
             {% for task in tasks %}
-                <li>{{ task.name }}</li>
+                <li><a href="{{ path('task.view', {id : task.id}) }}">{{ task.name }}</a></li>
             {% endfor %}
         </ul>
     {% endif %}
