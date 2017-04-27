@@ -14,36 +14,7 @@ class DecisionTaskModel
     protected $matrix;
     protected $coefficient;
     protected $arProbabilities;
-    protected $blMatrix;
 
-
-    /**
-     * @param array $arCountElements
-     * @param float $good_price
-     * @param float $bad_price
-     * @param float $cost
-     * @return $this
-     */
-    public function setBlMatrix($arCountElements, $good_price, $bad_price, $cost)
-    {
-        $this->matrix = [];
-        $count = count($arCountElements);
-
-        for ($i = 0; $i < $count; $i++) {
-            $payedCount = $arCountElements[$i];
-            foreach ($arCountElements as $j => $realizedCount) {
-                $unrealizedCount = 0;
-                if ($payedCount > $realizedCount) {
-                    $unrealizedCount = $realizedCount - $payedCount;
-                } else {
-                    $realizedCount = $payedCount;
-                }
-                $this->matrix[$i][$j] = $good_price * $realizedCount + $bad_price * $unrealizedCount - $cost * $payedCount;
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @param array $matrix
