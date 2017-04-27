@@ -27,12 +27,8 @@ class MinimaxStrategy extends AbstractStrategy
 
         $minArray = [];
         $solutionArray = [];
-        $tempArray = [];
-        $result = [];
 
-        $tempArray = $this->transponirating($decisionTaskModel->getMatrix());
-
-        foreach ($tempArray as $index => $row) {
+        foreach ($decisionTaskModel->getMatrix() as $index => $row) {
             $minValue = min($row);
             $minArray[] = $minValue;
             $solutionArray[] = array_search($minValue,$row);
