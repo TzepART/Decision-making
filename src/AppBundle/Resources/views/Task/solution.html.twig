@@ -2,6 +2,18 @@
 
 
 {% block body %}
-    {{ solution }}
+    <div class="row">
+        {% include '@App/Task/matrix.html.twig' with {'matrix': initial_matrix} %}
+    </div>
+    <br>
+    {% if result.newMatrix %}
+        <div class="row">
+            {% include '@App/Task/matrix.html.twig' with {'matrix': result.newMatrix} %}
+        </div>
+    {% endif %}
+    <div>
+        <p>Вариант: {{ result.solution }}</p>
+        <p>Значение: {{ result.value }}</p>
+    </div>
 {% endblock body %}
 

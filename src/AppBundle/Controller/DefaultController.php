@@ -25,7 +25,6 @@ class DefaultController extends Controller
      */
     public function simpleStrategyAction(Request $request)
     {
-        $solution = '';
         $matrix = !empty($request->get('matrix')) ? $request->get('matrix') : null;
         $strategyName = !empty($request->get('strategy')) ? $request->get('strategy') : null;
         $coefficient = !empty($request->get('coefficient')) ? $request->get('coefficient') : 0;
@@ -40,10 +39,12 @@ class DefaultController extends Controller
              * */
             $result = $this->get('app.strategy_manager')->getSolution($strategyName, $decisionTaskModel);
 
-            $solution .= $strategyName . '<br>';
-            $solution .= 'solution ' . $result->getSolution() . '<br>';
-            $solution .= 'value ' . $result->getValue() . '<br>';
-            return $this->render('@App/Task/solution.html.twig', ['solution' => $solution]);
+            return $this->render('@App/Task/solution.html.twig',
+                [
+                    'result' => $result,
+                    'initial_matrix' => $matrix
+                ]
+            );
         }
 
         return $this->render('@App/Task/simpleStrategy.html.twig');
@@ -62,7 +63,6 @@ class DefaultController extends Controller
 
         if(!empty($arCountElements) && !empty($arProbabilities)&& !empty($cost)&& !empty($good_price)&& !empty($bad_price)){
 
-            $solution = '';
             $matrix = $this->createBLMatrix($arCountElements, $good_price, $bad_price, $cost);
 
             $decisionTaskModel = new DecisionTaskModel();
@@ -74,20 +74,12 @@ class DefaultController extends Controller
              * */
             $result = $this->get('app.strategy_manager')->getSolution(BayasLaplasStrategy::STRATEGY_NAME, $decisionTaskModel);
 
-            $solution .= '<br>';
-            foreach ($result->getNewMatrix() as $index => $row) {
-                $solution .= '| ';
-                foreach ($row as $i => $item) {
-                    $solution .= $item . ' | ';
-                }
-                $solution .= '<br>';
-            }
-
-            $solution .= 'bayes-laplas <br>';
-            $solution .= 'solution ' . $result->getSolution() . '<br>';
-            $solution .= 'value ' . $result->getValue() . '<br>';
-
-            return $this->render('@App/Task/solution.html.twig', ['solution' => $solution]);
+            return $this->render('@App/Task/solution.html.twig',
+                [
+                    'result' => $result,
+                    'initial_matrix' => $matrix
+                ]
+            );
 
         }
 
