@@ -58,7 +58,7 @@ class TaskControllerTest extends WebTestCase
         $crawler = $client->request('GET', self::LIST_URL);
 
         // Get the form.
-        $li = $crawler->filter('li')->text();
+        $li = $crawler->filter('ul[class="tasks_list"] > li')->first()->text();
 
         $this->assertTrue(
             $li == "example_task"

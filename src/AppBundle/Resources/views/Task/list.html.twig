@@ -2,7 +2,7 @@
 
 {% block body %}
     {% if tasks %}
-        <ul>
+        <ul class="tasks_list">
             {% for task in tasks %}
                 <li>{{ task.name }}</li>
             {% endfor %}

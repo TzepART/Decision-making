@@ -1,7 +1,7 @@
 <table class="table-bordered col-md-6 matrix">
     <tr>
         <td></td>
-        {% for i in 0..(matrix|length-1) %}
+        {% for i in 1..(matrix|length) %}
             <td>
                 F {{ i }}
             </td>
@@ -10,7 +10,7 @@
     {% for row in matrix %}
         <tr>
             <td>
-                E {{ loop.index0 }}
+                E {{ loop.index }}
             </td>
             {% for value in row %}
                 <td>{{ value }}</td>
