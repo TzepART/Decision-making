@@ -42,15 +42,15 @@ class TaskController extends Controller
      */
     public function viewAction(Task $task)
     {
-        $form = [];
+        $criteria_forms = [];
         foreach ($task->getCriteria() as $index => $criterion) {
-            $form[] = $this->createForm(CriteriaType::class, $criterion, [
+            $criteria_forms[] = $this->createForm(CriteriaType::class, $criterion, [
                 'action' => $this->generateUrl('task.save_bo_matrix', ['id' => $criterion->getId()]),
                 'method' => 'POST'
             ])->createView();
         }
 
-        return ['task' => $task, 'forms' => $form];
+        return ['task' => $task, 'criteria_forms' => $criteria_forms];
     }
 
     /**

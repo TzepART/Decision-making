@@ -14,7 +14,7 @@
         {% endfor %}
     </ul>
 
-    {% for form in forms %}
+    {% for form in criteria_form %}
         {{ form_start(form) }}
              {{ form_row(form.name) }}
         {{ form_end(form) }}
