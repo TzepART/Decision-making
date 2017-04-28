@@ -13,7 +13,7 @@
     </ul>
 
     <h3>Criteria</h3>
-    <ul class="criterias">
+    <ul class="criterias" data-prototype="{{ form_widget(form.criteria.vars.prototype)|e('html_attr') }}">
         {% for criter in form.criteria %}
             <li>{{ form_row(criter.name) }}</li>
         {% endfor %}
@@ -26,33 +26,34 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        var $collectionHolder;
+        addlinkForAdd('variants');
+        addlinkForAdd('criterias');
 
-        // setup an "add a variant" link
-        var $addVariantLink = $('<a href="#" class="add_variant_link">Add a variant</a>');
-        var $newLinkLi = $('<li></li>').append($addVariantLink);
+        function addlinkForAdd(list_name) {
+            var $collectionHolder;
+            var $addLink = $('<a href="#" class="add_'+list_name+'_link">Add</a>');
+            var $newLinkLi = $('<li></li>').append($addLink);
 
-        jQuery(document).ready(function() {
-            // Get the ul that holds the collection of variants
-            $collectionHolder = $('ul.variants');
+            jQuery(document).ready(function() {
+                // Get the ul that holds the collection of variants
+                $collectionHolder = $('ul.'.concat(list_name));
 
-            // add the "add a variant" anchor and li to the variants ul
-            $collectionHolder.append($newLinkLi);
+                // add the "add a variant" anchor and li to the variants ul
+                $collectionHolder.append($newLinkLi);
 
-            // count the current form inputs we have (e.g. 2), use that as the new
-            // index when inserting a new item (e.g. 2)
-            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+                // count the current form inputs we have (e.g. 2), use that as the new
+                // index when inserting a new item (e.g. 2)
+                $collectionHolder.data('index', $collectionHolder.find(':input').length);
 
-            $addVariantLink.on('click', function(e) {
-                // prevent the link from creating a "#" on the URL
-                e.preventDefault();
-
-                // add a new variant form (see next code block)
-                addVariantForm($collectionHolder, $newLinkLi);
+                $addLink.on('click', function(e) {
+                    // prevent the link from creating a "#" on the URL
+                    e.preventDefault();
+                    addForm($collectionHolder, $newLinkLi);
+                });
             });
-        });
+        }
 
-        function addVariantForm($collectionHolder, $newLinkLi) {
+        function addForm($collectionHolder, $newLinkLi) {
             // Get the data-prototype explained earlier
             var prototype = $collectionHolder.data('prototype');
 
