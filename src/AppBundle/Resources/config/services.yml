@@ -8,5 +8,5 @@ services:
         arguments: ["@service_container"]
 
     app.matrix_manager:
-        class: AppBundle\Services\StrategyManager
+        class: AppBundle\Services\MatrixManager
         arguments: ["@service_container"]

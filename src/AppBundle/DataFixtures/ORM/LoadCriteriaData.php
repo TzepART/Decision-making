@@ -11,14 +11,16 @@ namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\Criteria;
 use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Entity\Task;
 use Faker\Factory as Faker;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
-class LoadCriteriaData extends AbstractFixture implements OrderedFixtureInterface
+class LoadCriteriaData extends AbstractFixture implements OrderedFixtureInterface, FixtureInterface, ContainerAwareInterface
 {
     /**
      * @var ContainerInterface
