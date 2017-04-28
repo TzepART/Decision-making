@@ -2,17 +2,41 @@
 
 {% block body %}
     {{ task.name }}
-    <ul>
-    {% for criteria in task.criteria %}
-        <li>{{ criteria.name }}</li>
-    {% endfor %}
-    </ul>
+    {% set variants = task.variants %}
 
-    <ul>
-        {% for variant in task.variants %}
-            <li>{{ variant.name }}</li>
-        {% endfor %}
-    </ul>
+    {% for form in criteria_forms %}
+        {% set criteria = form.vars.value %}
+        <h3>{{ criteria.name }}</h3>
+        <div class="row">
+            <div class="col-md-6">
+            {{ form_start(form) }}
+                <table class="table-bordered col-md-6 matrix">
+                    <tr>
+                        <td></td>
+                        {% for variant in variants %}
+                            <td>
+                                {{ variant.name }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                    {% for row in criteria.matrix %}
+                        {% set row_id = loop.index0 %}
+                        <tr>
+                            <td>
+                                {{ variants[row_id].name }}
+                            </td>
+                            {% for value in row %}
+                                <td>
+                                    <input type="text" id="criteria_matrix_{{ row_id }}_{{ loop.index0 }}" name="criteria[matrix][{{ row_id }}][{{ loop.index0 }}]" value="{{ value }}">
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            {{ form_end(form) }}
+            </div>
+        </div>
+    {% endfor %}
 
 {% endblock %}
 

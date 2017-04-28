@@ -45,6 +45,12 @@ class Criteria
     private $task;
 
     /**
+     * @ORM\Column(name="matrix", type="array", nullable=true)
+     * */
+    private $matrix;
+
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -95,6 +101,24 @@ class Criteria
     public function setTask(Task $task)
     {
         $this->task = $task;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMatrix()
+    {
+        return $this->matrix;
+    }
+
+    /**
+     * @param array $matrix
+     * @return $this
+     */
+    public function setMatrix($matrix)
+    {
+        $this->matrix = $matrix;
         return $this;
     }
 

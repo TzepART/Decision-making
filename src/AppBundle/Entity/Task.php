@@ -65,6 +65,11 @@ class Task
         $this->criteria = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return (string) $this->id;
+    }
+
     /**
      * @return mixed
      */

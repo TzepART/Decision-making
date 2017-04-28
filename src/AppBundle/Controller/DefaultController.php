@@ -34,7 +34,7 @@ class DefaultController extends Controller
              * */
             $result = $this->get('app.strategy_manager')->getSolution($request->get('strategy'), $decisionTaskModel);
 
-            return $this->render('@App/Task/solution.html.twig',
+            return $this->render('@App/Stratagy/solution.html.twig',
                 [
                     'result' => $result,
                     'initial_matrix' => $decisionTaskModel->getMatrix()
@@ -42,7 +42,7 @@ class DefaultController extends Controller
             );
         }
 
-        return $this->render('@App/Task/simpleStrategy.html.twig');
+        return $this->render('@App/Stratagy/simpleStrategy.html.twig');
     }
 
     /**
@@ -62,7 +62,7 @@ class DefaultController extends Controller
              * */
             $result = $this->get('app.strategy_manager')->getSolution(BayasLaplasStrategy::STRATEGY_NAME, $decisionTaskModel);
 
-            return $this->render('@App/Task/solution.html.twig',
+            return $this->render('@App/Stratagy/solution.html.twig',
                 [
                     'result' => $result,
                     'initial_matrix' => $decisionTaskModel->getMatrix()
@@ -72,7 +72,7 @@ class DefaultController extends Controller
         }
 
 
-        return $this->render('@App/Task/blStrategy.html.twig');
+        return $this->render('@App/Stratagy/blStrategy.html.twig');
     }
 
     /**

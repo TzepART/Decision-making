@@ -6,6 +6,8 @@ use AppBundle\Entity\Criteria;
 use AppBundle\Entity\Task;
 use AppBundle\Entity\Variant;
 use AppBundle\Form\TaskFormType;
+use AppBundle\Form\Type\CriteriaType;
+use AppBundle\Form\Type\ExtendCriteriaType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -41,7 +43,22 @@ class TaskController extends Controller
      */
     public function viewAction(Task $task)
     {
-        return ['task' => $task];
+        $criteria_forms = [];
+
+        /**
+         * @var Criteria $criterion
+         * */
+        foreach ($task->getCriteria() as $index => $criterion) {
+            $criteria_forms[] = $this->createForm(ExtendCriteriaType::class, $criterion, [
+                'action' => $this->generateUrl('task.save_bo_matrix', ['id' => $criterion->getId()]),
+                'method' => 'POST'
+            ])->createView();
+        }
+
+        return [
+            'task' => $task,
+            'criteria_forms' => $criteria_forms,
+        ];
     }
 
     /**
@@ -62,7 +79,7 @@ class TaskController extends Controller
         $task->getCriteria()->add($criteria);
 
         $form = $this->createForm(TaskFormType::class, $task, [
-            'action' => $this->generateUrl('task.create'),
+            'action' => $this->generateUrl('task.create')
         ]);
 
         return [
@@ -112,28 +129,52 @@ class TaskController extends Controller
     }
 
     /**
+     * @Route("/criteria/edit/{id}", name="task.save_bo_matrix")
+     * @Method("POST")
+     * @param Criteria $criteria
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function addBinaryRelativeAction(Criteria $criteria, Request $request)
+    {
+        $matrix = $request->request->get('criteria')['matrix'];
+
+        $em = $this->getDoctrine()->getManager();
+        $criteria->setMatrix($matrix);
+        $em->persist($criteria);
+        $em->flush();
+
+        return $this->redirectToRoute('task.view', ['id' => $criteria->getTask()->getId()]);
+    }
+
+    /**
      * @param Task $task
      * @param Form $form
      */
     private function saveVariantsAndCriteria(Task $task, Form $form)
     {
         $em = $this->getDoctrine()->getManager();
+        $variants = [];
 
         /**
          * @var Criteria $criteria
          * @var Variant $variant
          * */
-        foreach ($form['criteria']->getData() as $criteria) {
-            $criteria->setTask($task);
-            $em->persist($criteria);
+        foreach ($form['variants']->getData() as $variant) {
+            $variants[] = $variant->setTask($task);
+            $em->persist($variant);
         }
 
-        foreach ($form['variants']->getData() as $variant) {
-            $variant->setTask($task);
-            $em->persist($variant);
+        $emptyMatrix = $this->get('app.matrix_manager')->getEmptyMatrixByVariants($variants);
+
+        foreach ($form['criteria']->getData() as $criteria) {
+            $criteria->setTask($task);
+            $criteria->setMatrix($emptyMatrix);
+            $em->persist($criteria);
         }
 
         $em->flush();
 
     }
+
 }
