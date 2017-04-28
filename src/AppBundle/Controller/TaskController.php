@@ -125,12 +125,18 @@ class TaskController extends Controller
      * @Route("/criteria/edit/{id}", name="task.save_bo_matrix")
      * @Method("POST")
      * @param Criteria $criteria
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function addBinaryRelativeAction(Criteria $criteria)
+    public function addBinaryRelativeAction(Criteria $criteria, Request $request)
     {
-//        dump($criteria);
-//        die();
+        $matrix = $request->request->get('criteria')['matrix'];
+
+        $em = $this->getDoctrine()->getManager();
+        $criteria->setMatrix($matrix);
+        $em->persist($criteria);
+        $em->flush();
+
         return $this->redirectToRoute('task.view', ['id' => $criteria->getTask()->getId()]);
     }
 

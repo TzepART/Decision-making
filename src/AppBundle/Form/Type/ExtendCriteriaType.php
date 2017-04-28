@@ -18,8 +18,7 @@ class ExtendCriteriaType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')
-                ->add('save', SubmitType::class, array(
+        $builder->add('save', SubmitType::class, array(
                 'attr' => array('class' => 'save'),
         ));
     }

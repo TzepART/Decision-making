@@ -44,6 +44,9 @@ class Criteria
      */
     private $task;
 
+    /**
+     * @ORM\Column(name="matrix", type="array", nullable=true)
+     * */
     private $matrix;
 
 
