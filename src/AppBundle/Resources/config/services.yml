@@ -6,3 +6,7 @@ services:
     app.strategy_manager:
         class: AppBundle\Services\StrategyManager
         arguments: ["@service_container"]
+
+    app.matrix_manager:
+        class: AppBundle\Services\StrategyManager
+        arguments: ["@service_container"]

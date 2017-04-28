@@ -165,7 +165,7 @@ class TaskController extends Controller
             $em->persist($variant);
         }
 
-        $emptyMatrix = $this->getEmptyMatrixByVariants($variants);
+        $emptyMatrix = $this->get('app.matrix_manager')->getEmptyMatrixByVariants($variants);
 
         foreach ($form['criteria']->getData() as $criteria) {
             $criteria->setTask($task);
@@ -177,18 +177,4 @@ class TaskController extends Controller
 
     }
 
-    /**
-     * @param $variants
-     * @return array
-     */
-    private function getEmptyMatrixByVariants($variants): array
-    {
-        $emptyMatrix = [];
-        foreach ($variants as $row => $variant_row) {
-            foreach ($variants as $col => $variant_col) {
-                $emptyMatrix[$variant_row->getId()][$variant_col->getId()] = 0;
-            }
-        }
-        return $emptyMatrix;
-    }
 }
