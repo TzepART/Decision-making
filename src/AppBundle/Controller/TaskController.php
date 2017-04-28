@@ -44,30 +44,12 @@ class TaskController extends Controller
     public function viewAction(Task $task)
     {
         $criteria_forms = [];
-        $variants = $task->getVariants();
-
-        $matrixs = [];
-        $emptyMatrix = [];
-        $criteria_names = [];
-
-        foreach ($variants as $row => $variant_row) {
-            foreach ($variants as $col => $variant_col) {
-                $emptyMatrix[$variant_row->getId()][$variant_col->getId()] = 0;
-            }
-        }
 
         /**
          * @var Criteria $criterion
          * */
         foreach ($task->getCriteria() as $index => $criterion) {
-            $criteria_id = $criterion->getId();
-            if(empty($criterion->getMatrix())){
-                $matrixs[$criteria_id] = $emptyMatrix;
-            }else{
-                $matrixs[$criteria_id] = $criterion->getMatrix();
-            }
-            $criteria_names[$criteria_id] = $criterion->getName();
-            $criteria_forms[$criteria_id] = $this->createForm(ExtendCriteriaType::class, $criterion, [
+            $criteria_forms[] = $this->createForm(ExtendCriteriaType::class, $criterion, [
                 'action' => $this->generateUrl('task.save_bo_matrix', ['id' => $criterion->getId()]),
                 'method' => 'POST'
             ])->createView();
@@ -76,9 +58,6 @@ class TaskController extends Controller
         return [
             'task' => $task,
             'criteria_forms' => $criteria_forms,
-            'variants' => $variants,
-            'matrixs' => $matrixs,
-            'criteria_names' => $criteria_names
         ];
     }
 
@@ -175,22 +154,41 @@ class TaskController extends Controller
     private function saveVariantsAndCriteria(Task $task, Form $form)
     {
         $em = $this->getDoctrine()->getManager();
+        $variants = [];
 
         /**
          * @var Criteria $criteria
          * @var Variant $variant
          * */
-        foreach ($form['criteria']->getData() as $criteria) {
-            $criteria->setTask($task);
-            $em->persist($criteria);
+        foreach ($form['variants']->getData() as $variant) {
+            $variants[] = $variant->setTask($task);
+            $em->persist($variant);
         }
 
-        foreach ($form['variants']->getData() as $variant) {
-            $variant->setTask($task);
-            $em->persist($variant);
+        $emptyMatrix = $this->getEmptyMatrixByVariants($variants);
+
+        foreach ($form['criteria']->getData() as $criteria) {
+            $criteria->setTask($task);
+            $criteria->setMatrix($emptyMatrix);
+            $em->persist($criteria);
         }
 
         $em->flush();
 
+    }
+
+    /**
+     * @param $variants
+     * @return array
+     */
+    private function getEmptyMatrixByVariants($variants): array
+    {
+        $emptyMatrix = [];
+        foreach ($variants as $row => $variant_row) {
+            foreach ($variants as $col => $variant_col) {
+                $emptyMatrix[$variant_row->getId()][$variant_col->getId()] = 0;
+            }
+        }
+        return $emptyMatrix;
     }
 }
