@@ -11,6 +11,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
+
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TaskRepository")
@@ -19,6 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 class Task
 {
+    use Timestampable;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -43,12 +47,15 @@ class Task
 
 
     /**
-     * @ORM\Column(name="variants", type="array", nullable=true)
+     * @var Variant[]
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Variant", mappedBy="task", cascade={"persist"})
      */
     private $variants;
 
+
     /**
-     * @ORM\Column(name="criteria", type="array", nullable=true)
+     * @var Criteria[]
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Criteria", mappedBy="task", cascade={"persist"})
      */
     private $criteria;
 
