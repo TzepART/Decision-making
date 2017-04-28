@@ -7,6 +7,7 @@ use AppBundle\Entity\Task;
 use AppBundle\Entity\Variant;
 use AppBundle\Form\TaskFormType;
 use AppBundle\Form\Type\CriteriaType;
+use AppBundle\Form\Type\ExtendCriteriaType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -44,7 +45,7 @@ class TaskController extends Controller
     {
         $criteria_forms = [];
         foreach ($task->getCriteria() as $index => $criterion) {
-            $criteria_forms[] = $this->createForm(CriteriaType::class, $criterion, [
+            $criteria_forms[] = $this->createForm(ExtendCriteriaType::class, $criterion, [
                 'action' => $this->generateUrl('task.save_bo_matrix', ['id' => $criterion->getId()]),
                 'method' => 'POST'
             ])->createView();
@@ -71,7 +72,7 @@ class TaskController extends Controller
         $task->getCriteria()->add($criteria);
 
         $form = $this->createForm(TaskFormType::class, $task, [
-            'action' => $this->generateUrl('task.create'),
+            'action' => $this->generateUrl('task.create')
         ]);
 
         return [
