@@ -44,6 +44,16 @@ class TaskController extends Controller
     public function viewAction(Task $task)
     {
         $criteria_forms = [];
+        $variants = $task->getVariants();
+
+        $matrix = [];
+
+        foreach ($variants as $row => $variant_row) {
+            foreach ($variants as $col => $variant_col) {
+                $matrix[$variant_row->getId()][$variant_col->getId()] = 0;
+            }
+        }
+
         foreach ($task->getCriteria() as $index => $criterion) {
             $criteria_forms[] = $this->createForm(ExtendCriteriaType::class, $criterion, [
                 'action' => $this->generateUrl('task.save_bo_matrix', ['id' => $criterion->getId()]),
@@ -51,7 +61,7 @@ class TaskController extends Controller
             ])->createView();
         }
 
-        return ['task' => $task, 'criteria_forms' => $criteria_forms];
+        return ['task' => $task, 'criteria_forms' => $criteria_forms, 'variants' => $variants, 'matrix' => $matrix];
     }
 
     /**

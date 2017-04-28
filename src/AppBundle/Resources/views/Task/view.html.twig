@@ -15,13 +15,36 @@
     </ul>
 
     {% for form in criteria_forms %}
-        {{ form_start(form) }}
-            <div>
-                {% for i in 0..10 %}
-                    <input type="text" id="criteria_matrix_0_{{ i }}" name="criteria[matrix][0][{{ i }}]" value="{{ i }}">
-                {% endfor %}
+        <h2></h2>
+        <div class="row">
+            <div class="col-md-6">
+            {{ form_start(form) }}
+                <table class="table-bordered col-md-6 matrix">
+                    <tr>
+                        <td></td>
+                        {% for variant in variants %}
+                            <td>
+                                {{ variant.name }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                    {% for row in matrix %}
+                        {% set row_id = loop.index0 %}
+                        <tr>
+                            <td>
+                                {{ variants[row_id].name }}
+                            </td>
+                            {% for value in row %}
+                                <td>
+                                    <input type="text" id="criteria_matrix_{{ row_id }}_{{ loop.index0 }}" name="criteria[matrix][{{ row_id }}][{{ loop.index0 }}]" value="{{ value }}">
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            {{ form_end(form) }}
             </div>
-        {{ form_end(form) }}
+        </div>
     {% endfor %}
 
 {% endblock %}
