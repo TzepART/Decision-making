@@ -3,7 +3,10 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Task;
+use AppBundle\Form\Type\CriteriaType;
+use AppBundle\Form\Type\VariantType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,6 +20,14 @@ class TaskFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name')
+                ->add('variants', CollectionType::class, array(
+                    'entry_type' => VariantType::class,
+                    'allow_add' => true
+                ))
+                ->add('criteria', CollectionType::class, array(
+                    'entry_type' => CriteriaType::class,
+                    'allow_add' => true
+                ))
                 ->add('save', SubmitType::class, array(
                     'attr' => array('class' => 'save'),
                 ));

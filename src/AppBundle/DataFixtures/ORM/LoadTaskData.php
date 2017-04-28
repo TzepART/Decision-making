@@ -8,19 +8,19 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
-
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Entity\Task;
+
 
 class LoadTaskData extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
         $task = new Task();
-        $task->setName('example_task');
-        $task->setUser($this->getReference('example_user'));
+        $task->setName('example_task')
+             ->setUser($this->getReference('example_user'));
 
         $manager->persist($task);
         $manager->flush();

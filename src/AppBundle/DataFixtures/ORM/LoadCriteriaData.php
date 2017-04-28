@@ -1,0 +1,48 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: tzepart
+ * Date: 05.04.17
+ * Time: 21:08
+ */
+
+namespace AppBundle\DataFixtures\ORM;
+
+
+use AppBundle\Entity\Criteria;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+use AppBundle\Entity\Task;
+use Faker\Factory as Faker;
+
+
+class LoadCriteriaData extends AbstractFixture implements OrderedFixtureInterface
+{
+    /**
+     * @param ObjectManager $manager
+     */
+    public function load(ObjectManager $manager)
+    {
+        $faker = Faker::create();
+
+        /** @var Task $task */
+        $task = $this->getReference('example_task');
+
+        foreach ($faker->words($nb = 5, $asText = false) as $index => $word) {
+            $criteria = new Criteria();
+            $criteria->setName($word);
+            $criteria->setTask($task);
+            $manager->persist($criteria);
+            $this->addReference('example_criteria_'.$index, $criteria);
+        }
+
+        $manager->flush();
+
+    }
+
+    public function getOrder()
+    {
+        return 3;
+    }
+}

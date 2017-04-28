@@ -9,7 +9,10 @@
 namespace AppBundle\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
+
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TaskRepository")
@@ -18,6 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 class Task
 {
+    use Timestampable;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -39,6 +44,26 @@ class Task
      * })
      */
     private $user;
+
+
+    /**
+     * @var Variant[]
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Variant", mappedBy="task", cascade={"persist"})
+     */
+    private $variants;
+
+
+    /**
+     * @var Criteria[]
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Criteria", mappedBy="task", cascade={"persist"})
+     */
+    private $criteria;
+
+    public function __construct()
+    {
+        $this->variants = new ArrayCollection();
+        $this->criteria = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -66,10 +91,12 @@ class Task
 
     /**
      * @param mixed $name
+     * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
@@ -92,6 +119,45 @@ class Task
     {
         return $this->user;
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getVariants()
+    {
+        return $this->variants;
+    }
+
+    /**
+     * @param ArrayCollection $variants
+     * @return $this
+     */
+    public function setVariants($variants)
+    {
+        $this->variants = $variants;
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCriteria()
+    {
+        return $this->criteria;
+
+    }
+
+    /**
+     * @param ArrayCollection $criteria
+     * @return $this
+     */
+    public function setCriteria($criteria)
+    {
+        $this->criteria = $criteria;
+        return $this;
+
+    }
+
 
 
 }
