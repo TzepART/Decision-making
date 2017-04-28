@@ -14,9 +14,14 @@
         {% endfor %}
     </ul>
 
-    {% for form in criteria_form %}
+    {% for form in criteria_forms %}
         {{ form_start(form) }}
              {{ form_row(form.name) }}
+            <div>
+                {% for i in 0..10 %}
+                    <input type="text" id="criteria_matrix_0_{{ i }}" name="criteria[matrix][0][{{ i }}]" value="{{ i }}">
+                {% endfor %}
+            </div>
         {{ form_end(form) }}
     {% endfor %}
 

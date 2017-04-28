@@ -128,7 +128,8 @@ class TaskController extends Controller
      */
     public function addBinaryRelativeAction(Criteria $criteria)
     {
-
+//        dump($criteria);
+//        die();
         return $this->redirectToRoute('task.view', ['id' => $criteria->getTask()->getId()]);
     }
 

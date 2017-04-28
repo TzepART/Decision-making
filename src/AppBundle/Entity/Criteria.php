@@ -44,6 +44,9 @@ class Criteria
      */
     private $task;
 
+    private $matrix;
+
+
     /**
      * @return mixed
      */
@@ -95,6 +98,24 @@ class Criteria
     public function setTask(Task $task)
     {
         $this->task = $task;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMatrix()
+    {
+        return $this->matrix;
+    }
+
+    /**
+     * @param array $matrix
+     * @return $this
+     */
+    public function setMatrix($matrix)
+    {
+        $this->matrix = $matrix;
         return $this;
     }
 
