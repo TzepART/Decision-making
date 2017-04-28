@@ -46,22 +46,40 @@ class TaskController extends Controller
         $criteria_forms = [];
         $variants = $task->getVariants();
 
-        $matrix = [];
+        $matrixs = [];
+        $emptyMatrix = [];
+        $criteria_names = [];
 
         foreach ($variants as $row => $variant_row) {
             foreach ($variants as $col => $variant_col) {
-                $matrix[$variant_row->getId()][$variant_col->getId()] = 0;
+                $emptyMatrix[$variant_row->getId()][$variant_col->getId()] = 0;
             }
         }
 
+        /**
+         * @var Criteria $criterion
+         * */
         foreach ($task->getCriteria() as $index => $criterion) {
-            $criteria_forms[] = $this->createForm(ExtendCriteriaType::class, $criterion, [
+            $criteria_id = $criterion->getId();
+            if(empty($criterion->getMatrix())){
+                $matrixs[$criteria_id] = $emptyMatrix;
+            }else{
+                $matrixs[$criteria_id] = $criterion->getMatrix();
+            }
+            $criteria_names[$criteria_id] = $criterion->getName();
+            $criteria_forms[$criteria_id] = $this->createForm(ExtendCriteriaType::class, $criterion, [
                 'action' => $this->generateUrl('task.save_bo_matrix', ['id' => $criterion->getId()]),
                 'method' => 'POST'
             ])->createView();
         }
 
-        return ['task' => $task, 'criteria_forms' => $criteria_forms, 'variants' => $variants, 'matrix' => $matrix];
+        return [
+            'task' => $task,
+            'criteria_forms' => $criteria_forms,
+            'variants' => $variants,
+            'matrixs' => $matrixs,
+            'criteria_names' => $criteria_names
+        ];
     }
 
     /**
