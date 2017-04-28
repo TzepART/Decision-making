@@ -6,6 +6,7 @@ use AppBundle\Entity\Criteria;
 use AppBundle\Entity\Task;
 use AppBundle\Entity\Variant;
 use AppBundle\Form\TaskFormType;
+use AppBundle\Form\Type\CriteriaType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -41,7 +42,15 @@ class TaskController extends Controller
      */
     public function viewAction(Task $task)
     {
-        return ['task' => $task];
+        $form = [];
+        foreach ($task->getCriteria() as $index => $criterion) {
+            $form[] = $this->createForm(CriteriaType::class, $criterion, [
+                'action' => $this->generateUrl('task.save_bo_matrix', ['id' => $criterion->getId()]),
+                'method' => 'POST'
+            ])->createView();
+        }
+
+        return ['task' => $task, 'forms' => $form];
     }
 
     /**
@@ -109,6 +118,18 @@ class TaskController extends Controller
         return [
             'form' => $form->createView()
         ];
+    }
+
+    /**
+     * @Route("/criteria/edit/{id}", name="task.save_bo_matrix")
+     * @Method("POST")
+     * @param Criteria $criteria
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function addBinaryRelativeAction(Criteria $criteria)
+    {
+
+        return $this->redirectToRoute('task.view', ['id' => $criteria->getTask()->getId()]);
     }
 
     /**

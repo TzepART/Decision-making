@@ -14,5 +14,11 @@
         {% endfor %}
     </ul>
 
+    {% for form in forms %}
+        {{ form_start(form) }}
+             {{ form_row(form.name) }}
+        {{ form_end(form) }}
+    {% endfor %}
+
 {% endblock %}
 
