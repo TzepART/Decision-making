@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
@@ -100,11 +101,39 @@ class TaskController extends Controller
             $em->persist($entity);
             $em->flush();
 
+            $this->saveVariantsAndCriteria($entity, $form);
+
             return $this->redirectToRoute('task.view', ['id' => $entity->getId()]);
         }
 
         return [
             'form' => $form->createView()
         ];
+    }
+
+    /**
+     * @param Task $task
+     * @param Form $form
+     */
+    private function saveVariantsAndCriteria(Task $task, Form $form)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /**
+         * @var Criteria $criteria
+         * @var Variant $variant
+         * */
+        foreach ($form['criteria']->getData() as $criteria) {
+            $criteria->setTask($task);
+            $em->persist($criteria);
+        }
+
+        foreach ($form['variants']->getData() as $variant) {
+            $variant->setTask($task);
+            $em->persist($variant);
+        }
+
+        $em->flush();
+
     }
 }
