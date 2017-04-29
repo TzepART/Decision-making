@@ -35,13 +35,37 @@ class MatrixManager
      */
     public function getEmptyMatrixByVariants($variants): array
     {
+
         $emptyMatrix = [];
         foreach ($variants as $row => $variant_row) {
             foreach ($variants as $col => $variant_col) {
                 $emptyMatrix[$variant_row->getId()][$variant_col->getId()] = 0;
             }
         }
+
         return $emptyMatrix;
+    }
+
+    /**
+     * @param array $matrix
+     * @param int $id
+     * @return array
+     */
+    public function getColumnById($matrix, $id): array
+    {
+        $column = array_column($matrix, $id);
+        return $column;
+    }
+
+    /**
+     * @param array $matrix
+     * @param int $id
+     * @return array
+     */
+    public function getRowById($matrix, $id): array
+    {
+        $row = $matrix[$id];
+        return $row;
     }
 
 }
