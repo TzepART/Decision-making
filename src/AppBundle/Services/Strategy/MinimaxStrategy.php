@@ -20,8 +20,6 @@ class MinimaxStrategy extends AbstractStrategy
      * @param DecisionTaskModel $decisionTaskModel
      * @param DecisionSolutionModel $decisionSolutionModel
      * @return DecisionSolutionModel
-     * @internal param array $matrix
-     * @internal param int $coefficient
      */
     function getOptimalSolution(DecisionTaskModel $decisionTaskModel, DecisionSolutionModel $decisionSolutionModel){
 

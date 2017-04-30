@@ -38,6 +38,22 @@ class MatrixModel
     }
 
     /**
+     * Gets a new transposed matrix
+     * @return array
+     */
+    public function transponirating()
+    {
+        $transporateMatrix = [];
+        foreach ($this->matrix as $i => $row) {
+            foreach ($row as $j => $item) {
+                $transporateMatrix[$j][$i] = $item;
+            }
+        }
+        return $transporateMatrix;
+    }
+
+
+    /**
      * @param int $id
      * @return array
      */
