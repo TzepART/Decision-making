@@ -52,6 +52,12 @@ class Criteria
 
 
     /**
+     * @ORM\Column(name="significance", type="float", nullable=true)
+     * */
+    private $significance;
+
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -65,6 +71,24 @@ class Criteria
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSignificance()
+    {
+        return $this->significance;
+    }
+
+    /**
+     * @param mixed $significance
+     * @return $this
+     */
+    public function setSignificance($significance)
+    {
+        $this->significance = $significance;
+        return $this;
     }
 
 
