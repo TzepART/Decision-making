@@ -126,7 +126,7 @@ class Task
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection|Variant[]
      */
     public function getVariants()
     {

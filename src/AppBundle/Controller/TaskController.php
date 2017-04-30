@@ -8,6 +8,7 @@ use AppBundle\Entity\Variant;
 use AppBundle\Form\TaskFormType;
 use AppBundle\Form\Type\CriteriaType;
 use AppBundle\Form\Type\ExtendCriteriaType;
+use AppBundle\Model\MatrixModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -137,7 +138,7 @@ class TaskController extends Controller
      */
     public function addBinaryRelativeAction(Criteria $criteria, Request $request)
     {
-        $matrix = $request->request->get('criteria')['matrix'];
+        $matrix = new MatrixModel($request->request->get('criteria')['matrix']);
 
         $em = $this->getDoctrine()->getManager();
         $criteria->setMatrix($matrix);
@@ -165,7 +166,7 @@ class TaskController extends Controller
             $em->persist($variant);
         }
 
-        $emptyMatrix = $this->get('app.matrix_manager')->getEmptyMatrixByVariants($variants);
+        $emptyMatrix = new MatrixModel($this->get('app.matrix_manager')->getEmptyMatrixByVariants($variants));
 
         foreach ($form['criteria']->getData() as $criteria) {
             $criteria->setTask($task);

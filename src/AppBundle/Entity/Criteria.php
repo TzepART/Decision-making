@@ -8,6 +8,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Model\MatrixModel;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
 
@@ -67,7 +68,6 @@ class Criteria
     }
 
 
-
     /**
      * @return mixed
      */
@@ -105,20 +105,21 @@ class Criteria
     }
 
     /**
-     * @return array
+     * @return MatrixModel
      */
-    public function getMatrix()
+    public function getMatrix(): MatrixModel
     {
-        return $this->matrix;
+        $matrix = new MatrixModel($this->matrix);
+        return $matrix;
     }
 
     /**
-     * @param array $matrix
+     * @param MatrixModel $matrix
      * @return $this
      */
-    public function setMatrix($matrix)
+    public function setMatrix(MatrixModel $matrix)
     {
-        $this->matrix = $matrix;
+        $this->matrix = $matrix->toArray();
         return $this;
     }
 
