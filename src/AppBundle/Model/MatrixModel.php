@@ -41,15 +41,15 @@ class MatrixModel
      * Gets a new transposed matrix
      * @return array
      */
-    public function transponirating()
+    public function getTransposeMatrix()
     {
-        $transporateMatrix = [];
+        $transposeMatrix = [];
         foreach ($this->matrix as $i => $row) {
             foreach ($row as $j => $item) {
-                $transporateMatrix[$j][$i] = $item;
+                $transposeMatrix[$j][$i] = $item;
             }
         }
-        return $transporateMatrix;
+        return $transposeMatrix;
     }
 
 
