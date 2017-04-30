@@ -46,26 +46,4 @@ class MatrixManager
         return $emptyMatrix;
     }
 
-    /**
-     * @param array $matrix
-     * @param int $id
-     * @return array
-     */
-    public function getColumnById($matrix, $id): array
-    {
-        $column = array_column($matrix, $id);
-        return $column;
-    }
-
-    /**
-     * @param array $matrix
-     * @param int $id
-     * @return array
-     */
-    public function getRowById($matrix, $id): array
-    {
-        $row = $matrix[$id];
-        return $row;
-    }
-
 }

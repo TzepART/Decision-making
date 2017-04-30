@@ -2,10 +2,10 @@
 
 namespace Tests\AppBundle\Services;
 
-use AppBundle\Services\MatrixManager;
+use AppBundle\Model\MatrixModel;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
-class MatrixTest extends WebTestCase
+class MatrixModelTest extends WebTestCase
 {
     protected $matrix = [
         [34, 44, 10, 0, 11],
@@ -20,10 +20,10 @@ class MatrixTest extends WebTestCase
     public function testGetColumn()
     {
         /**
-         * @var MatrixManager $matrixManager
+         * @var MatrixModel $matrixModel
          * */
-        $matrixManager = $this->getContainer()->get('app.matrix_manager');
-        $column = $matrixManager->getColumnById($this->matrix,2);
+        $matrixModel = new MatrixModel($this->matrix);
+        $column = $matrixModel->getColumnById(2);
 
         self::assertEquals($column,[10, 22, 34, 33]);
     }
@@ -31,10 +31,10 @@ class MatrixTest extends WebTestCase
     public function testGetRow()
     {
         /**
-         * @var MatrixManager $matrixManager
+         * @var MatrixModel $matrixModel
          * */
-        $matrixManager = $this->getContainer()->get('app.matrix_manager');
-        $row = $matrixManager->getRowById($this->matrix,2);
+        $matrixModel = new MatrixModel($this->matrix);
+        $row = $matrixModel->getRowById(2);
 
         self::assertEquals($row,[44, 88, 34, 56, 76]);
     }

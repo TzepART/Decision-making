@@ -27,7 +27,8 @@ class SevidgStrategy extends AbstractStrategy
 
         $refactorArray = [];
 
-        $tempArray = $this->transponirating($decisionTaskModel->getMatrix());
+        $matrix = $decisionTaskModel->getMatrix();
+        $tempArray = $matrix->getTransposeMatrix();
 
         foreach ($tempArray as $i => $col) {
             $max = max($col);

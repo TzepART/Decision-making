@@ -28,7 +28,7 @@ class HurwitzStrategy extends AbstractStrategy
         $valueArray = [];
         $solutionArray = [];
 
-        foreach ($decisionTaskModel->getMatrix() as $i => $col) {
+        foreach ($decisionTaskModel->getMatrix()->toArray() as $i => $col) {
             $max = max($col);
             $min = min($col);
             $value = $decisionTaskModel->getCoefficient()*$min+(1-$decisionTaskModel->getCoefficient())*$max;

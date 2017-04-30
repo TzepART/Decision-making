@@ -19,7 +19,7 @@
                             </td>
                         {% endfor %}
                     </tr>
-                    {% for row in criteria.matrix %}
+                    {% for row in criteria.matrix.toArray %}
                         {% set row_id = loop.index0 %}
                         <tr>
                             <td>

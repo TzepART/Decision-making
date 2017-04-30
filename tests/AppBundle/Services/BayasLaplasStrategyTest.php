@@ -4,12 +4,13 @@ namespace Tests\AppBundle\Services;
 
 use AppBundle\Model\DecisionSolutionModel;
 use AppBundle\Model\DecisionTaskModel;
+use AppBundle\Model\MatrixModel;
 use AppBundle\Services\Strategy\BayasLaplasStrategy;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 class BayasLaplasStrategyTest extends WebTestCase
 {
-    protected $matrix = [
+    protected $arrayMatrix = [
         [34, 44, 10, 0, 11],
 
         [2, 32, 22, 56, 53],
@@ -19,7 +20,16 @@ class BayasLaplasStrategyTest extends WebTestCase
         [34, 45, 33, 6, 31],
     ];
 
+    protected $matrix;
+
     protected $probability = [0.2, 0.1, 0.25, 0.15, 0.3];
+
+
+    public function setUp()
+    {
+        $this->matrix = new MatrixModel($this->arrayMatrix);
+    }
+
 
     public function testCheckCorrectLogic()
     {
