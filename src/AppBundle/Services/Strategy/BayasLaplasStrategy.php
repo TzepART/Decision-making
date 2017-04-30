@@ -43,9 +43,10 @@ class BayasLaplasStrategy extends AbstractStrategy
         }
 
         $solutionValue = max($valueArray);
+        $solution = $solutionArray[array_search($solutionValue,$valueArray)]+1;
 
         //TODO предусмотреть случай с несколькими решениями
-        $decisionSolutionModel->setSolution($solutionArray[array_search($solutionValue,$valueArray)]+1)
+        $decisionSolutionModel->setSolution($solution)
                               ->setValue($solutionValue)
                               ->setNewMatrix($newMatrix);
 

@@ -49,7 +49,7 @@ class SevidgStrategy extends AbstractStrategy
 
         //TODO предусмотреть случай с несколькими решениями
         $decisionSolutionModel->setSolution($solution)
-            ->setValue($solutionValue);
+                               ->setValue($solutionValue);
 
         return $decisionSolutionModel;
 

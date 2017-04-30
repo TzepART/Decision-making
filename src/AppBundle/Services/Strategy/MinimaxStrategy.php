@@ -33,10 +33,12 @@ class MinimaxStrategy extends AbstractStrategy
         }
 
         $solutionValue = max($minArray);
+        $solution = $solutionArray[array_search($solutionValue,$minArray)]+1;
+
 
         //TODO предусмотреть случай с несколькими решениями
-        $decisionSolutionModel->setSolution($solutionArray[array_search($solutionValue,$minArray)]+1)
-            ->setValue($solutionValue);
+        $decisionSolutionModel->setSolution($solution)
+                              ->setValue($solutionValue);
 
         return $decisionSolutionModel;
 

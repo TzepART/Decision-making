@@ -27,19 +27,21 @@ class HurwitzStrategy extends AbstractStrategy
 
         $valueArray = [];
         $solutionArray = [];
+        $coefficient = $decisionTaskModel->getCoefficient();
 
-        foreach ($decisionTaskModel->getMatrix()->toArray() as $i => $col) {
-            $max = max($col);
-            $min = min($col);
-            $value = $decisionTaskModel->getCoefficient()*$min+(1-$decisionTaskModel->getCoefficient())*$max;
+        foreach ($decisionTaskModel->getMatrix()->toArray() as $i => $row) {
+            $max = max($row);
+            $min = min($row);
+            $value = $coefficient*$min+(1-$coefficient)*$max;
             $valueArray[] = $value;
             $solutionArray[] = $i;
         }
 
         $solutionValue = max($valueArray);
+        $solution = $solutionArray[array_search($solutionValue,$valueArray)]+1;
 
         //TODO предусмотреть случай с несколькими решениями
-        $decisionSolutionModel->setSolution($solutionArray[array_search($solutionValue,$valueArray)]+1)
+        $decisionSolutionModel->setSolution($solution)
                               ->setValue($solutionValue);
 
         return $decisionSolutionModel;
