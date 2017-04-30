@@ -36,7 +36,7 @@ class TaskController extends Controller
     }
 
     /**
-     * @Route("/list/{id}", name="task.view")
+     * @Route("/view/{id}", name="task.view")
      * @Method("GET")
      * @Template()
      * @param Task $task
