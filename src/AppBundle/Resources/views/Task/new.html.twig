@@ -15,7 +15,7 @@
     <h3>Criteria</h3>
     <ul class="criterias" data-prototype="{{ form_widget(form.criteria.vars.prototype)|e('html_attr') }}">
         {% for criter in form.criteria %}
-            <li>{{ form_row(criter.name) }}</li>
+            <li>{{ form_row(criter.name) }} {{ form_row(criter.significance) }}</li>
         {% endfor %}
     </ul>
     {{ form_end(form) }}

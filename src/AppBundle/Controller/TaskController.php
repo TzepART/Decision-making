@@ -77,6 +77,7 @@ class TaskController extends Controller
 
         $criteria = new Criteria();
         $criteria->setName('');
+        $criteria->setSignificance(0.00);
         $task->getCriteria()->add($criteria);
 
         $form = $this->createForm(TaskFormType::class, $task, [
@@ -139,9 +140,11 @@ class TaskController extends Controller
     public function addBinaryRelativeAction(Criteria $criteria, Request $request)
     {
         $matrix = new MatrixModel($request->request->get('criteria')['matrix']);
+        $significance = $request->request->get('criteria')['significance'];
 
         $em = $this->getDoctrine()->getManager();
         $criteria->setMatrix($matrix);
+        $criteria->setSignificance($significance);
         $em->persist($criteria);
         $em->flush();
 
