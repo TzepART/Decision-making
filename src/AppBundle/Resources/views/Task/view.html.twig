@@ -6,10 +6,12 @@
 
     {% for form in criteria_forms %}
         {% set criteria = form.vars.value %}
-        <h3>{{ criteria.name }} - {{ criteria.significance }}</h3>
+        <h3>{{ criteria.name }}</h3>
         <div class="row">
             <div class="col-md-6">
             {{ form_start(form) }}
+                <label for="criteria_significance">Significance:   </label><input type="text" id="criteria_significance" name="criteria[significance]" value="{{ criteria.significance }}">
+                <br>
                 <table class="table-bordered col-md-6 matrix">
                     <tr>
                         <td></td>

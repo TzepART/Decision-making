@@ -140,9 +140,11 @@ class TaskController extends Controller
     public function addBinaryRelativeAction(Criteria $criteria, Request $request)
     {
         $matrix = new MatrixModel($request->request->get('criteria')['matrix']);
+        $significance = $request->request->get('criteria')['significance'];
 
         $em = $this->getDoctrine()->getManager();
         $criteria->setMatrix($matrix);
+        $criteria->setSignificance($significance);
         $em->persist($criteria);
         $em->flush();
 
