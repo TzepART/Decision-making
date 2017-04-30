@@ -46,9 +46,10 @@ class LoadCriteriaData extends AbstractFixture implements OrderedFixtureInterfac
 
         foreach ($faker->words($nb = 5, $asText = false) as $index => $word) {
             $criteria = new Criteria();
-            $criteria->setName($word);
-            $criteria->setTask($task);
-            $criteria->setMatrix($emptyMatrix);
+            $criteria->setName($word)
+                     ->setTask($task)
+                     ->setMatrix($emptyMatrix)
+                     ->setSignificance($faker->randomFloat(2,0,1));
             $manager->persist($criteria);
             $this->addReference('example_criteria_'.$index, $criteria);
         }

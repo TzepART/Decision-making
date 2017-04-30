@@ -77,6 +77,7 @@ class TaskController extends Controller
 
         $criteria = new Criteria();
         $criteria->setName('');
+        $criteria->setSignificance(0.00);
         $task->getCriteria()->add($criteria);
 
         $form = $this->createForm(TaskFormType::class, $task, [
