@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Model\DecisionSolutionModel;
 use AppBundle\Model\DecisionTaskModel;
+use AppBundle\Model\MatrixModel;
 use AppBundle\Services\Strategy\BayasLaplasStrategy;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -50,7 +51,7 @@ class DefaultController extends Controller
      */
     public function blStrategyAction(Request $request)
     {
-        $matrix = $this->createBLMatrix($request);
+        $matrix = new MatrixModel($this->createBLMatrix($request));
         $decisionTaskModel = $this->initialTaskModel($request);
 
         if(!empty($matrix) && !empty($decisionTaskModel->getArProbabilities())){
@@ -71,7 +72,6 @@ class DefaultController extends Controller
 
         }
 
-
         return $this->render('@App/Stratagy/blStrategy.html.twig');
     }
 
@@ -88,7 +88,8 @@ class DefaultController extends Controller
         }
 
         if($request->get('matrix')) {
-            $decisionTaskModel->setMatrix($request->get('matrix'));
+            $matrix = new MatrixModel($request->get('matrix'));
+            $decisionTaskModel->setMatrix($matrix);
         }
 
         if($request->get('coefficient')) {

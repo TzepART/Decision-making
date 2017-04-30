@@ -17,17 +17,17 @@ class DecisionTaskModel
 
 
     /**
-     * @param array $matrix
+     * @param MatrixModel $matrix
      * @return $this
      */
-    public function setMatrix($matrix)
+    public function setMatrix(MatrixModel $matrix)
     {
         $this->matrix = $matrix;
         return $this;
     }
 
     /**
-     * @return array
+     * @return MatrixModel
      */
     public function getMatrix()
     {

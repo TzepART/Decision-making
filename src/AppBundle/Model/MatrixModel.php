@@ -14,9 +14,46 @@ use vermotr\Math\Matrix;
 /**
  * Class MatrixModel
  * @package AppBundle\Model
- * @link https://packagist.org/packages/vermotr/php-matrix
  */
-class MatrixModel extends Matrix
+class MatrixModel
 {
+    /**
+     * @var array
+     */
+    private $matrix;
 
+
+    /**
+     * MatrixModel constructor.
+     * @param array $matrix
+     */
+    public function __construct(array $matrix)
+    {
+        $this->matrix = $matrix;
+    }
+
+    public function toArray()
+    {
+        return $this->matrix;
+    }
+
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function getColumnById($id): array
+    {
+        $column = array_column($this->matrix, $id);
+        return $column;
+    }
+
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function getRowById($id): array
+    {
+        $row = $this->matrix[$id];
+        return $row;
+    }
 }

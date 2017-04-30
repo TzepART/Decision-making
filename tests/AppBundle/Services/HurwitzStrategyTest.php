@@ -4,12 +4,13 @@ namespace Tests\AppBundle\Services;
 
 use AppBundle\Model\DecisionSolutionModel;
 use AppBundle\Model\DecisionTaskModel;
+use AppBundle\Model\MatrixModel;
 use AppBundle\Services\Strategy\HurwitzStrategy;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 class HurwitzStrategyTest extends WebTestCase
 {
-    protected $matrix = [
+    protected $arrayMatrix = [
         [34, 44, 10, 0, 11],
 
         [2, 32, 22, 56, 53],
@@ -19,7 +20,14 @@ class HurwitzStrategyTest extends WebTestCase
         [34, 45, 33, 6, 31],
     ];
 
+    protected $matrix;
+
     protected $coefficient = 0.75;
+
+    public function setUp()
+    {
+        $this->matrix = new MatrixModel($this->arrayMatrix);
+    }
 
     public function testCheckCorrectLogic()
     {
