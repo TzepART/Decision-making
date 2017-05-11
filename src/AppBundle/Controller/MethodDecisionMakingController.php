@@ -60,7 +60,6 @@ class MethodDecisionMakingController extends Controller
 
     /**
      * @Route("/solution/", name="method.get-solution")
-     * @Method("POST")
      * @param Request $request
      * @Template()
      * @return array
