@@ -18,6 +18,11 @@ class MainCriteriaModel extends ExtendMatrixModel
      */
     protected $limitations = [];
 
+    /**
+     * @var string
+     */
+    protected $mainCriteria;
+
 
     /**
      * @return MainCriteriaModel
@@ -42,6 +47,7 @@ class MainCriteriaModel extends ExtendMatrixModel
         $matrixModel->setVectorColumnName($arCriteriaName);
         $matrixModel->setVectorRowName($arVariantName);
         $matrixModel->setLimitations($arLimitations);
+        $matrixModel->setMainCriteria('K1');
 
         return $matrixModel;
     }
@@ -73,5 +79,23 @@ class MainCriteriaModel extends ExtendMatrixModel
     {
         return $this->limitations;
     }
+
+    /**
+     * @return string
+     */
+    public function getMainCriteria(): string
+    {
+        return $this->mainCriteria;
+    }
+
+    /**
+     * @param string $mainCriteria
+     */
+    public function setMainCriteria(string $mainCriteria)
+    {
+        $this->mainCriteria = $mainCriteria;
+    }
+
+
 
 }

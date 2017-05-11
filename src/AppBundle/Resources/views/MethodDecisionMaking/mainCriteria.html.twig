@@ -5,6 +5,10 @@
         <form action="{{ path('method.get-solution') }}" method="post">
             <input type="hidden" name="method" value="{{ method }}">
             <div class="row">
+                <h4>Главный критерий</h4>
+                <p>
+                    Критерий - <input type="text" name="mainCriteria" value="{{ matrixModel.mainCriteria }}">
+                </p>
                 <h4>Ограничения</h4>
                 {% for col_key, limit in matrixModel.limitations %}
                     <p>

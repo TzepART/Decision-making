@@ -32,6 +32,8 @@ class MainCriteriaMethod extends AbstractMethod
     {
         $matrixModel = $this->initalMatrixModel($request);
 
+        dump($matrixModel);
+        die();
 
         return $decisionSolutionModel;
     }
@@ -50,11 +52,13 @@ class MainCriteriaMethod extends AbstractMethod
         $arCriteriaName = $request->get('columnName');
         $arVariantName = $request->get('rowName');
         $limitations = $request->get('limitations');
+        $mainCriteria = $request->get('mainCriteria');
 
         $matrixModel = new MainCriteriaModel($matrix);
         $matrixModel->setVectorColumnName($arCriteriaName);
         $matrixModel->setVectorRowName($arVariantName);
         $matrixModel->setLimitations($limitations);
+        $matrixModel->setMainCriteria($mainCriteria);
 
         return $matrixModel;
     }
