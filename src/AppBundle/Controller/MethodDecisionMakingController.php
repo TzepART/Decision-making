@@ -29,6 +29,8 @@ class MethodDecisionMakingController extends Controller
     {
         $arCriteriaName = ['К1','К2','К3','К4','К5','К6','К7','К8'];
         $arVariantName = ['Смена', 'Час Пик', 'Невское время', 'Вечерний Пб', 'СПб ведомости', 'Деловой Пб', 'Реклама - Шанс'];
+        $arLimitations = [0.010,0.1000,0.038,44000,400,2500000,0.3,10];
+
         $matrix = [
             [0.008,0.100,0.500,44000,500,2800000,0.3,30],
             [0.010,0.0625,0.125,70000,700,3000000,0.8,45],
@@ -40,6 +42,7 @@ class MethodDecisionMakingController extends Controller
         ];
 
         $matrixModel = $this->initalMatrixModel($matrix, $arCriteriaName, $arVariantName);
+        $matrixModel->setLimitations($arLimitations);
 
         return ['matrixModel' => $matrixModel, 'method' => MainCriteriaMethod::METHOD_NAME];
     }
@@ -83,6 +86,11 @@ class MethodDecisionMakingController extends Controller
     public function getSolutionAction(Request $request)
     {
         $matrixModel = $this->initalMatrixModel($request->get('matrix'),$request->get('columnName'),$request->get('rowName'));
+
+        if(!empty($request->get('limitations'))){
+            $matrixModel->setLimitations($request->get('limitations'));
+        }
+
         $method = $request->get('method');
 
         $solution = $this->get('app.method')->getMethod($method)->getOptimalSolution($matrixModel, new DecisionSolutionModel());
