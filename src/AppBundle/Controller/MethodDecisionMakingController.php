@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Model\DecisionSolutionModel;
-use AppBundle\Model\ExtendMatrixModel;
+use AppBundle\Model\MethodModel\MainCriteriaModel;
 use AppBundle\Services\Method\MainCriteriaMethod;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -41,8 +41,11 @@ class MethodDecisionMakingController extends Controller
             [0.001,0.7500,0.038,85000,600,2500000,0.9,11],
         ];
 
-        $matrixModel = $this->initalMatrixModel($matrix, $arCriteriaName, $arVariantName);
+        $matrixModel = new MainCriteriaModel($matrix);
+        $matrixModel->setVectorColumnName($arCriteriaName);
+        $matrixModel->setVectorRowName($arVariantName);
         $matrixModel->setLimitations($arLimitations);
+
 
         return ['matrixModel' => $matrixModel, 'method' => MainCriteriaMethod::METHOD_NAME];
     }
@@ -85,31 +88,9 @@ class MethodDecisionMakingController extends Controller
      */
     public function getSolutionAction(Request $request)
     {
-        $matrixModel = $this->initalMatrixModel($request->get('matrix'),$request->get('columnName'),$request->get('rowName'));
-
-        if(!empty($request->get('limitations'))){
-            $matrixModel->setLimitations($request->get('limitations'));
-        }
-
         $method = $request->get('method');
-
-        $solution = $this->get('app.method')->getMethod($method)->getOptimalSolution($matrixModel, new DecisionSolutionModel());
+        $solution = $this->get('app.method')->getMethod($method)->getOptimalSolution($request, new DecisionSolutionModel());
 
         return ['solution' => $solution];
-    }
-
-    /**
-     * @param array $matrix
-     * @param array $arCriteriaName
-     * @param array $arVariantName
-     * @return ExtendMatrixModel
-     */
-    private function initalMatrixModel($matrix, $arCriteriaName, $arVariantName): ExtendMatrixModel
-    {
-        $matrixModel = new ExtendMatrixModel($matrix);
-        $matrixModel->setVectorColumnName($arCriteriaName);
-        $matrixModel->setVectorRowName($arVariantName);
-
-        return $matrixModel;
     }
 }

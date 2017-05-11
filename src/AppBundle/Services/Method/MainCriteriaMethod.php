@@ -11,6 +11,8 @@ namespace AppBundle\Services\Method;
 
 use AppBundle\Model\DecisionSolutionModel;
 use AppBundle\Model\ExtendMatrixModel;
+use AppBundle\Model\MethodModel\MainCriteriaModel;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class MainCriteriaMethod
@@ -22,14 +24,39 @@ class MainCriteriaMethod extends AbstractMethod
     const METHOD_NAME = 'main-criteria';
 
     /**
-     * @param ExtendMatrixModel $matrixModel
+     * @param Request $request
      * @param DecisionSolutionModel $decisionSolutionModel
      * @return DecisionSolutionModel
      */
-    public function getOptimalSolution(ExtendMatrixModel $matrixModel, DecisionSolutionModel $decisionSolutionModel)
+    public function getOptimalSolution(Request $request, DecisionSolutionModel $decisionSolutionModel)
     {
+        $matrixModel = $this->initalMatrixModel($request);
+
 
         return $decisionSolutionModel;
+    }
+
+    /**
+     * @param Request $request
+     * @return ExtendMatrixModel
+     * @internal param array $matrix
+     * @internal param array $arCriteriaName
+     * @internal param array $arVariantName
+     * @internal param $limitations
+     */
+    protected function initalMatrixModel(Request $request): ExtendMatrixModel
+    {
+        $matrix = $request->get($request->get('matrix'));
+        $arCriteriaName = $request->get($request->get('columnName'));
+        $arVariantName = $request->get($request->get('rowName'));
+        $limitations = $request->get($request->get('limitations'));
+
+        $matrixModel = new MainCriteriaModel($matrix);
+        $matrixModel->setVectorColumnName($arCriteriaName);
+        $matrixModel->setVectorRowName($arVariantName);
+        $matrixModel->setLimitations($limitations);
+
+        return $matrixModel;
     }
 
 }
