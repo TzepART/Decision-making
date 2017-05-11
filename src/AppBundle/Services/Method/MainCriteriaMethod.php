@@ -30,9 +30,26 @@ class MainCriteriaMethod extends AbstractMethod
      */
     public function getOptimalSolution(Request $request, DecisionSolutionModel $decisionSolutionModel)
     {
+        /** @var MainCriteriaModel $matrixModel */
         $matrixModel = $this->initalMatrixModel($request);
 
-        dump($matrixModel);
+        $mainCriteriaColumn = $matrixModel->getColumnById($matrixModel->getMainCriteriaKey());
+
+        /*
+         * Осортируем главный критерий
+         * */
+        asort($mainCriteriaColumn);
+
+        /*
+         * Удалим те, которые не удовлетворяют ограничению
+         * */
+        foreach ($mainCriteriaColumn as $index => $item) {
+            if($item < $matrixModel->getLimitations()[$matrixModel->getMainCriteriaKey()]){
+                unset($mainCriteriaColumn[$index]);
+            }
+        }
+
+        dump($mainCriteriaColumn);
         die();
 
         return $decisionSolutionModel;

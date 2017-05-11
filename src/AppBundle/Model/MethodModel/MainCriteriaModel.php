@@ -96,6 +96,10 @@ class MainCriteriaModel extends ExtendMatrixModel
         $this->mainCriteria = $mainCriteria;
     }
 
+    public function getMainCriteriaKey()
+    {
+        return (int) array_search($this->mainCriteria,$this->vectorColumnName);
+    }
 
 
 }
