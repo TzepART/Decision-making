@@ -20,7 +20,17 @@ class MatrixModel
     /**
      * @var array
      */
-    private $matrix;
+    protected $matrix;
+
+    /**
+     * @var int
+     */
+    protected $count_row = 0;
+
+    /**
+     * @var int
+     */
+    protected $count_col = 0;
 
 
     /**
@@ -30,6 +40,18 @@ class MatrixModel
     public function __construct(array $matrix)
     {
         $this->matrix = $matrix;
+
+        /*
+         * set size matrix
+         * */
+        foreach ($this->matrix as $i => $row) {
+            if($this->count_row == 0){
+                foreach ($row as $j => $item) {
+                    $this->count_col++;
+                }
+            }
+            $this->count_row++;
+        }
     }
 
     public function toArray()
