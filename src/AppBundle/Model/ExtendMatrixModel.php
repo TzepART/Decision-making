@@ -30,7 +30,11 @@ class ExtendMatrixModel extends MatrixModel
      */
     public function setVectorColumnName(array $vectorColumnName)
     {
-        $this->vectorColumnName = $vectorColumnName;
+        if (empty($this->vectorColumnName) && count($vectorColumnName) == $this->getCountColumns()) {
+            foreach ($this->getColumnKeys() as $index => $columnKey) {
+                $vectorColumnName[$columnKey] = $vectorColumnName[$index];
+            }
+        }
     }
 
     /**
@@ -42,36 +46,16 @@ class ExtendMatrixModel extends MatrixModel
     }
 
 
-    public function addVectorColumnName()
-    {
-        if (!empty($this->vectorColumnName) && count($this->vectorColumnName) == $this->count_col) {
-            array_unshift($this->matrix,$this->vectorColumnName);
-        }
-    }
-
-
-    public function removeVectorColumnName()
-    {
-        if (!empty($this->vectorColumnName)) {
-            $firstRow = array_shift($this->matrix);
-
-            /*
-             * if first row != return first row back
-             * */
-            if($firstRow != $this->vectorColumnName){
-                array_unshift($this->matrix,$firstRow);
-            }
-        }
-    }
-
-
-
     /**
      * @param array $vectorRowName
      */
     public function setVectorRowName(array $vectorRowName)
     {
-        $this->vectorRowName = $vectorRowName;
+        if (empty($this->vectorRowName) && count($vectorRowName) == $this->getCountRows()) {
+            foreach ($this->getRowKeys() as $index => $columnKey) {
+                $vectorRowName[$columnKey] = $vectorRowName[$index];
+            }
+        }
     }
 
     /**
@@ -81,23 +65,5 @@ class ExtendMatrixModel extends MatrixModel
     {
         return $this->vectorRowName;
     }
-
-
-    public function addVectorRowName()
-    {
-        if (!empty($this->vectorRowName) && count($this->vectorRowName) == $this->count_row) {
-            array_unshift($this->matrix,$this->vectorRowName);
-        }
-    }
-
-
-    /**
-     * @return array
-     */
-    public function removeVectorRowName(): array
-    {
-        return $this->vectorRowName;
-    }
-
 
 }

@@ -23,14 +23,14 @@ class MatrixModel
     protected $matrix;
 
     /**
-     * @var int
+     * @var array
      */
-    protected $count_row = 0;
+    protected $row_keys = [];
 
     /**
-     * @var int
+     * @var array
      */
-    protected $count_col = 0;
+    protected $column_keys = [];
 
 
     /**
@@ -42,15 +42,15 @@ class MatrixModel
         $this->matrix = $matrix;
 
         /*
-         * set size matrix
+         * set keys
          * */
         foreach ($this->matrix as $i => $row) {
-            if($this->count_row == 0){
+            if(empty($this->row_keys)){
                 foreach ($row as $j => $item) {
-                    $this->count_col++;
+                    $this->column_keys[] = $j;
                 }
             }
-            $this->count_row++;
+            $this->row_keys[] = $i;
         }
     }
 
@@ -93,5 +93,37 @@ class MatrixModel
     {
         $row = $this->matrix[$id];
         return $row;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRowKeys(): array
+    {
+        return $this->row_keys;
+    }
+
+    /**
+     * @return array
+     */
+    public function getColumnKeys(): array
+    {
+        return $this->column_keys;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCountRows(): int
+    {
+        return count($this->row_keys);
+    }
+
+    /**
+     * @return int
+     */
+    public function getCountColumns(): int
+    {
+        return count($this->column_keys);
     }
 }
