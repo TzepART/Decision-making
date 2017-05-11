@@ -2,9 +2,12 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Model\DecisionSolutionModel;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 
 /**
@@ -53,5 +56,19 @@ class MethodDecisionMakingController extends Controller
     public function biasedIdealAction()
     {
         return null;
+    }
+
+    /**
+     * @Route("/solution/", name="method.get-solution")
+     * @Method("POST")
+     * @param Request $request
+     * @Template()
+     * @return array
+     */
+    public function getSolutionAction(Request $request)
+    {
+        $solution = new DecisionSolutionModel();
+
+        return ['solution' => $solution];
     }
 }
