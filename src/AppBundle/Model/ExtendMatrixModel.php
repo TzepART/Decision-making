@@ -30,9 +30,12 @@ class ExtendMatrixModel extends MatrixModel
      */
     public function setVectorColumnName(array $vectorColumnName)
     {
-        if (empty($this->vectorColumnName) && count($vectorColumnName) == $this->getCountColumns()) {
+//        dump($vectorColumnName);
+//        dump($this->getCountColumns());
+//        die();
+        if(empty($this->vectorColumnName) && count($vectorColumnName) == $this->getCountColumns()) {
             foreach ($this->getColumnKeys() as $index => $columnKey) {
-                $vectorColumnName[$columnKey] = $vectorColumnName[$index];
+                $this->vectorColumnName[$columnKey] = $vectorColumnName[$index];
             }
         }
     }
@@ -53,7 +56,7 @@ class ExtendMatrixModel extends MatrixModel
     {
         if (empty($this->vectorRowName) && count($vectorRowName) == $this->getCountRows()) {
             foreach ($this->getRowKeys() as $index => $columnKey) {
-                $vectorRowName[$columnKey] = $vectorRowName[$index];
+                $this->vectorRowName[$columnKey] = $vectorRowName[$index];
             }
         }
     }
