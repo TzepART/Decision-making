@@ -5,6 +5,13 @@
         <form action="{{ path('method.get-solution') }}" method="post">
             <input type="hidden" name="method" value="{{ method }}">
             <div class="row">
+                <h4>Ограничения</h4>
+                {% for col_key, limit in matrixModel.limitations %}
+                    <p>
+                        Критерий {{ matrixModel.vectorColumnName[col_key] }} - <input type="text" name="limitations[{{ col_key }}]" value="{{ limit }}">
+                    </p>
+                {% endfor %}
+
                 {% include '@App/MethodDecisionMaking/matrix.html.twig' with {'matrix': matrixModel} %}
             </div>
             <input type="submit" value="send">
