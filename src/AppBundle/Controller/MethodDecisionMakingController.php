@@ -29,7 +29,7 @@ class MethodDecisionMakingController extends Controller
         $arCriteriaName = ['К1','К2','К3','К4','К5','К6','К7','К8'];
         $arVariantName = ['Смена', 'Час Пик', 'Невское время', 'Вечерний Пб', 'СПб ведомости', 'Деловой Пб', 'Реклама - Шанс'];
         $matrix = [
-            [0.008, 0.100, 0.500, 44000, 500, 2800000, 0.3, 30],
+            [0.008,0.100,0.500,44000,500,2800000,0.3,30],
             [0.010,0.0625,0.125,70000,700,3000000,0.8,45],
             [0.010,0.1111,0.200,47000,500,2550000,0.2,19],
             [0.010,0.1250,0.050,49000,600,2600000,0.6,20],
@@ -38,11 +38,9 @@ class MethodDecisionMakingController extends Controller
             [0.001,0.7500,0.038,85000,600,2500000,0.9,11],
         ];
 
-        $matrixModel = new ExtendMatrixModel($matrix);
-        $matrixModel->setVectorColumnName($arCriteriaName);
-        $matrixModel->setVectorRowName($arVariantName);
+        $matrixModel = $this->initalMatrixModel($matrix, $arCriteriaName, $arVariantName);
 
-        return ['matrixModel' => $matrixModel];
+        return ['matrixModel' => $matrixModel, 'method' => 'main-criteria'];
     }
 
     /**
@@ -84,7 +82,24 @@ class MethodDecisionMakingController extends Controller
     public function getSolutionAction(Request $request)
     {
         $solution = new DecisionSolutionModel();
+        $matrixModel = $this->initalMatrixModel($request->get('matrix'),$request->get('columnName'),$request->get('rowName'));
+        $method = $request->get('method');
 
         return ['solution' => $solution];
+    }
+
+    /**
+     * @param array $matrix
+     * @param array $arCriteriaName
+     * @param array $arVariantName
+     * @return ExtendMatrixModel
+     */
+    private function initalMatrixModel($matrix, $arCriteriaName, $arVariantName): ExtendMatrixModel
+    {
+        $matrixModel = new ExtendMatrixModel($matrix);
+        $matrixModel->setVectorColumnName($arCriteriaName);
+        $matrixModel->setVectorRowName($arVariantName);
+
+        return $matrixModel;
     }
 }

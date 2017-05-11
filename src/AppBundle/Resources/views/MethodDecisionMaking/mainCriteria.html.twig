@@ -3,6 +3,7 @@
 {% block form %}
     <div id="matrix-form">
         <form action="{{ path('method.get-solution') }}" method="post">
+            <input type="hidden" name="method" value="{{ method }}">
             <div class="row">
                 {% include '@App/MethodDecisionMaking/matrix.html.twig' with {'matrix': matrixModel} %}
             </div>
