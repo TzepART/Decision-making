@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Model\DecisionSolutionModel;
 use AppBundle\Model\ExtendMatrixModel;
+use AppBundle\Services\Method\MainCriteriaMethod;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -40,7 +41,7 @@ class MethodDecisionMakingController extends Controller
 
         $matrixModel = $this->initalMatrixModel($matrix, $arCriteriaName, $arVariantName);
 
-        return ['matrixModel' => $matrixModel, 'method' => 'main-criteria'];
+        return ['matrixModel' => $matrixModel, 'method' => MainCriteriaMethod::METHOD_NAME];
     }
 
     /**
@@ -81,9 +82,10 @@ class MethodDecisionMakingController extends Controller
      */
     public function getSolutionAction(Request $request)
     {
-        $solution = new DecisionSolutionModel();
         $matrixModel = $this->initalMatrixModel($request->get('matrix'),$request->get('columnName'),$request->get('rowName'));
         $method = $request->get('method');
+
+        $solution = $this->get('app.method')->getMethod($method)->getOptimalSolution($matrixModel, new DecisionSolutionModel());
 
         return ['solution' => $solution];
     }
