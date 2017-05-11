@@ -46,10 +46,10 @@ class MainCriteriaMethod extends AbstractMethod
      */
     protected function initalMatrixModel(Request $request): ExtendMatrixModel
     {
-        $matrix = $request->get($request->get('matrix'));
-        $arCriteriaName = $request->get($request->get('columnName'));
-        $arVariantName = $request->get($request->get('rowName'));
-        $limitations = $request->get($request->get('limitations'));
+        $matrix = $request->get('matrix');
+        $arCriteriaName = $request->get('columnName');
+        $arVariantName = $request->get('rowName');
+        $limitations = $request->get('limitations');
 
         $matrixModel = new MainCriteriaModel($matrix);
         $matrixModel->setVectorColumnName($arCriteriaName);
