@@ -28,7 +28,6 @@ class MethodDecisionMakingController extends Controller
     public function mainCriteriaAction()
     {
         $matrixModel = MainCriteriaModel::getDefaultModel();
-
         return ['matrixModel' => $matrixModel, 'method' => MainCriteriaMethod::METHOD_NAME];
     }
 

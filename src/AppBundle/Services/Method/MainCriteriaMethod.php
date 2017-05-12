@@ -33,24 +33,14 @@ class MainCriteriaMethod extends AbstractMethod
         /** @var MainCriteriaModel $matrixModel */
         $matrixModel = $this->initalMatrixModel($request);
 
-        $mainCriteriaColumn = $matrixModel->getColumnById($matrixModel->getMainCriteriaKey());
-
         /*
-         * Осортируем главный критерий
+         * Для каждого варианта
+         *   - Массив с информацией по критериям
+         *      - Место по критерию
+         *      - Больше/меньше граничного условия
          * */
-        asort($mainCriteriaColumn);
+        $sortVariantsByCriteria = $this->getSortVariantsByCriteria($matrixModel);
 
-        /*
-         * Удалим те, которые не удовлетворяют ограничению
-         * */
-        foreach ($mainCriteriaColumn as $index => $item) {
-            if($item < $matrixModel->getLimitations()[$matrixModel->getMainCriteriaKey()]){
-                unset($mainCriteriaColumn[$index]);
-            }
-        }
-
-        dump($mainCriteriaColumn);
-        die();
 
         return $decisionSolutionModel;
     }
@@ -78,6 +68,42 @@ class MainCriteriaMethod extends AbstractMethod
         $matrixModel->setMainCriteria($mainCriteria);
 
         return $matrixModel;
+    }
+
+
+    /**
+     * @param MainCriteriaModel $matrixModel
+     * @return array
+     * @internal param array $arCriteria
+     */
+    private function getSortVariantsByCriteria(MainCriteriaModel $matrixModel)
+    {
+        $result = [];
+        $mainCriteriaKey = $matrixModel->getMainCriteriaKey();
+        //Цикл по критериям
+        foreach ($matrixModel->getVectorColumnName() as $index => $arCriterionName) {
+            // Выбираем столбец с id критерия
+            $arCriteria = $matrixModel->getColumnById($index);
+            //Граничное условие
+            $border = $matrixModel->getLimitations()[$index];
+
+            //  Обратно сортируем его с сохранением ключей
+            arsort($arCriteria);
+            //Получаем массив ключей
+            $arKeys =  array_keys($arCriteria);
+
+            //Добавляем этот массив в массив, где ключ - id критерия + добавляем проверку на граничнеое условие
+            foreach ($arKeys as $i => $key) {
+                $result[$index]['sort_variants'][$i]['variant_key'] = $key;
+                $result[$index]['sort_variants'][$i]['value'] = $arCriteria[$key];
+                $result[$index]['sort_variants'][$i]['check_border'] = ($arCriteria[$key] >= $border);
+            }
+            $result[$index]['name'] = $arCriterionName;
+            $result[$index]['main'] = ($index == $mainCriteriaKey);
+        }
+
+        //На выходе набор массивов с остсортированными вариантами
+        return $result;
     }
 
 }
