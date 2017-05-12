@@ -14,22 +14,6 @@ use AppBundle\Model\DecisionTaskModel;
 
 abstract class AbstractStrategy
 {
-
     public abstract function getOptimalSolution(DecisionTaskModel $decisionTaskModel, DecisionSolutionModel $decisionSolutionModel);
-
-    /**
-     * @param $array
-     * @return array
-     */
-    protected function transponirating($array)
-    {
-        $tempArray = [];
-        foreach ($array as $i => $row) {
-            foreach ($row as $j => $item) {
-                $tempArray[$j][$i] = $item;
-            }
-        }
-        return $tempArray;
-    }
 
 }

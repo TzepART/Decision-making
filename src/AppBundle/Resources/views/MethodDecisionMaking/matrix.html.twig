@@ -1,0 +1,29 @@
+<table class="table-bordered col-md-6 matrix">
+    <tr>
+        <td></td>
+        {% for col_key,columnName in matrixModel.VectorColumnName %}
+            <td>
+                <input type="text" name="columnName[{{ col_key }}]" value="{{ columnName }}">
+            </td>
+        {% endfor %}
+    </tr>
+    {% for row_key, row in matrixModel.toArray %}
+        <tr>
+            <td>
+                <input type="text" name="rowName[{{ row_key }}]" value="{{ matrixModel.VectorRowName[row_key] }}">
+            </td>
+            {% for col_key,value in row %}
+                <td><input type="text" name="matrix[{{ row_key }}][{{ col_key }}]" value="{{ value }}"></td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+<style>
+    .matrix td{
+        padding: 10px;
+    }
+    .matrix td input{
+        width: 100px;
+    }
+</style>

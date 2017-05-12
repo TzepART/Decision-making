@@ -1,0 +1,24 @@
+{% extends '@App/MethodDecisionMaking/baseMethod.html.twig' %}
+
+{% block form %}
+    <div id="matrix-form">
+        <form action="{{ path('method.get-solution') }}" method="post">
+            <input type="hidden" name="method" value="{{ method }}">
+            <div class="row">
+                <h4>Главный критерий</h4>
+                <p>
+                    Критерий - <input type="text" name="mainCriteria" value="{{ matrixModel.mainCriteria }}">
+                </p>
+                <h4>Ограничения</h4>
+                {% for col_key, limit in matrixModel.limitations %}
+                    <p>
+                        Критерий {{ matrixModel.vectorColumnName[col_key] }} - <input type="text" name="limitations[{{ col_key }}]" value="{{ limit }}">
+                    </p>
+                {% endfor %}
+
+                {% include '@App/MethodDecisionMaking/matrix.html.twig' with {'matrix': matrixModel} %}
+            </div>
+            <input type="submit" value="send">
+        </form>
+    </div>
+{% endblock %}

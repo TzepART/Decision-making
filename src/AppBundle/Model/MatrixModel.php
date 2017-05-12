@@ -20,7 +20,17 @@ class MatrixModel
     /**
      * @var array
      */
-    private $matrix;
+    protected $matrix;
+
+    /**
+     * @var array
+     */
+    protected $row_keys = [];
+
+    /**
+     * @var array
+     */
+    protected $column_keys = [];
 
 
     /**
@@ -30,6 +40,18 @@ class MatrixModel
     public function __construct(array $matrix)
     {
         $this->matrix = $matrix;
+
+        /*
+         * set keys
+         * */
+        foreach ($this->matrix as $i => $row) {
+            if(empty($this->row_keys)){
+                foreach ($row as $j => $item) {
+                    $this->column_keys[] = $j;
+                }
+            }
+            $this->row_keys[] = $i;
+        }
     }
 
     public function toArray()
@@ -71,5 +93,37 @@ class MatrixModel
     {
         $row = $this->matrix[$id];
         return $row;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRowKeys(): array
+    {
+        return $this->row_keys;
+    }
+
+    /**
+     * @return array
+     */
+    public function getColumnKeys(): array
+    {
+        return $this->column_keys;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCountRows(): int
+    {
+        return count($this->row_keys);
+    }
+
+    /**
+     * @return int
+     */
+    public function getCountColumns(): int
+    {
+        return count($this->column_keys);
     }
 }
