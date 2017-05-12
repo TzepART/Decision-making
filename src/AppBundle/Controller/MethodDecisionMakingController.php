@@ -4,7 +4,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Model\DecisionSolutionModel;
 use AppBundle\Model\MethodModel\MainCriteriaModel;
+use AppBundle\Model\MethodModel\ParetoModel;
 use AppBundle\Services\Method\MainCriteriaMethod;
+use AppBundle\Services\Method\ParetoMethod;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -38,7 +40,8 @@ class MethodDecisionMakingController extends Controller
      */
     public function paretoAction()
     {
-        return null;
+        $matrixModel = ParetoModel::getDefaultModel();
+        return ['matrixModel' => $matrixModel, 'method' => ParetoMethod::METHOD_NAME];
     }
 
     /**
