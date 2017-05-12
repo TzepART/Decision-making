@@ -5,20 +5,25 @@
         <form action="{{ path('method.get-solution') }}" method="post">
             <input type="hidden" name="method" value="{{ method }}">
             <div class="row">
-                <h4>Главный критерий</h4>
-                <p>
-                    Критерий - <input type="text" name="mainCriteria" value="{{ matrixModel.mainCriteria }}">
-                </p>
-                <h4>Ограничения</h4>
-                {% for col_key, limit in matrixModel.limitations %}
+                <div class="col-md-6">
+                    <h4>Ограничения</h4>
+                        <ul>
+                            {% for col_key, limit in matrixModel.limitations %}
+                                    <li>Критерий {{ matrixModel.vectorColumnName[col_key] }} - <input type="text" name="limitations[{{ col_key }}]" value="{{ limit }}"></li>
+                            {% endfor %}
+                        </ul>
+                </div>
+                <div class="col-md-6">
+                    <h4>Главный критерий</h4>
                     <p>
-                        Критерий {{ matrixModel.vectorColumnName[col_key] }} - <input type="text" name="limitations[{{ col_key }}]" value="{{ limit }}">
+                        Критерий - <input type="text" name="mainCriteria" value="{{ matrixModel.mainCriteria }}">
                     </p>
-                {% endfor %}
-
-                {% include '@App/MethodDecisionMaking/matrix.html.twig' with {'matrix': matrixModel} %}
+                </div>
+                <div class="col-md-12">
+                    {% include '@App/MethodDecisionMaking/matrix.html.twig' with {'matrix': matrixModel} %}
+                </div>
             </div>
-            <input type="submit" value="send">
+            <input type="submit" value="Найти решение">
         </form>
     </div>
 {% endblock %}

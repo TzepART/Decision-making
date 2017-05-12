@@ -30,21 +30,18 @@ class CommonCriteriaMethod extends AbstractMethod
      */
     public function getOptimalSolution(Request $request, DecisionSolutionModel $decisionSolutionModel)
     {
+        $select_variant = null;
+
         /** @var CommonCriteriaModel $matrixModel */
         $matrixModel = $this->initalMatrixModel($request);
-        $select_variants = [];
-
-        $arBadVariants = $this->getBadVariantsByCriteria($matrixModel);
-
-        foreach ($matrixModel->getVectorRowName() as $index => $item) {
-            if(!array_search($index,$arBadVariants)){
-                $select_variants[] = $item;
-            }
-        }
+        $variants = $this->getVariantsSortByWeight($matrixModel);
 
 
-        if(!empty($select_variants)){
-            $decisionSolutionModel->setSolution(implode(',',$select_variants));
+        $select_variant = array_shift($variants);
+
+
+        if($select_variant ==! null){
+            $decisionSolutionModel->setSolution($matrixModel->getVectorRowName()[$select_variant]);
         }else{
             $decisionSolutionModel->setError('Нет вариантов, удовлетворяющего, условию метода');
         }
@@ -64,10 +61,12 @@ class CommonCriteriaMethod extends AbstractMethod
         $matrix = $request->get('matrix');
         $arCriteriaName = $request->get('columnName');
         $arVariantName = $request->get('rowName');
+        $arSignificance = $request->get('significances');
 
         $matrixModel = new CommonCriteriaModel($matrix);
         $matrixModel->setVectorColumnName($arCriteriaName);
         $matrixModel->setVectorRowName($arVariantName);
+        $matrixModel->setSignificance($arSignificance);
 
         return $matrixModel;
     }
@@ -77,26 +76,27 @@ class CommonCriteriaMethod extends AbstractMethod
      * @return array
      * @internal param array $arCriteria
      */
-    private function getBadVariantsByCriteria(CommonCriteriaModel $matrixModel)
+    private function getVariantsSortByWeight(CommonCriteriaModel $matrixModel)
     {
         $result = [];
         //Цикл по критериям
-        foreach ($matrixModel->getVectorColumnName() as $index => $arCriterionName) {
-            // Выбираем столбец с id критерия
-            $arCriteria = $matrixModel->getColumnById($index);
+        foreach ($matrixModel->getVectorColumnName() as $indexC => $criterionName) {
+            $significance = $matrixModel->getSignificance()[$indexC];
+            $arColumn = $matrixModel->getColumnById($indexC);
 
-            //  Обратно сортируем его с сохранением ключей
-            arsort($arCriteria);
-            //Получаем наихудший по критерию вариант
-            $variantKeys = array_keys($arCriteria);
-            $badVariant =  array_pop($variantKeys);
-
-            //Добавляем в массив, где ключ - id критерия
-            $result[$index] = $badVariant;
+            foreach ($arColumn as $indexV => $value) {
+                if(isset($result[$indexV])){
+                    $result[$indexV] += $significance*$value;
+                }else{
+                    $result[$indexV] = $significance*$value;
+                }
+            }
         }
 
+        arsort($result);
+
         //На выходе набор наихудших вариантов по критериям
-        return $result;
+        return array_keys($result);
     }
 
 }
