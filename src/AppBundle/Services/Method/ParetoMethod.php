@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Возможны три исхода:
  *  1. Очередной элемент множества не хуже хотя бы одного из элементов текущего множества Парето. Тогда он сразу же
  * и окончательно выбывает из участия в процедуре.
- *  2. Очередной элемент множества не хуже, но и лучше,  ни одного из
+ *  2. Очередной элемент множества не хуже, но и не лучше, ни одного из
  * элементов текущего множества Парето. Тогда он добавляется к списку текущего множества Парето.
  *  3. Очередной элемент множества лучше одного или нескольких элементов текущего множества Парето.
  * Тогда этот элемент множества добавляется к списку текущего множества Парето, а элементы текущего
@@ -45,12 +45,21 @@ class ParetoMethod extends AbstractMethod
     {
         /** @var ParetoModel $matrixModel */
         $matrixModel = $this->initalMatrixModel($request);
-        $select_variant = null;
+        $select_variants = [];
 
-        if($select_variant ==! null){
-            $decisionSolutionModel->setSolution($matrixModel->getVectorRowName()[$select_variant]);
+        $arBadVariants = $this->getBadVariantsByCriteria($matrixModel);
+
+        foreach ($matrixModel->getVectorRowName() as $index => $item) {
+            if(!array_search($index,$arBadVariants)){
+                $select_variants[] = $item;
+            }
+        }
+
+
+        if(!empty($select_variants)){
+            $decisionSolutionModel->setSolution(implode(',',$select_variants));
         }else{
-            $decisionSolutionModel->setError('Нет варианта, удовлетворяющего, условию метода');
+            $decisionSolutionModel->setError('Нет вариантов, удовлетворяющего, условию метода');
         }
 
         return $decisionSolutionModel;
@@ -74,6 +83,33 @@ class ParetoMethod extends AbstractMethod
         $matrixModel->setVectorRowName($arVariantName);
 
         return $matrixModel;
+    }
+
+    /**
+     * @param ParetoModel $matrixModel
+     * @return array
+     * @internal param array $arCriteria
+     */
+    private function getBadVariantsByCriteria(ParetoModel $matrixModel)
+    {
+        $result = [];
+        //Цикл по критериям
+        foreach ($matrixModel->getVectorColumnName() as $index => $arCriterionName) {
+            // Выбираем столбец с id критерия
+            $arCriteria = $matrixModel->getColumnById($index);
+
+            //  Обратно сортируем его с сохранением ключей
+            arsort($arCriteria);
+            //Получаем наихудший по критерию вариант
+            $variantKeys = array_keys($arCriteria);
+            $badVariant =  array_pop($variantKeys);
+
+            //Добавляем в массив, где ключ - id критерия
+            $result[$index] = $badVariant;
+        }
+
+        //На выходе набор наихудших вариантов по критериям
+        return $result;
     }
 
 }
