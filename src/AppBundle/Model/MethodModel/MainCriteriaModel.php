@@ -29,7 +29,7 @@ class MainCriteriaModel extends ExtendMatrixModel
      */
     public static function getDefaultModel()
     {
-        $arCriteriaName = ['К1','К2','К3','К4','К5','К6','К7','К8'];
+        $arCriteriaName = ['K1','K2','K3','K4','K5','K6','K7','K8'];
         $arVariantName = ['Смена', 'Час Пик', 'Невское время', 'Вечерний Пб', 'СПб ведомости', 'Деловой Пб', 'Реклама - Шанс'];
         $arLimitations = [0.010,0.1000,0.038,44000,400,2500000,0.3,10];
 

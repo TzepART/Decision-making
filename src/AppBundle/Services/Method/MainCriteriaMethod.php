@@ -32,6 +32,7 @@ class MainCriteriaMethod extends AbstractMethod
     {
         /** @var MainCriteriaModel $matrixModel */
         $matrixModel = $this->initalMatrixModel($request);
+        $select_variant = null;
 
         /*
          * Для каждого варианта
@@ -41,6 +42,40 @@ class MainCriteriaMethod extends AbstractMethod
          * */
         $sortVariantsByCriteria = $this->getSortVariantsByCriteria($matrixModel);
 
+        /*
+         * Выберем главный критерий, и удалим его из общего массива
+         * */
+        $mainCriteria = $sortVariantsByCriteria[$matrixModel->getMainCriteriaKey()];
+        unset($sortVariantsByCriteria[$matrixModel->getMainCriteriaKey()]);
+
+        /*
+         * Пробежимся по массиву с вариантами для главного критерия
+         * */
+        foreach ($mainCriteria['sort_variants'] as $index => $sort_variant) {
+            //если проходят граничные условия для главного критерия
+            if($sort_variant['check_border']){
+                $check_border = true;
+                $variant_key = $sort_variant['variant_key'];
+                //проверим на граничные условия по остальным критериям и если он прошел по остальным, значит это победитель!
+                foreach ($sortVariantsByCriteria as $sortVariantsByCriterion) {
+                    foreach ($sortVariantsByCriterion["sort_variants"] as $item) {
+                        if($item["variant_key"] == $variant_key && !$item["check_border"]){
+                            $check_border = false;
+                            break;
+                        }
+                    }
+                }
+                if($check_border){
+                    $select_variant = $variant_key;
+                    break;
+                }
+            }
+        }
+        if($select_variant ==! null){
+            $decisionSolutionModel->setSolution($matrixModel->getVectorRowName()[$select_variant]);
+        }else{
+            $decisionSolutionModel->setError('Нет варианта, удовлетворяющего, условию метода');
+        }
 
         return $decisionSolutionModel;
     }
