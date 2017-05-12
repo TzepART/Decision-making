@@ -134,7 +134,11 @@ class BiasedIdealMethod extends AbstractMethod
         for($p = 1; $p <= 5; $p++){
             $arTemp = [];
             foreach ($updateMatrix as $varId => $row) {
-                $arTemp[$varId] = array_sum($row)**$p;
+                $newRow = [];
+                foreach ($row as $index => $val) {
+                    $newRow[] = $val**$p;
+                }
+                $arTemp[$matrixModel->getVectorRowName()[$varId]] = array_sum($newRow)**(1/$p);
             }
             arsort($arTemp);
             $result[$p] = $arTemp;
