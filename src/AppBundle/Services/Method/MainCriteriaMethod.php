@@ -71,8 +71,11 @@ class MainCriteriaMethod extends AbstractMethod
                 }
             }
         }
-
-        $decisionSolutionModel->setSolution($matrixModel->getVectorRowName()[$select_variant]);
+        if($select_variant ==! null){
+            $decisionSolutionModel->setSolution($matrixModel->getVectorRowName()[$select_variant]);
+        }else{
+            $decisionSolutionModel->setSolution(null);
+        }
 
         return $decisionSolutionModel;
     }
