@@ -20,6 +20,10 @@ class FactoryMethod
             case ParetoMethod::METHOD_NAME:
                 $method = new ParetoMethod();
                 break;
+            case CommonCriteriaMethod::METHOD_NAME:
+                $method = new CommonCriteriaMethod();
+                break;
+
             default:
                 $method = null;
         }
