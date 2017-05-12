@@ -11,11 +11,25 @@ namespace AppBundle\Model;
 
 class DecisionSolutionModel
 {
+    /**
+     * @var string
+     */
     protected  $solution;
 
+    /**
+     * @var string|int
+     */
     protected  $value;
 
+    /**
+     * @var array
+     */
     protected  $new_matrix;
+
+    /**
+     * @var string
+     */
+    protected $error;
 
     /**
      * @return mixed
@@ -72,5 +86,23 @@ class DecisionSolutionModel
         return $this;
 
     }
+
+    /**
+     * @return string
+     */
+    public function getError(): string
+    {
+        return $this->error;
+    }
+
+    /**
+     * @param string $error
+     */
+    public function setError(string $error)
+    {
+        $this->error = $error;
+    }
+
+
 
 }

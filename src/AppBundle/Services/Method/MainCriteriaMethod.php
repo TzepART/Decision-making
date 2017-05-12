@@ -75,6 +75,7 @@ class MainCriteriaMethod extends AbstractMethod
             $decisionSolutionModel->setSolution($matrixModel->getVectorRowName()[$select_variant]);
         }else{
             $decisionSolutionModel->setSolution(null);
+            $decisionSolutionModel->setError('Нет варианта, удовлетворяющего, условию метода');
         }
 
         return $decisionSolutionModel;
