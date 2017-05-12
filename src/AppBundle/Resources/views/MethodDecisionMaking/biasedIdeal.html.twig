@@ -1,2 +1,23 @@
 {% extends '@App/MethodDecisionMaking/baseMethod.html.twig' %}
 
+{% block form %}
+    <div id="matrix-form">
+        <form action="{{ path('method.get-solution') }}" method="post">
+            <input type="hidden" name="method" value="{{ method }}">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Значимость</h4>
+                    <ul>
+                        {% for col_key, significance in matrixModel.significance %}
+                            <li>Критерий {{ matrixModel.vectorColumnName[col_key] }} - <input type="text" name="significances[{{ col_key }}]" value="{{ significance }}"></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-12">
+                    {% include '@App/MethodDecisionMaking/matrix.html.twig' with {'matrix': matrixModel} %}
+                </div>
+            </div>
+            <input type="submit" value="Найти решение">
+        </form>
+    </div>
+{% endblock %}

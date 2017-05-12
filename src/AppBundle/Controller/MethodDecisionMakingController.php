@@ -3,9 +3,11 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Model\DecisionSolutionModel;
+use AppBundle\Model\MethodModel\BiasedIdealModel;
 use AppBundle\Model\MethodModel\CommonCriteriaModel;
 use AppBundle\Model\MethodModel\MainCriteriaModel;
 use AppBundle\Model\MethodModel\ParetoModel;
+use AppBundle\Services\Method\BiasedIdealMethod;
 use AppBundle\Services\Method\CommonCriteriaMethod;
 use AppBundle\Services\Method\MainCriteriaMethod;
 use AppBundle\Services\Method\ParetoMethod;
@@ -64,7 +66,8 @@ class MethodDecisionMakingController extends Controller
      */
     public function biasedIdealAction()
     {
-        return null;
+        $matrixModel = BiasedIdealModel::getDefaultModel();
+        return ['matrixModel' => $matrixModel, 'method' => BiasedIdealMethod::METHOD_NAME];
     }
 
     /**

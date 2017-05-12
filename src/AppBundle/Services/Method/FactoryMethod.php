@@ -23,6 +23,9 @@ class FactoryMethod
             case CommonCriteriaMethod::METHOD_NAME:
                 $method = new CommonCriteriaMethod();
                 break;
+            case BiasedIdealMethod::METHOD_NAME:
+                $method = new BiasedIdealMethod();
+                break;
 
             default:
                 $method = null;
