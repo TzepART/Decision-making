@@ -2,7 +2,7 @@
 
 {% block body %}
     {% if solution.solution %}
-        <p>Решение - {{ solution.solution }}</p>
+        <p>Решение: {{ solution.solution|raw }}</p>
     {% elseif solution.error %}
         <p>Ошибка - {{ solution.error }}</p>
     {% endif %}

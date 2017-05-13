@@ -30,18 +30,24 @@ class BiasedIdealMethod extends AbstractMethod
      */
     public function getOptimalSolution(Request $request, DecisionSolutionModel $decisionSolutionModel)
     {
-        $select_variant = null;
+        $solution = '';
 
         /** @var BiasedIdealModel $matrixModel */
         $matrixModel = $this->initalMatrixModel($request);
-        $variants = $this->getVariantsSortByWeight($matrixModel);
+        $variants = $this->getSortVariants($matrixModel);
+
+        if(!empty($variants)){
+            $solution = '</br>';
+            foreach ($variants as $p => $arVariants) {
+                $keys = array_keys($arVariants);
+                $solution.= 'При P = '.$p.' - '.implode(' > ',$keys).'</br>';
+            }
+        }
 
 
-        $select_variant = array_shift($variants);
 
-
-        if($select_variant ==! null){
-            $decisionSolutionModel->setSolution($matrixModel->getVectorRowName()[$select_variant]);
+        if($solution ==! ''){
+            $decisionSolutionModel->setSolution($solution);
         }else{
             $decisionSolutionModel->setError('Нет вариантов, удовлетворяющего, условию метода');
         }
@@ -76,7 +82,7 @@ class BiasedIdealMethod extends AbstractMethod
      * @return array
      * @internal param array $arCriteria
      */
-    private function getVariantsSortByWeight(BiasedIdealModel $matrixModel)
+    private function getSortVariants(BiasedIdealModel $matrixModel)
     {
         $result = [];
         /*
@@ -107,13 +113,21 @@ class BiasedIdealMethod extends AbstractMethod
             $arColumn = $matrixModel->getColumnById($indexC);
 
             //Сортируем
-            arsort($arColumn);
+            //TODO добавить флаг на то, в каком направлении смотреть критерий
+            if($indexC == 1){
+                arsort($arColumn);
+            }else{
+                asort($arColumn);
+            }
 
             //IdealPositive добалем [indexC] = max $arColumn
             //IdealNegative [indexC] = min $arColumn
             $idealPositive[$indexC] = array_shift($arColumn);
             $idealNegative[$indexC] = array_pop($arColumn);
         }
+
+        dump($idealPositive);
+        dump($idealNegative);
 
         $updateMatrix = [];
         //Делаем обновленную матрицу, где значения ячеек
@@ -143,9 +157,6 @@ class BiasedIdealMethod extends AbstractMethod
             arsort($arTemp);
             $result[$p] = $arTemp;
         }
-
-        dump($result);
-        die();
 
         return $result;
     }
