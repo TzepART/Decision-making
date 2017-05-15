@@ -9,7 +9,7 @@
 namespace AppBundle\Services\Method;
 
 
-use AppBundle\Model\DecisionSolutionModel;
+use AppBundle\Model\MethodModel\DecisionSolutionModel;
 use AppBundle\Model\ExtendMatrixModel;
 use AppBundle\Model\MethodModel\MainCriteriaModel;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,6 +71,9 @@ class MainCriteriaMethod extends AbstractMethod
                 }
             }
         }
+
+        $decisionSolutionModel->setMatrixModel($matrixModel);
+
         if($select_variant ==! null){
             $decisionSolutionModel->setSolution($matrixModel->getVectorRowName()[$select_variant]);
         }else{

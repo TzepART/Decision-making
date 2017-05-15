@@ -8,7 +8,7 @@
 
 namespace AppBundle\Services\Method;
 
-use AppBundle\Model\DecisionSolutionModel;
+use AppBundle\Model\MethodModel\DecisionSolutionModel;
 use AppBundle\Model\ExtendMatrixModel;
 use AppBundle\Model\MethodModel\CommonCriteriaModel;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,6 +38,8 @@ class CommonCriteriaMethod extends AbstractMethod
 
 
         $select_variant = array_shift($variants);
+
+        $decisionSolutionModel->setMatrixModel($matrixModel);
 
 
         if($select_variant ==! null){

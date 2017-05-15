@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Model\DecisionSolutionModel;
+use AppBundle\Model\MethodModel\DecisionSolutionModel;
 use AppBundle\Model\MethodModel\BiasedIdealModel;
 use AppBundle\Model\MethodModel\CommonCriteriaModel;
 use AppBundle\Model\MethodModel\MainCriteriaModel;
