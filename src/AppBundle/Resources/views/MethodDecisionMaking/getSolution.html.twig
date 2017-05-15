@@ -1,6 +1,13 @@
 {% extends '@App/MethodDecisionMaking/baseMethod.html.twig' %}
 
 {% block body %}
+
+    <a href="{{ path('homepage') }}">Главная</a>
+
+    {% block form %}
+        {% include '@App/MethodDecisionMaking/matrix_form.html.twig' with {'matrixModel': solution.matrixModel, 'method': method} %}
+    {% endblock %}
+
     {% if solution.solution %}
         <p>Решение: {{ solution.solution|raw }}</p>
     {% elseif solution.error %}

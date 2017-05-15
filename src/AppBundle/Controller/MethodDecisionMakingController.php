@@ -28,46 +28,45 @@ class MethodDecisionMakingController extends Controller
     /**
      * @Route("/main-criteria/", name="method.main-criteria")
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Template()
      * @return array
      */
     public function mainCriteriaAction()
     {
         $matrixModel = MainCriteriaModel::getDefaultModel();
-        return ['matrixModel' => $matrixModel, 'method' => MainCriteriaMethod::METHOD_NAME];
+        return $this->render('@App/MethodDecisionMaking/baseMethod.html.twig',['matrixModel' => $matrixModel, 'method' => MainCriteriaMethod::METHOD_NAME]);
+
     }
 
     /**
      * @Route("/pareto/", name="method.pareto")
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Template()
      */
     public function paretoAction()
     {
         $matrixModel = ParetoModel::getDefaultModel();
-        return ['matrixModel' => $matrixModel, 'method' => ParetoMethod::METHOD_NAME];
+        return $this->render('@App/MethodDecisionMaking/baseMethod.html.twig',['matrixModel' => $matrixModel, 'method' => ParetoMethod::METHOD_NAME]);
+
     }
 
     /**
      * @Route("/common-criteria/", name="method.common-criteria")
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Template()
      */
     public function commonCriteriaAction()
     {
         $matrixModel = CommonCriteriaModel::getDefaultModel();
-        return ['matrixModel' => $matrixModel, 'method' => CommonCriteriaMethod::METHOD_NAME];
+        return $this->render('@App/MethodDecisionMaking/baseMethod.html.twig',['matrixModel' => $matrixModel, 'method' => CommonCriteriaMethod::METHOD_NAME]);
+
     }
 
     /**
      * @Route("/biased-ideal/", name="method.biased-ideal")
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Template()
      */
     public function biasedIdealAction()
     {
         $matrixModel = BiasedIdealModel::getDefaultModel();
-        return ['matrixModel' => $matrixModel, 'method' => BiasedIdealMethod::METHOD_NAME];
+        return $this->render('@App/MethodDecisionMaking/baseMethod.html.twig',['matrixModel' => $matrixModel, 'method' => BiasedIdealMethod::METHOD_NAME]);
     }
 
     /**
@@ -80,7 +79,9 @@ class MethodDecisionMakingController extends Controller
     {
         $method = $request->get('method');
         $solution = $this->get('app.method')->getMethod($method)->getOptimalSolution($request, new DecisionSolutionModel());
+//        dump($solution);
+//        die();
 
-        return ['solution' => $solution];
+        return ['solution' => $solution, 'method' => $method];
     }
 }
