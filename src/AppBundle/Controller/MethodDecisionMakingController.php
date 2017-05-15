@@ -79,8 +79,6 @@ class MethodDecisionMakingController extends Controller
     {
         $method = $request->get('method');
         $solution = $this->get('app.method')->getMethod($method)->getOptimalSolution($request, new DecisionSolutionModel());
-//        dump($solution);
-//        die();
 
         return ['solution' => $solution, 'method' => $method];
     }
