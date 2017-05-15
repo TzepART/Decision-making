@@ -25,6 +25,24 @@
                 </div>
             {% endif %}
 
+            {% if matrixModel.maxType is defined %}
+                <div class="col-md-6">
+                    <h4>Максимальный исход - положительный(если не отмечен, то минимальный)</h4>
+                    <ul>
+                        {% for col_key, maxType in matrixModel.maxType %}
+                            <li>Критерий {{ matrixModel.vectorColumnName[col_key] }} -
+                                <input type="checkbox" name="maxType[{{ col_key }}]"
+                                        {% if (maxType == 1) %}
+                                            checked
+                                        {% endif %}
+                                       value="{{ true }}"
+                                >
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
             {% if matrixModel.mainCriteria is defined %}
                 <div class="col-md-6">
                     <h4>Главный критерий</h4>

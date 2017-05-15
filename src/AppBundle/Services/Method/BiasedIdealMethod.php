@@ -64,15 +64,27 @@ class BiasedIdealMethod extends AbstractMethod
      */
     protected function initalMatrixModel(Request $request): ExtendMatrixModel
     {
+        $maxType = array();
+
         $matrix = $request->get('matrix');
         $arCriteriaName = $request->get('columnName');
         $arVariantName = $request->get('rowName');
         $arSignificance = $request->get('significances');
+        $tempMaxType = $request->get('maxType');
+
+        foreach ($arCriteriaName as $indexC => $criteriaName) {
+            if(isset($tempMaxType[$indexC])){
+                $maxType[$indexC] = true;
+            }else{
+                $maxType[$indexC] = false;
+            }
+        }
 
         $matrixModel = new BiasedIdealModel($matrix);
         $matrixModel->setVectorColumnName($arCriteriaName);
         $matrixModel->setVectorRowName($arVariantName);
         $matrixModel->setSignificance($arSignificance);
+        $matrixModel->setMaxType($maxType);
 
         return $matrixModel;
     }
@@ -112,9 +124,9 @@ class BiasedIdealMethod extends AbstractMethod
             //Выбираем столбцы по id критерия
             $arColumn = $matrixModel->getColumnById($indexC);
 
-            //Сортируем
-            //TODO добавить флаг на то, в каком направлении смотреть критерий
-            if($indexC == 1){
+            // Сортируем в зависимоти от того, что считается благоприятным исходом
+            // максимальное или минимальное значение
+            if($matrixModel->getMaxType()[$indexC]){
                 arsort($arColumn);
             }else{
                 asort($arColumn);
