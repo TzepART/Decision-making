@@ -8,7 +8,7 @@
 
 namespace AppBundle\Services\Method;
 
-use AppBundle\Model\DecisionSolutionModel;
+use AppBundle\Model\MethodModel\DecisionSolutionModel;
 use AppBundle\Model\ExtendMatrixModel;
 use AppBundle\Model\MethodModel\ParetoModel;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,6 +55,7 @@ class ParetoMethod extends AbstractMethod
             }
         }
 
+        $decisionSolutionModel->setMatrixModel($matrixModel);
 
         if(!empty($select_variants)){
             $decisionSolutionModel->setSolution(implode(',',$select_variants));

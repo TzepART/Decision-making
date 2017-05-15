@@ -1,0 +1,71 @@
+<div id="matrix-form">
+    <form action="{{ path('method.get-solution') }}" method="post">
+        <input type="hidden" name="method" value="{{ method }}">
+        <div class="row">
+
+            {% if matrixModel.significance is defined %}
+                <div class="col-md-6">
+                    <h4>Значимость</h4>
+                    <ul>
+                        {% for col_key, significance in matrixModel.significance %}
+                            <li>Критерий {{ matrixModel.vectorColumnName[col_key] }} - <input type="text" name="significances[{{ col_key }}]" value="{{ significance }}"></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if matrixModel.limitations is defined %}
+                <div class="col-md-6">
+                    <h4>Ограничения</h4>
+                    <ul>
+                        {% for col_key, limit in matrixModel.limitations %}
+                            <li>Критерий {{ matrixModel.vectorColumnName[col_key] }} - <input type="text" name="limitations[{{ col_key }}]" value="{{ limit }}"></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if matrixModel.mainCriteria is defined %}
+                <div class="col-md-6">
+                    <h4>Главный критерий</h4>
+                    <p>
+                        Критерий - <input type="text" name="mainCriteria" value="{{ matrixModel.mainCriteria }}">
+                    </p>
+                </div>
+            {% endif %}
+
+            <div class="col-md-12">
+                <table class="table-bordered col-md-6 matrix">
+                    <tr>
+                        <td></td>
+                        {% for col_key,columnName in matrixModel.VectorColumnName %}
+                            <td>
+                                <input type="text" name="columnName[{{ col_key }}]" value="{{ columnName }}">
+                            </td>
+                        {% endfor %}
+                    </tr>
+                    {% for row_key, row in matrixModel.toArray %}
+                        <tr>
+                            <td>
+                                <input type="text" name="rowName[{{ row_key }}]" value="{{ matrixModel.VectorRowName[row_key] }}">
+                            </td>
+                            {% for col_key,value in row %}
+                                <td><input type="text" name="matrix[{{ row_key }}][{{ col_key }}]" value="{{ value }}"></td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <input type="submit" value="Найти решение">
+    </form>
+</div>
+
+<style>
+    .matrix td{
+        padding: 10px;
+    }
+    .matrix td input{
+        width: 100px;
+    }
+</style>

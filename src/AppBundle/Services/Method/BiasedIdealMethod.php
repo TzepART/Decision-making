@@ -8,7 +8,7 @@
 
 namespace AppBundle\Services\Method;
 
-use AppBundle\Model\DecisionSolutionModel;
+use AppBundle\Model\MethodModel\DecisionSolutionModel;
 use AppBundle\Model\ExtendMatrixModel;
 use AppBundle\Model\MethodModel\BiasedIdealModel;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +44,7 @@ class BiasedIdealMethod extends AbstractMethod
             }
         }
 
-
+        $decisionSolutionModel->setMatrixModel($matrixModel);
 
         if($solution ==! ''){
             $decisionSolutionModel->setSolution($solution);

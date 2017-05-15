@@ -9,7 +9,7 @@
 namespace AppBundle\Services\Method;
 
 
-use AppBundle\Model\DecisionSolutionModel;
+use AppBundle\Model\MethodModel\DecisionSolutionModel;
 use AppBundle\Model\ExtendMatrixModel;
 use Symfony\Component\HttpFoundation\Request;
 
