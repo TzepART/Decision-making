@@ -23,6 +23,11 @@ class CommonCriteriaMethod extends AbstractMethod
 {
     const METHOD_NAME = 'common-criteria';
 
+    /*
+     * Варианты имеющие максимальные результаты по критериям
+     * */
+    protected $winVariants = [];
+
     /**
      * @param Request $request
      * @param DecisionSolutionModel $decisionSolutionModel
@@ -41,9 +46,16 @@ class CommonCriteriaMethod extends AbstractMethod
 
         $decisionSolutionModel->setMatrixModel($matrixModel);
 
+        $solution = '</br> Варианты имеющие максимальные результаты по критериям:</br>';
+
+        foreach ($this->winVariants as $indexC => $winVariants) {
+            $solution .= $matrixModel->getVectorColumnName()[$indexC].' - '.implode(', ',$winVariants).'</br>';
+        }
+
+        $solution .= '</br>Наиболее подходящий - '.$matrixModel->getVectorRowName()[$select_variant];
 
         if($select_variant ==! null){
-            $decisionSolutionModel->setSolution($matrixModel->getVectorRowName()[$select_variant]);
+            $decisionSolutionModel->setSolution($solution);
         }else{
             $decisionSolutionModel->setError('Нет вариантов, удовлетворяющего, условию метода');
         }
@@ -93,6 +105,19 @@ class CommonCriteriaMethod extends AbstractMethod
                     $result[$indexV] = $significance*$value;
                 }
             }
+
+            //Получим отсортированный список значений по критерию
+            arsort($arColumn);
+            //первое - соответсвует максимальному значению по критерию
+            $maxValue = current($arColumn);
+            foreach ($arColumn as $indexV => $item) {
+                if($item == $maxValue){
+                    $this->winVariants[$indexC][]=$matrixModel->getVectorRowName()[$indexV];
+                }else{
+                    break;
+                }
+            }
+
         }
 
         arsort($result);
