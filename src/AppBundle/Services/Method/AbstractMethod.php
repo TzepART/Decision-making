@@ -10,13 +10,10 @@ namespace AppBundle\Services\Method;
 
 
 use AppBundle\Model\MethodModel\DecisionSolutionModel;
-use AppBundle\Model\ExtendMatrixModel;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractMethod
 {
     public abstract function getOptimalSolution(Request $request, DecisionSolutionModel $decisionSolutionModel);
-
-    protected abstract function initalMatrixModel(Request $request): ExtendMatrixModel;
 
 }

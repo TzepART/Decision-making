@@ -26,6 +26,9 @@ class FactoryMethod
             case BiasedIdealMethod::METHOD_NAME:
                 $method = new BiasedIdealMethod();
                 break;
+            case OptimizationMethod::METHOD_NAME:
+                $method = new OptimizationMethod();
+                break;
 
             default:
                 $method = null;

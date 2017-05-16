@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <a href="{{ path('homepage') }}">Главная</a>
+
+    {% block form %}
+        <div class="row">
+            <form action="{{ path('method.get-solution') }}">
+                <input type="hidden" name="method" value="{{ method }}">
+                <p>step - <input type="text" name="step" value=""></p>
+                <p>X - <input type="text" name="beginX[]" value=""><input type="text" name="beginX[]" value=""></p>
+                <p><input type="submit" value="Найти решение"></p>
+            </form>
+        </div>
+    {% endblock %}
+
+{% endblock body %}
