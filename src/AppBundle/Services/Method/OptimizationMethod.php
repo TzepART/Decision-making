@@ -21,7 +21,7 @@ class OptimizationMethod extends AbstractMethod
     const ASYMMETRIC_VALLEY_TYPE_FUNCTION = 'asymmetric_valley_function';
     const POWELL_TYPE_FUNCTION = 'powell_function';
 
-    const COUNT_ITERATION = 50;
+    const COUNT_ITERATION = 200;
 //    const ASYMMETRIC_VALLEY_TYPE_FUNCTION = 'asymmetric_valley_function';
 
     /**
@@ -42,8 +42,9 @@ class OptimizationMethod extends AbstractMethod
         $result = [];
         $solution = '';
 
-        //  Шаг 1. Ввести начальную точку х = (х1, ..., хn) и шаг s, принять F : = J(х).
-        //  Шаг 2. Принять hi := s, i = 1, n.
+        //Шаг 1. Ввести начальную точку х = (х1, ..., хn) и шаг s, принять F : = J(х).
+        //Шаг 2. Принять hi := s, i = 0, n(COUNT_ITERATION).
+        //Шаг 3. Принять m := 0.
         $arrayX = $request->get('beginX');
         $step = $request->get('step');
         $function_type = $request->get('selectFunction');
@@ -90,29 +91,31 @@ class OptimizationMethod extends AbstractMethod
      */
     protected function getSolutionByX($function_type, $step, $arrayX, $indexX)
     {
-        $h = $step;
         $f = [
             'current' => 0,
             'next' => 0,
         ];
         $f['current'] = $this->getFunctionResult($function_type,$arrayX);
 
-        //  Шаг 3. Принять m := 1.
+        //Шаг 7. Если m ≤ n (COUNT_ITERATION), перейти к шагу 4; иначе — к шагу 3
         for ($m = 0; $m <= self::COUNT_ITERATION; $m++) {
             //  Шаг 4. Принять xm := xm + hm вычислить F1=J(x).
-            $arrayX[$indexX] = $arrayX[$indexX] + $h;
+            $arrayX[$indexX] = $arrayX[$indexX] + $step;
 
             $f['next'] = $this->getFunctionResult($function_type,$arrayX);
 
             if ($f['next'] <= $f['current']) {
                 //  Шаг 5. Если F1 ≤ F, принять hm := 3hm, F := F1 и перейти к шагу 7; иначе — перейти к шагу 6.
-                $h = 3 * $h;
+                $step = 3 * $step;
                 $f['current'] = $f['next'];
             } else {
                 //  Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
-                $arrayX[$indexX] = $arrayX[$indexX] - $h;
-                $h = -0.5 * $h;
+                $arrayX[$indexX] = $arrayX[$indexX] - $step;
+                $step = -0.5 * $step;
             }
+            echo "<pre>";
+            var_dump($arrayX);
+            echo "</pre>";
         }
 
         return $arrayX[$indexX];
