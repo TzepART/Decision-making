@@ -6,13 +6,43 @@
 
     {% block form %}
         <div class="row">
-            <form action="{{ path('method.get-solution') }}">
+            <form action="{{ path('method.get-solution') }}" method="post">
                 <input type="hidden" name="method" value="{{ method }}">
-                <p>step - <input type="text" name="step" value=""></p>
-                <p>X - <input type="text" name="beginX[]" value=""><input type="text" name="beginX[]" value=""></p>
+                <p>step - <input type="text" name="step" value="0.001"></p>
+                <p>
+                    <select name="selectFunction" id="selectFunction">
+                        {% for key, arFunction in arFunctions %}
+                            <option value="{{ key }}">{{ arFunction }}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+                <p id="inputX">X - <input type="text" name="beginX[]" value="0">
+                    <input type="text" name="beginX[]" value="">
+                </p>
                 <p><input type="submit" value="Найти решение"></p>
             </form>
         </div>
     {% endblock %}
 
 {% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(document).ready(function() {
+            $('#selectFunction').on('click', function(e) {
+                var countInput = $('#inputX input').size();
+                var selectFunction = $( "#selectFunction option:selected").val();
+//                console.log(selectFunction);
+
+                if(countInput == 2 && selectFunction == 'powell_function'){
+                    $( "#inputX" ).append( $( '<input type="text" name="beginX[]" value="">' ) );
+                    $( "#inputX" ).append( $( '<input type="text" name="beginX[]" value="">' ) );
+                }else if(countInput == 4 && selectFunction != 'powell_function'){
+                    $('#inputX input').last().remove();
+                    $('#inputX input').last().remove();
+                }
+            });
+        });
+    </script>
+{% endblock %}

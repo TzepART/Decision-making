@@ -76,7 +76,8 @@ class MethodDecisionMakingController extends Controller
      */
     public function optimizationAction()
     {
-        return ['method' => OptimizationMethod::METHOD_NAME];
+        $arFunctions = $this->get('app.method')->getMethod(OptimizationMethod::METHOD_NAME)->getArrayFunctionNames();
+        return ['method' => OptimizationMethod::METHOD_NAME, 'arFunctions' => $arFunctions];
     }
 
     /**

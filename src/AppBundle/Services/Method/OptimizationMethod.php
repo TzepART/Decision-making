@@ -19,6 +19,8 @@ class OptimizationMethod extends AbstractMethod
     const SIMPLE_TYPE_FUNCTION = 'simlple_function';
     const ROZENBORK_TYPE_FUNCTION = 'rozenbork_function';
     const ASYMMETRIC_VALLEY_TYPE_FUNCTION = 'asymmetric_valley_function';
+    const POWELL_TYPE_FUNCTION = 'powell_function';
+//    const ASYMMETRIC_VALLEY_TYPE_FUNCTION = 'asymmetric_valley_function';
 
     /**
      * @param Request $request
@@ -36,13 +38,13 @@ class OptimizationMethod extends AbstractMethod
     public function getOptimalSolution(Request $request, DecisionSolutionModel $decisionSolutionModel)
     {
         $solution = '';
-        $n = 50;
+        $n = 100;
 
         //  Шаг 1. Ввести начальную точку х = (х1, ..., хn) и шаг s, принять F : = J(х).
         //  Шаг 2. Принять hi := s, i = 1, n.
         $arrayX = $request->get('beginX');
         $step = $request->get('step');
-        $function_type = self::ASYMMETRIC_VALLEY_TYPE_FUNCTION;
+        $function_type = $request->get('selectFunction');
 
         $result = $this->getSolution($function_type, $step, $arrayX, $n);
 
@@ -56,6 +58,18 @@ class OptimizationMethod extends AbstractMethod
         }
 
         return $decisionSolutionModel;
+    }
+
+    public function getArrayFunctionNames()
+    {
+        $arFunctions = [
+            OptimizationMethod::SIMPLE_TYPE_FUNCTION => 'Квадратичная функция простой структуры',
+            OptimizationMethod::ROZENBORK_TYPE_FUNCTION => 'Функция Розенброка',
+            OptimizationMethod::ASYMMETRIC_VALLEY_TYPE_FUNCTION => 'Ассиметричная долина',
+            OptimizationMethod::POWELL_TYPE_FUNCTION => 'Функция Пауэлла',
+        ];
+
+        return $arFunctions;
     }
 
     /**
@@ -75,11 +89,12 @@ class OptimizationMethod extends AbstractMethod
         ];
         $f['current'] = $this->getFunctionResult($function_type,$arrayX);
 
+
         //  Шаг 3. Принять m := 1.
         for ($m = 1; $m <= $n; $m++) {
-            //  Шаг 4. Принять xm := xm+ hm вычислить F1=J(x).
-            $arrayX[0] = $arrayX[1];
-            $arrayX[1] = $arrayX[1] + $h;
+            //  Шаг 4. Принять xm := xm + hm вычислить F1=J(x).
+            $arrayX = $this->shiftAndIncreaseStep($arrayX,$h);
+
             $f['next'] = $this->getFunctionResult($function_type,$arrayX);
 
             if ($f['next'] < $f['current']) {
@@ -88,8 +103,7 @@ class OptimizationMethod extends AbstractMethod
                 $f['current'] = $f['next'];
             } else {
                 //  Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
-                $arrayX[0] = $arrayX[0] - $h;
-                $arrayX[1] = $arrayX[1] - $h;
+                $arrayX = $this->decreaseStep($arrayX,$h);
                 $h = -0.5 * $h;
             }
         }
@@ -102,8 +116,10 @@ class OptimizationMethod extends AbstractMethod
                 return $this->simpleFunction($arrayX);
             case self::ROZENBORK_TYPE_FUNCTION:
                 return $this->rozenborkFunction($arrayX);
-                case self::ASYMMETRIC_VALLEY_TYPE_FUNCTION:
+            case self::ASYMMETRIC_VALLEY_TYPE_FUNCTION:
                 return $this->asymmetricValleyFunction($arrayX);
+            case self::POWELL_TYPE_FUNCTION:
+                return $this->powelFunction($arrayX);
             default:
                 return false;
         }
@@ -141,6 +157,45 @@ class OptimizationMethod extends AbstractMethod
         $result = 0;
         $result = (($arrayX[0]-3)/100)**2-($arrayX[1]-$arrayX[0]+exp(20*($arrayX[1]-$arrayX[0])));
         return $result;
+    }
+
+    /**
+     * F4 = (x1+10x22)2+5(x3-x4)2+(x2-2x3)4+10(x1-x4)4;
+     * @param array $arrayX
+     * @return int
+     */
+    protected function powelFunction($arrayX){
+        $result = 0;
+        $result = ($arrayX[0] + $arrayX[1]**2)**2+5*($arrayX[2]-$arrayX[3])**2+($arrayX[1]-2*$arrayX[2])**4+10*($arrayX[0]-$arrayX[3])**4;
+        return $result;
+    }
+
+    /**
+     * @param array $arrayX
+     * @param $h
+     * @return mixed
+     */
+    protected function shiftAndIncreaseStep($arrayX,$h)
+    {
+        $last = end($arrayX);
+        array_shift($arrayX);
+        $arrayX[] = $last + $h;
+
+        return $arrayX;
+    }
+
+    /**
+     * @param array $arrayX
+     * @param $h
+     * @return mixed
+     */
+    protected function decreaseStep($arrayX,$h)
+    {
+        $last = end($arrayX);
+        array_pop($arrayX);
+        $arrayX[] = $last - $h;
+
+        return $arrayX;
     }
 
 }
