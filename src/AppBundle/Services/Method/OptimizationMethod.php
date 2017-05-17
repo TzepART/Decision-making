@@ -38,7 +38,7 @@ class OptimizationMethod extends AbstractMethod
     public function getOptimalSolution(Request $request, DecisionSolutionModel $decisionSolutionModel)
     {
         $solution = '';
-        $n = 100;
+        $n = 50;
 
         //  Шаг 1. Ввести начальную точку х = (х1, ..., хn) и шаг s, принять F : = J(х).
         //  Шаг 2. Принять hi := s, i = 1, n.
@@ -48,7 +48,9 @@ class OptimizationMethod extends AbstractMethod
 
         $result = $this->getSolution($function_type, $step, $arrayX, $n);
 
-        dump($result);
+        echo "<pre>";
+        var_dump($result);
+        echo "</pre>";
         die();
 
         if($solution ==! ''){
@@ -88,12 +90,14 @@ class OptimizationMethod extends AbstractMethod
             'next' => 0,
         ];
         $f['current'] = $this->getFunctionResult($function_type,$arrayX);
+        $countX = count($arrayX);
 
 
         //  Шаг 3. Принять m := 1.
         for ($m = 1; $m <= $n; $m++) {
+            $indexX = ($m % $countX);
             //  Шаг 4. Принять xm := xm + hm вычислить F1=J(x).
-            $arrayX = $this->shiftAndIncreaseStep($arrayX,$h);
+            $arrayX = $this->increaseStep($arrayX,$h,$indexX);
 
             $f['next'] = $this->getFunctionResult($function_type,$arrayX);
 
@@ -103,11 +107,11 @@ class OptimizationMethod extends AbstractMethod
                 $f['current'] = $f['next'];
             } else {
                 //  Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
-                $arrayX = $this->decreaseStep($arrayX,$h);
+                $arrayX = $this->decreaseStep($arrayX,$h,$indexX);
                 $h = -0.5 * $h;
             }
         }
-        return ['F' => $f, 'X' => $arrayX];
+        return ['X' => $arrayX, 'F' => $f];
     }
 
     protected function getFunctionResult($typeFunction, $arrayX){
@@ -172,29 +176,25 @@ class OptimizationMethod extends AbstractMethod
 
     /**
      * @param array $arrayX
-     * @param $h
-     * @return mixed
+     * @param float $h
+     * @param int $index
+     * @return array
      */
-    protected function shiftAndIncreaseStep($arrayX,$h)
+    protected function increaseStep($arrayX, $h, $index)
     {
-        $last = end($arrayX);
-        array_shift($arrayX);
-        $arrayX[] = $last + $h;
-
+        $arrayX[$index] = $arrayX[$index] + $h;
         return $arrayX;
     }
 
     /**
      * @param array $arrayX
-     * @param $h
-     * @return mixed
+     * @param float $h
+     * @param int $index
+     * @return array
      */
-    protected function decreaseStep($arrayX,$h)
+    protected function decreaseStep($arrayX,$h, $index)
     {
-        $last = end($arrayX);
-        array_pop($arrayX);
-        $arrayX[] = $last - $h;
-
+        $arrayX[$index] = $arrayX[$index] - $h;
         return $arrayX;
     }
 
