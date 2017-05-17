@@ -20,6 +20,8 @@ class OptimizationMethod extends AbstractMethod
     const ROZENBORK_TYPE_FUNCTION = 'rozenbork_function';
     const ASYMMETRIC_VALLEY_TYPE_FUNCTION = 'asymmetric_valley_function';
     const POWELL_TYPE_FUNCTION = 'powell_function';
+
+    const COUNT_ITERATION = 50;
 //    const ASYMMETRIC_VALLEY_TYPE_FUNCTION = 'asymmetric_valley_function';
 
     /**
@@ -37,8 +39,8 @@ class OptimizationMethod extends AbstractMethod
      */
     public function getOptimalSolution(Request $request, DecisionSolutionModel $decisionSolutionModel)
     {
+        $result = [];
         $solution = '';
-        $n = 50;
 
         //  Шаг 1. Ввести начальную точку х = (х1, ..., хn) и шаг s, принять F : = J(х).
         //  Шаг 2. Принять hi := s, i = 1, n.
@@ -46,7 +48,11 @@ class OptimizationMethod extends AbstractMethod
         $step = $request->get('step');
         $function_type = $request->get('selectFunction');
 
-        $result = $this->getSolution($function_type, $step, $arrayX, $n);
+        foreach ($arrayX as $indexX => $value) {
+            $result['X'][$indexX] = $this->getSolutionByX($function_type, $step, $arrayX, $indexX);
+        }
+
+        $result['F'] = $this->getFunctionResult($function_type,$result['X']);
 
         echo "<pre>";
         var_dump($result);
@@ -78,11 +84,11 @@ class OptimizationMethod extends AbstractMethod
      * @param string $function_type
      * @param float $step
      * @param array $arrayX
-     * @param integer $n
+     * @param integer $indexX
      * @return array
      * @internal param $s
      */
-    protected function getSolution($function_type, $step, $arrayX, $n)
+    protected function getSolutionByX($function_type, $step, $arrayX, $indexX)
     {
         $h = $step;
         $f = [
@@ -90,28 +96,26 @@ class OptimizationMethod extends AbstractMethod
             'next' => 0,
         ];
         $f['current'] = $this->getFunctionResult($function_type,$arrayX);
-        $countX = count($arrayX);
-
 
         //  Шаг 3. Принять m := 1.
-        for ($m = 1; $m <= $n; $m++) {
-            $indexX = ($m % $countX);
+        for ($m = 0; $m <= self::COUNT_ITERATION; $m++) {
             //  Шаг 4. Принять xm := xm + hm вычислить F1=J(x).
-            $arrayX = $this->increaseStep($arrayX,$h,$indexX);
+            $arrayX[$indexX] = $arrayX[$indexX] + $h;
 
             $f['next'] = $this->getFunctionResult($function_type,$arrayX);
 
-            if ($f['next'] < $f['current']) {
+            if ($f['next'] <= $f['current']) {
                 //  Шаг 5. Если F1 ≤ F, принять hm := 3hm, F := F1 и перейти к шагу 7; иначе — перейти к шагу 6.
                 $h = 3 * $h;
                 $f['current'] = $f['next'];
             } else {
                 //  Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
-                $arrayX = $this->decreaseStep($arrayX,$h,$indexX);
+                $arrayX[$indexX] = $arrayX[$indexX] - $h;
                 $h = -0.5 * $h;
             }
         }
-        return ['X' => $arrayX, 'F' => $f];
+
+        return $arrayX[$indexX];
     }
 
     protected function getFunctionResult($typeFunction, $arrayX){
@@ -172,30 +176,6 @@ class OptimizationMethod extends AbstractMethod
         $result = 0;
         $result = ($arrayX[0] + $arrayX[1]**2)**2+5*($arrayX[2]-$arrayX[3])**2+($arrayX[1]-2*$arrayX[2])**4+10*($arrayX[0]-$arrayX[3])**4;
         return $result;
-    }
-
-    /**
-     * @param array $arrayX
-     * @param float $h
-     * @param int $index
-     * @return array
-     */
-    protected function increaseStep($arrayX, $h, $index)
-    {
-        $arrayX[$index] = $arrayX[$index] + $h;
-        return $arrayX;
-    }
-
-    /**
-     * @param array $arrayX
-     * @param float $h
-     * @param int $index
-     * @return array
-     */
-    protected function decreaseStep($arrayX,$h, $index)
-    {
-        $arrayX[$index] = $arrayX[$index] - $h;
-        return $arrayX;
     }
 
 }
