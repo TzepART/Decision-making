@@ -167,7 +167,7 @@ class OptimizationMethod extends AbstractMethod
      */
     protected function asymmetricValleyFunction($arrayX){
         $result = 0;
-        $result = (($arrayX[0]-3)/100)**2-($arrayX[1]-$arrayX[0]+exp(20*($arrayX[1]-$arrayX[0])));
+        $result = (($arrayX[0]-3)/100)**2-($arrayX[1]-$arrayX[0])+exp(20*($arrayX[1]-$arrayX[0]));
         return $result;
     }
 
