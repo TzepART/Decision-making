@@ -20,9 +20,9 @@ class OptimizationMethod extends AbstractMethod
     const ROZENBORK_TYPE_FUNCTION = 'rozenbork_function';
     const ASYMMETRIC_VALLEY_TYPE_FUNCTION = 'asymmetric_valley_function';
     const POWELL_TYPE_FUNCTION = 'powell_function';
+    const EXPERIMENT_TYPE_FUNCTION = 'experiment_function';
 
-    const COUNT_ITERATION = 300000;
-//    const ASYMMETRIC_VALLEY_TYPE_FUNCTION = 'asymmetric_valley_function';
+    const COUNT_ITERATION = 50;
 
     /**
      * @param Request $request
@@ -63,6 +63,7 @@ class OptimizationMethod extends AbstractMethod
             OptimizationMethod::ROZENBORK_TYPE_FUNCTION => 'Функция Розенброка',
             OptimizationMethod::ASYMMETRIC_VALLEY_TYPE_FUNCTION => 'Ассиметричная долина',
             OptimizationMethod::POWELL_TYPE_FUNCTION => 'Функция Пауэлла',
+            OptimizationMethod::EXPERIMENT_TYPE_FUNCTION => 'Экспериментальная функция',
         ];
 
         return $arFunctions;
@@ -83,33 +84,6 @@ class OptimizationMethod extends AbstractMethod
      *    Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
      *    Шаг 7. Принять m := m+1. Если m ≤ n, перейти к шагу 4; иначе — к шагу 3.
      */
-    /*
-     void GZ1(double (*F)(double*, int), double* x, const int sz_x, double step, int N = 100, const int ERR=0.00001)
-        Функция-алгоритм для расчета.
-        F-расчетная функция,
-        x-массив начальных данных,
-        sz_x-размер массива исходных координат,
-        step-начальный шаг расчета,
-        N-общее количество шагов расчета,
-        ERR- ошибка, по идее второй способ выхода из алгоритма, если новое решение не отличается от старого на ERR(не реализовано)
-        {
-            double* h = new double[sz_x]; //массив шагов h_i по каждой координате
-            for (int i = 0; i < sz_x; ++i) { h[i] = step; }
-            do
-            {
-                for (int m = 0; m < sz_x; ++m)
-                    {
-                        double oldVal = F(x, sz_x);
-                        x[m] += h[m];
-                        double newVal = F(x, sz_x);
-                        if (newVal <= oldVal) { h[m] = 3*h[m]; }
-                        else { x[m] -= h[m]; h[m] = -0.5*h[m]; }
-                    }
-                    --N;
-            } while (N > 0);
-            delete[] h;
-       }
-     * */
     protected function getSolutionUseGZ1($function_type, $step, $arrayX)
     {
         $sz_x = count($arrayX);
@@ -154,6 +128,8 @@ class OptimizationMethod extends AbstractMethod
                 return $this->asymmetricValleyFunction($arrayX);
             case self::POWELL_TYPE_FUNCTION:
                 return $this->powelFunction($arrayX);
+            case self::EXPERIMENT_TYPE_FUNCTION:
+                return $this->experimentFunction($arrayX);
             default:
                 return false;
         }
@@ -163,7 +139,7 @@ class OptimizationMethod extends AbstractMethod
     /**
      * F1(x) = (x1-x2)2+(x1+x2-10)2/9
      * @param array $arrayX
-     * @return int
+     * @return float
      */
     protected function simpleFunction($arrayX){
         $result = 0;
@@ -174,7 +150,7 @@ class OptimizationMethod extends AbstractMethod
     /**
      * F2 = 100(x12-x2)2+(1-x1)2
      * @param array $arrayX
-     * @return int
+     * @return float
      */
     protected function rozenborkFunction($arrayX){
         $result = 0;
@@ -185,7 +161,7 @@ class OptimizationMethod extends AbstractMethod
     /**
      * F3 = [(x1-3)/100]2-(x2-x1)+exp[20(x2-x1)];
      * @param array $arrayX
-     * @return int
+     * @return float
      */
     protected function asymmetricValleyFunction($arrayX){
         $result = 0;
@@ -196,12 +172,31 @@ class OptimizationMethod extends AbstractMethod
     /**
      * F4 = (x1+10x22)2+5(x3-x4)2+(x2-2x3)4+10(x1-x4)4;
      * @param array $arrayX
-     * @return int
+     * @return float
      */
     protected function powelFunction($arrayX){
         $result = 0;
         $result = ($arrayX[0] + $arrayX[1]**2)**2+5*($arrayX[2]-$arrayX[3])**2+($arrayX[1]-2*$arrayX[2])**4+10*($arrayX[0]-$arrayX[3])**4;
         return $result;
+    }
+
+    /**
+     * @param array $arrayX
+     * @return float
+     */
+    protected function experimentFunction($arrayX)
+    {
+        $a = [0, 0.428, 1, 1.61, 2.09, 3.48, 5.25];
+        $b = [7.391, 11.18, 16.44, 16.20, 22.2, 24.02, 31.32];
+
+        $result = 0;
+        for($i = 0;$i<7;$i++){
+            $result += ((($arrayX[0]**2+$arrayX[1]**2*$a[$i]+$arrayX[2]*$a[$i]**2)/(1+$arrayX[3]**2*$a[$i])-$b[$i])/$b[$i])**2;
+        }
+        $result = 10**4*$result;
+
+        return $result;
+        
     }
 
 }
