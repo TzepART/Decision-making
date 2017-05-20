@@ -38,8 +38,9 @@ class OptimizationMethod extends AbstractMethod
         $arrayX = $request->get('beginX');
         $step = $request->get('step');
         $function_type = $request->get('selectFunction');
+        $countIteration = $request->get('countIteration');
 
-        $result['X'] = $this->getSolutionUseGZ1($function_type, $step, $arrayX);
+        $result['X'] = $this->getSolutionUseGZ1($function_type, $step, $arrayX,$countIteration);
         $result['F'] = $this->getFunctionResult($function_type,$result['X']);
 
         echo "<pre>";
@@ -73,6 +74,7 @@ class OptimizationMethod extends AbstractMethod
      * @param string $function_type
      * @param float $step
      * @param array $arrayX
+     * @param int $countIteration
      * @return array
      * @internal param $s
      * Алгоритм GZ1.
@@ -84,7 +86,7 @@ class OptimizationMethod extends AbstractMethod
      *    Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
      *    Шаг 7. Принять m := m+1. Если m ≤ n, перейти к шагу 4; иначе — к шагу 3.
      */
-    protected function getSolutionUseGZ1($function_type, $step, $arrayX)
+    protected function getSolutionUseGZ1($function_type, $step, $arrayX, $countIteration)
     {
         $sz_x = count($arrayX);
 
@@ -94,7 +96,7 @@ class OptimizationMethod extends AbstractMethod
 
         for ($i = 0; $i <= $sz_x; $i++) {
             $h = array_fill(0,$sz_x, $step);
-            for ($n = 0; $n <= self::COUNT_ITERATION; $n++) {
+            for ($n = 0; $n <= $countIteration; $n++) {
                 //Шаг 7. Если m ≤ n (COUNT_ITERATION), перейти к шагу 4; иначе — к шагу 3
                 for($m = 0; $m < $sz_x; $m++){
                     $oldVal = $this->getFunctionResult($function_type,$arrayX);

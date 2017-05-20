@@ -8,7 +8,8 @@
         <div class="row">
             <form action="{{ path('method.get-solution') }}" method="post">
                 <input type="hidden" name="method" value="{{ method }}">
-                <p>step - <input type="text" name="step" value="0.001"></p>
+                <p>Колличество итераций - <input type="text" name="countIteration" value="10000"></p>
+                <p>Шаг - <input type="text" name="step" value="0.001"></p>
                 <p>
                     <select name="selectFunction" id="selectFunction">
                         {% for key, arFunction in arFunctions %}
