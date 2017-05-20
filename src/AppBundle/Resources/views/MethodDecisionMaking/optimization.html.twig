@@ -44,7 +44,7 @@
             if(countInput == 2 && (selectFunction == 'powell_function' || selectFunction == 'experiment_function')){
                 $( "#inputX" ).append( $( '<input type="text" name="beginX[]" value="">' ) );
                 $( "#inputX" ).append( $( '<input type="text" name="beginX[]" value="">' ) );
-            }else if(countInput == 4 && (selectFunction == 'powell_function' || selectFunction == 'experiment_function')){
+            }else if(countInput == 4 && !(selectFunction == 'powell_function' || selectFunction == 'experiment_function')){
                 $('#inputX input').last().remove();
                 $('#inputX input').last().remove();
             }
