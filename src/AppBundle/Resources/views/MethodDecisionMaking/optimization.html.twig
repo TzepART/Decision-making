@@ -18,8 +18,8 @@
                     </select>
                 </p>
                 <p id="inputX">X -
-                    <input type="text" name="beginX[]" value="0">
-                    <input type="text" name="beginX[]" value="1">
+                    <input type="text" name="beginX[]" value="">
+                    <input type="text" name="beginX[]" value="">
                 </p>
                 <p><input type="submit" value="Найти решение"></p>
             </form>
@@ -37,39 +37,45 @@
             });
         }
 
+        function updateInputArea() {
+            var countInput = $('#inputX input').size();
+            var selectFunction = $( "#selectFunction option:selected").val();
+
+            if(countInput == 2 && (selectFunction == 'powell_function' || selectFunction == 'experiment_function')){
+                $( "#inputX" ).append( $( '<input type="text" name="beginX[]" value="">' ) );
+                $( "#inputX" ).append( $( '<input type="text" name="beginX[]" value="">' ) );
+            }else if(countInput == 4 && (selectFunction == 'powell_function' || selectFunction == 'experiment_function')){
+                $('#inputX input').last().remove();
+                $('#inputX input').last().remove();
+            }
+
+            if(selectFunction == 'simlple_function'){
+                var values = [0,1];
+                updateInput(values);
+            }
+            else if(selectFunction == 'rozenbork_function'){
+                var values = [-1.2,1];
+                updateInput(values);
+            }
+            else if(selectFunction == 'asymmetric_valley_function'){
+                var values = [0,-1];
+                updateInput(values);
+            }
+            else if(selectFunction == 'powell_function'){
+                var values = [3,-1,0,1];
+                updateInput(values);
+            }
+            else if(selectFunction == 'experiment_function'){
+                var values = [2.7,90,1500,10];
+                updateInput(values);
+            }
+        }
+
+        updateInputArea();
+
         jQuery(document).ready(function() {
             $('#selectFunction').on('click', function(e) {
-                var countInput = $('#inputX input').size();
-                var selectFunction = $( "#selectFunction option:selected").val();
-                if(countInput == 2 && (selectFunction == 'powell_function' || selectFunction == 'experiment_function')){
-                    $( "#inputX" ).append( $( '<input type="text" name="beginX[]" value="">' ) );
-                    $( "#inputX" ).append( $( '<input type="text" name="beginX[]" value="">' ) );
-                }else if(countInput == 4 && (selectFunction == 'powell_function' || selectFunction == 'experiment_function')){
-                    $('#inputX input').last().remove();
-                    $('#inputX input').last().remove();
-                }
-
-                if(selectFunction == 'simlple_function'){
-                    var values = [0,1];
-                    updateInput(values);
-                }
-                else if(selectFunction == 'rozenbork_function'){
-                    var values = [-1.2,1];
-                    updateInput(values);
-                }
-                else if(selectFunction == 'asymmetric_valley_function'){
-                    var values = [0,-1];
-                    updateInput(values);
-                }
-                else if(selectFunction == 'powell_function'){
-                    var values = [3,-1,0,1];
-                    updateInput(values);
-                }
-                else if(selectFunction == 'experiment_function'){
-                    var values = [2.7,90,1500,10];
-                    updateInput(values);
-                }
-
+                updateInputArea();
             });
         });
     </script>
