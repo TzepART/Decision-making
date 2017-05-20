@@ -43,10 +43,8 @@ class OptimizationMethod extends AbstractMethod
         $result['X'] = $this->getSolutionUseGZ1($function_type, $step, $arrayX,$countIteration);
         $result['F'] = $this->getFunctionResult($function_type,$result['X']);
 
-        echo "<pre>";
-        var_dump($result);
-        echo "</pre>";
-        die();
+        $solution .= 'X - ('.implode(', ',$result['X']).')</br>';
+        $solution .= 'F - ('.$result['F'].')</br>';
 
         if($solution ==! ''){
             $decisionSolutionModel->setSolution($solution);
