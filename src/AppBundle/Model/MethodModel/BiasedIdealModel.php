@@ -22,6 +22,12 @@ class BiasedIdealModel extends ExtendMatrixModel
      */
     private $significance;
 
+
+    /**
+     * @var array
+     */
+    private $maxType;
+
     /**
      * @return BiasedIdealModel()
      */
@@ -30,6 +36,7 @@ class BiasedIdealModel extends ExtendMatrixModel
         $arVariantName = ['МКО1','МКО2','МКО3','МКО4','МКО5','МКО6'];
         $arCriteriaName = ['K1','K2','K3'];
         $arSignificance = [6,6,2];
+        $maxType = [false,true,false];
 
         $matrix = [
             [5.0,1.0,50.0],
@@ -44,6 +51,7 @@ class BiasedIdealModel extends ExtendMatrixModel
         $matrixModel->setVectorColumnName($arCriteriaName);
         $matrixModel->setVectorRowName($arVariantName);
         $matrixModel->setSignificance($arSignificance);
+        $matrixModel->setMaxType($maxType);
 
         return $matrixModel;
     }
@@ -72,6 +80,20 @@ class BiasedIdealModel extends ExtendMatrixModel
         $this->significance = $significance;
     }
 
+    /**
+     * @return array
+     */
+    public function getMaxType(): array
+    {
+        return $this->maxType;
+    }
 
+    /**
+     * @param array $maxType
+     */
+    public function setMaxType(array $maxType)
+    {
+        $this->maxType = $maxType;
+    }
 
 }

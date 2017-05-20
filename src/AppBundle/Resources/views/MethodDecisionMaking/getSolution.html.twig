@@ -4,15 +4,17 @@
 
     <a href="{{ path('homepage') }}">Главная</a>
 
-    {% block form %}
-        {% include '@App/MethodDecisionMaking/matrix_form.html.twig' with {'matrixModel': solution.matrixModel, 'method': method} %}
-    {% endblock %}
-
     {% if solution.solution %}
         <p>Решение: {{ solution.solution|raw }}</p>
     {% elseif solution.error %}
         <p>Ошибка - {{ solution.error }}</p>
     {% endif %}
+
+    {% block form %}
+        {% if solution.matrixModel %}
+            {% include '@App/MethodDecisionMaking/matrix_form.html.twig' with {'matrixModel': solution.matrixModel, 'method': method} %}
+        {% endif %}
+    {% endblock %}
 
 {% endblock %}
 

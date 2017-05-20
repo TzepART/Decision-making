@@ -10,6 +10,7 @@ use AppBundle\Model\MethodModel\ParetoModel;
 use AppBundle\Services\Method\BiasedIdealMethod;
 use AppBundle\Services\Method\CommonCriteriaMethod;
 use AppBundle\Services\Method\MainCriteriaMethod;
+use AppBundle\Services\Method\OptimizationMethod;
 use AppBundle\Services\Method\ParetoMethod;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -67,6 +68,16 @@ class MethodDecisionMakingController extends Controller
     {
         $matrixModel = BiasedIdealModel::getDefaultModel();
         return $this->render('@App/MethodDecisionMaking/baseMethod.html.twig',['matrixModel' => $matrixModel, 'method' => BiasedIdealMethod::METHOD_NAME]);
+    }
+
+    /**
+     * @Route("/optimization/", name="method.optimization")
+     * @Template()
+     */
+    public function optimizationAction()
+    {
+        $arFunctions = $this->get('app.method')->getMethod(OptimizationMethod::METHOD_NAME)->getArrayFunctionNames();
+        return ['method' => OptimizationMethod::METHOD_NAME, 'arFunctions' => $arFunctions];
     }
 
     /**

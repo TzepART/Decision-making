@@ -26,7 +26,7 @@ class DecisionSolutionModel extends \AppBundle\Model\DecisionSolutionModel
     /**
      * @return ExtendMatrixModel
      */
-    public function getMatrixModel(): ExtendMatrixModel
+    public function getMatrixModel()
     {
         return $this->matrixModel;
     }

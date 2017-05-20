@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <a href="{{ path('homepage') }}">Главная</a>
+
+    {% block form %}
+        <div class="row">
+            <form action="{{ path('method.get-solution') }}" method="post">
+                <input type="hidden" name="method" value="{{ method }}">
+                <p>Колличество итераций - <input type="text" name="countIteration" value="10000"></p>
+                <p>Шаг - <input type="text" name="step" value="0.001"></p>
+                <p>
+                    <select name="selectFunction" id="selectFunction">
+                        {% for key, arFunction in arFunctions %}
+                            <option value="{{ key }}">{{ arFunction }}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+                <p id="inputX">X -
+                    <input type="text" name="beginX[]" value="">
+                    <input type="text" name="beginX[]" value="">
+                </p>
+                <p><input type="submit" value="Найти решение"></p>
+            </form>
+        </div>
+    {% endblock %}
+
+{% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function updateInput(values) {
+            $('#inputX input').each(function(i) {
+                $( this ).val(values[i]);
+            });
+        }
+
+        function updateInputArea() {
+            var countInput = $('#inputX input').size();
+            var selectFunction = $( "#selectFunction option:selected").val();
+
+            if(countInput == 2 && (selectFunction == 'powell_function' || selectFunction == 'experiment_function')){
+                $( "#inputX" ).append( $( '<input type="text" name="beginX[]" value="">' ) );
+                $( "#inputX" ).append( $( '<input type="text" name="beginX[]" value="">' ) );
+            }else if(countInput == 4 && !(selectFunction == 'powell_function' || selectFunction == 'experiment_function')){
+                $('#inputX input').last().remove();
+                $('#inputX input').last().remove();
+            }
+
+            if(selectFunction == 'simlple_function'){
+                var values = [0,1];
+                updateInput(values);
+            }
+            else if(selectFunction == 'rozenbork_function'){
+                var values = [-1.2,1];
+                updateInput(values);
+            }
+            else if(selectFunction == 'asymmetric_valley_function'){
+                var values = [0,-1];
+                updateInput(values);
+            }
+            else if(selectFunction == 'powell_function'){
+                var values = [3,-1,0,1];
+                updateInput(values);
+            }
+            else if(selectFunction == 'experiment_function'){
+                var values = [2.7,90,1500,10];
+                updateInput(values);
+            }
+        }
+
+        updateInputArea();
+
+        jQuery(document).ready(function() {
+            $('#selectFunction').on('click', function(e) {
+                updateInputArea();
+            });
+        });
+    </script>
+{% endblock %}
