@@ -21,38 +21,25 @@ class OptimizationMethod extends AbstractMethod
     const ASYMMETRIC_VALLEY_TYPE_FUNCTION = 'asymmetric_valley_function';
     const POWELL_TYPE_FUNCTION = 'powell_function';
 
-    const COUNT_ITERATION = 200;
+    const COUNT_ITERATION = 300000;
 //    const ASYMMETRIC_VALLEY_TYPE_FUNCTION = 'asymmetric_valley_function';
 
     /**
      * @param Request $request
      * @param DecisionSolutionModel $decisionSolutionModel
      * @return DecisionSolutionModel
-     * Алгоритм GZ1.
-     *    Шаг 1. Ввести начальную точку х = (х1, ..., хn) и шаг s, принять F : = J(х).
-     *    Шаг 2. Принять hi := s, i = 1, n.
-     *    Шаг 3. Принять m := 1.
-     *    Шаг 4. Принять xm := xm+ hm вычислить F1=J(x).
-     *    Шаг 5. Если F1 ≤ F, принять hm := 3hm, F := F1 и перейти к шагу 7; иначе — перейти к шагу 6.
-     *    Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
-     *    Шаг 7. Принять m := m+1. Если m ≤ n, перейти к шагу 4; иначе — к шагу 3.
      */
+
     public function getOptimalSolution(Request $request, DecisionSolutionModel $decisionSolutionModel)
     {
         $result = [];
         $solution = '';
 
-        //Шаг 1. Ввести начальную точку х = (х1, ..., хn) и шаг s, принять F : = J(х).
-        //Шаг 2. Принять hi := s, i = 0, n(COUNT_ITERATION).
-        //Шаг 3. Принять m := 0.
         $arrayX = $request->get('beginX');
         $step = $request->get('step');
         $function_type = $request->get('selectFunction');
 
-        foreach ($arrayX as $indexX => $value) {
-            $result['X'][$indexX] = $this->getSolutionByX($function_type, $step, $arrayX, $indexX);
-        }
-
+        $result['X'] = $this->getSolutionUseGZ1($function_type, $step, $arrayX);
         $result['F'] = $this->getFunctionResult($function_type,$result['X']);
 
         echo "<pre>";
@@ -85,40 +72,76 @@ class OptimizationMethod extends AbstractMethod
      * @param string $function_type
      * @param float $step
      * @param array $arrayX
-     * @param integer $indexX
      * @return array
      * @internal param $s
+     * Алгоритм GZ1.
+     *    Шаг 1. Ввести начальную точку х = (х1, ..., хn) и шаг s, принять F : = J(х).
+     *    Шаг 2. Принять hi := s, i = 1, n.
+     *    Шаг 3. Принять m := 1.
+     *    Шаг 4. Принять xm := xm+ hm вычислить F1=J(x).
+     *    Шаг 5. Если F1 ≤ F, принять hm := 3hm, F := F1 и перейти к шагу 7; иначе — перейти к шагу 6.
+     *    Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
+     *    Шаг 7. Принять m := m+1. Если m ≤ n, перейти к шагу 4; иначе — к шагу 3.
      */
-    protected function getSolutionByX($function_type, $step, $arrayX, $indexX)
+    /*
+     void GZ1(double (*F)(double*, int), double* x, const int sz_x, double step, int N = 100, const int ERR=0.00001)
+        Функция-алгоритм для расчета.
+        F-расчетная функция,
+        x-массив начальных данных,
+        sz_x-размер массива исходных координат,
+        step-начальный шаг расчета,
+        N-общее количество шагов расчета,
+        ERR- ошибка, по идее второй способ выхода из алгоритма, если новое решение не отличается от старого на ERR(не реализовано)
+        {
+            double* h = new double[sz_x]; //массив шагов h_i по каждой координате
+            for (int i = 0; i < sz_x; ++i) { h[i] = step; }
+            do
+            {
+                for (int m = 0; m < sz_x; ++m)
+                    {
+                        double oldVal = F(x, sz_x);
+                        x[m] += h[m];
+                        double newVal = F(x, sz_x);
+                        if (newVal <= oldVal) { h[m] = 3*h[m]; }
+                        else { x[m] -= h[m]; h[m] = -0.5*h[m]; }
+                    }
+                    --N;
+            } while (N > 0);
+            delete[] h;
+       }
+     * */
+    protected function getSolutionUseGZ1($function_type, $step, $arrayX)
     {
-        $f = [
-            'current' => 0,
-            'next' => 0,
-        ];
-        $f['current'] = $this->getFunctionResult($function_type,$arrayX);
+        $sz_x = count($arrayX);
 
-        //Шаг 7. Если m ≤ n (COUNT_ITERATION), перейти к шагу 4; иначе — к шагу 3
-        for ($m = 0; $m <= self::COUNT_ITERATION; $m++) {
-            //  Шаг 4. Принять xm := xm + hm вычислить F1=J(x).
-            $arrayX[$indexX] = $arrayX[$indexX] + $step;
+        //Шаг 1. Ввести начальную точку х = (х1, ..., хn) и шаг s, принять F : = J(х).
+        //Шаг 2. Принять hi := s, i = 0, n(COUNT_ITERATION).
+        //Шаг 3. Принять m := 0.
 
-            $f['next'] = $this->getFunctionResult($function_type,$arrayX);
+        for ($i = 0; $i <= $sz_x; $i++) {
+            $h = array_fill(0,$sz_x, $step);
+            for ($n = 0; $n <= self::COUNT_ITERATION; $n++) {
+                //Шаг 7. Если m ≤ n (COUNT_ITERATION), перейти к шагу 4; иначе — к шагу 3
+                for($m = 0; $m < $sz_x; $m++){
+                    $oldVal = $this->getFunctionResult($function_type,$arrayX);
+                    //  Шаг 4. Принять xm := xm + hm вычислить F1=J(x).
+                    $arrayX[$m] = $arrayX[$m] + $h[$m];
 
-            if ($f['next'] <= $f['current']) {
-                //  Шаг 5. Если F1 ≤ F, принять hm := 3hm, F := F1 и перейти к шагу 7; иначе — перейти к шагу 6.
-                $step = 3 * $step;
-                $f['current'] = $f['next'];
-            } else {
-                //  Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
-                $arrayX[$indexX] = $arrayX[$indexX] - $step;
-                $step = -0.5 * $step;
+                    $newVal = $this->getFunctionResult($function_type,$arrayX);
+
+                    if ($newVal <= $oldVal) {
+                        //  Шаг 5. Если F1 ≤ F, принять hm := 3hm, F := F1 и перейти к шагу 7; иначе — перейти к шагу 6.
+                        $h[$m] = 3 * $h[$m];
+                    } else {
+                        //  Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
+                        $arrayX[$m] = $arrayX[$m] - $h[$m];
+                        $h[$m] = -0.5 * $h[$m];
+                    }
+                }
+
             }
-            echo "<pre>";
-            var_dump($arrayX);
-            echo "</pre>";
         }
-
-        return $arrayX[$indexX];
+        return $arrayX;
     }
 
     protected function getFunctionResult($typeFunction, $arrayX){
