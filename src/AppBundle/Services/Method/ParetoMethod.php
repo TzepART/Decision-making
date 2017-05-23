@@ -105,7 +105,7 @@ class ParetoMethod extends AbstractMethod
             arsort($arCriteria);
             //Получаем наихудший по критерию вариант
             $variantKeys = array_keys($arCriteria);
-            $badVariant =  array_pop($variantKeys);
+            $badVariant = array_pop($variantKeys);
 
             //Добавляем в массив, где ключ - id критерия
             $result[$index] = $badVariant;
