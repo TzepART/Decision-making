@@ -186,12 +186,12 @@ class OptimizationMethod extends AbstractMethod
      */
     protected function experimentFunction($arrayX)
     {
-        $a = [0, 0.428, 1, 1.61, 2.09, 3.48, 5.25];
+        $a = [0, 0.000428, 0.001, 0.00161, 0.00209, 0.00348, 0.00525];
         $b = [7.391, 11.18, 16.44, 16.20, 22.2, 24.02, 31.32];
 
         $result = 0;
         for($i = 0;$i<7;$i++){
-            $result += ((($arrayX[0]**2+$arrayX[1]**2*$a[$i]+$arrayX[2]*$a[$i]**2)/(1+$arrayX[3]**2*$a[$i])-$b[$i])/$b[$i])**2;
+            $result += ((($arrayX[0]**2+$arrayX[1]**2*$a[$i]+$arrayX[2]**2*$a[$i]**2)/(1+$arrayX[3]**2*$a[$i])-$b[$i])/$b[$i])**2;
         }
         $result = 10**4*$result;
 
