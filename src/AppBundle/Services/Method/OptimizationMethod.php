@@ -20,45 +20,31 @@ class OptimizationMethod extends AbstractMethod
     const ROZENBORK_TYPE_FUNCTION = 'rozenbork_function';
     const ASYMMETRIC_VALLEY_TYPE_FUNCTION = 'asymmetric_valley_function';
     const POWELL_TYPE_FUNCTION = 'powell_function';
+    const EXPERIMENT_TYPE_FUNCTION = 'experiment_function';
 
-    const COUNT_ITERATION = 200;
-//    const ASYMMETRIC_VALLEY_TYPE_FUNCTION = 'asymmetric_valley_function';
+    const COUNT_ITERATION = 50;
 
     /**
      * @param Request $request
      * @param DecisionSolutionModel $decisionSolutionModel
      * @return DecisionSolutionModel
-     * Алгоритм GZ1.
-     *    Шаг 1. Ввести начальную точку х = (х1, ..., хn) и шаг s, принять F : = J(х).
-     *    Шаг 2. Принять hi := s, i = 1, n.
-     *    Шаг 3. Принять m := 1.
-     *    Шаг 4. Принять xm := xm+ hm вычислить F1=J(x).
-     *    Шаг 5. Если F1 ≤ F, принять hm := 3hm, F := F1 и перейти к шагу 7; иначе — перейти к шагу 6.
-     *    Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
-     *    Шаг 7. Принять m := m+1. Если m ≤ n, перейти к шагу 4; иначе — к шагу 3.
      */
+
     public function getOptimalSolution(Request $request, DecisionSolutionModel $decisionSolutionModel)
     {
         $result = [];
         $solution = '';
 
-        //Шаг 1. Ввести начальную точку х = (х1, ..., хn) и шаг s, принять F : = J(х).
-        //Шаг 2. Принять hi := s, i = 0, n(COUNT_ITERATION).
-        //Шаг 3. Принять m := 0.
         $arrayX = $request->get('beginX');
         $step = $request->get('step');
         $function_type = $request->get('selectFunction');
+        $countIteration = $request->get('countIteration');
 
-        foreach ($arrayX as $indexX => $value) {
-            $result['X'][$indexX] = $this->getSolutionByX($function_type, $step, $arrayX, $indexX);
-        }
-
+        $result['X'] = $this->getSolutionUseGZ1($function_type, $step, $arrayX,$countIteration);
         $result['F'] = $this->getFunctionResult($function_type,$result['X']);
 
-        echo "<pre>";
-        var_dump($result);
-        echo "</pre>";
-        die();
+        $solution .= 'X - ('.implode(', ',$result['X']).')</br>';
+        $solution .= 'F - ('.$result['F'].')</br>';
 
         if($solution ==! ''){
             $decisionSolutionModel->setSolution($solution);
@@ -76,6 +62,7 @@ class OptimizationMethod extends AbstractMethod
             OptimizationMethod::ROZENBORK_TYPE_FUNCTION => 'Функция Розенброка',
             OptimizationMethod::ASYMMETRIC_VALLEY_TYPE_FUNCTION => 'Ассиметричная долина',
             OptimizationMethod::POWELL_TYPE_FUNCTION => 'Функция Пауэлла',
+            OptimizationMethod::EXPERIMENT_TYPE_FUNCTION => 'Экспериментальная функция',
         ];
 
         return $arFunctions;
@@ -85,40 +72,50 @@ class OptimizationMethod extends AbstractMethod
      * @param string $function_type
      * @param float $step
      * @param array $arrayX
-     * @param integer $indexX
+     * @param int $countIteration
      * @return array
      * @internal param $s
+     * Алгоритм GZ1.
+     *    Шаг 1. Ввести начальную точку х = (х1, ..., хn) и шаг s, принять F : = J(х).
+     *    Шаг 2. Принять hi := s, i = 1, n.
+     *    Шаг 3. Принять m := 1.
+     *    Шаг 4. Принять xm := xm+ hm вычислить F1=J(x).
+     *    Шаг 5. Если F1 ≤ F, принять hm := 3hm, F := F1 и перейти к шагу 7; иначе — перейти к шагу 6.
+     *    Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
+     *    Шаг 7. Принять m := m+1. Если m ≤ n, перейти к шагу 4; иначе — к шагу 3.
      */
-    protected function getSolutionByX($function_type, $step, $arrayX, $indexX)
+    protected function getSolutionUseGZ1($function_type, $step, $arrayX, $countIteration)
     {
-        $f = [
-            'current' => 0,
-            'next' => 0,
-        ];
-        $f['current'] = $this->getFunctionResult($function_type,$arrayX);
+        $sz_x = count($arrayX);
 
-        //Шаг 7. Если m ≤ n (COUNT_ITERATION), перейти к шагу 4; иначе — к шагу 3
-        for ($m = 0; $m <= self::COUNT_ITERATION; $m++) {
-            //  Шаг 4. Принять xm := xm + hm вычислить F1=J(x).
-            $arrayX[$indexX] = $arrayX[$indexX] + $step;
+        //Шаг 1. Ввести начальную точку х = (х1, ..., хn) и шаг s, принять F : = J(х).
+        //Шаг 2. Принять hi := s, i = 0, n(COUNT_ITERATION).
+        //Шаг 3. Принять m := 0.
 
-            $f['next'] = $this->getFunctionResult($function_type,$arrayX);
+        for ($i = 0; $i <= $sz_x; $i++) {
+            $h = array_fill(0,$sz_x, $step);
+            for ($n = 0; $n <= $countIteration; $n++) {
+                //Шаг 7. Если m ≤ n (COUNT_ITERATION), перейти к шагу 4; иначе — к шагу 3
+                for($m = 0; $m < $sz_x; $m++){
+                    $oldVal = $this->getFunctionResult($function_type,$arrayX);
+                    //  Шаг 4. Принять xm := xm + hm вычислить F1=J(x).
+                    $arrayX[$m] = $arrayX[$m] + $h[$m];
 
-            if ($f['next'] <= $f['current']) {
-                //  Шаг 5. Если F1 ≤ F, принять hm := 3hm, F := F1 и перейти к шагу 7; иначе — перейти к шагу 6.
-                $step = 3 * $step;
-                $f['current'] = $f['next'];
-            } else {
-                //  Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
-                $arrayX[$indexX] = $arrayX[$indexX] - $step;
-                $step = -0.5 * $step;
+                    $newVal = $this->getFunctionResult($function_type,$arrayX);
+
+                    if ($newVal <= $oldVal) {
+                        //  Шаг 5. Если F1 ≤ F, принять hm := 3hm, F := F1 и перейти к шагу 7; иначе — перейти к шагу 6.
+                        $h[$m] = 3 * $h[$m];
+                    } else {
+                        //  Шаг 6. Принять хm := хm - hm, hm := - 0,5hm.
+                        $arrayX[$m] = $arrayX[$m] - $h[$m];
+                        $h[$m] = -0.5 * $h[$m];
+                    }
+                }
+
             }
-            echo "<pre>";
-            var_dump($arrayX);
-            echo "</pre>";
         }
-
-        return $arrayX[$indexX];
+        return $arrayX;
     }
 
     protected function getFunctionResult($typeFunction, $arrayX){
@@ -131,6 +128,8 @@ class OptimizationMethod extends AbstractMethod
                 return $this->asymmetricValleyFunction($arrayX);
             case self::POWELL_TYPE_FUNCTION:
                 return $this->powelFunction($arrayX);
+            case self::EXPERIMENT_TYPE_FUNCTION:
+                return $this->experimentFunction($arrayX);
             default:
                 return false;
         }
@@ -140,7 +139,7 @@ class OptimizationMethod extends AbstractMethod
     /**
      * F1(x) = (x1-x2)2+(x1+x2-10)2/9
      * @param array $arrayX
-     * @return int
+     * @return float
      */
     protected function simpleFunction($arrayX){
         $result = 0;
@@ -151,7 +150,7 @@ class OptimizationMethod extends AbstractMethod
     /**
      * F2 = 100(x12-x2)2+(1-x1)2
      * @param array $arrayX
-     * @return int
+     * @return float
      */
     protected function rozenborkFunction($arrayX){
         $result = 0;
@@ -162,23 +161,42 @@ class OptimizationMethod extends AbstractMethod
     /**
      * F3 = [(x1-3)/100]2-(x2-x1)+exp[20(x2-x1)];
      * @param array $arrayX
-     * @return int
+     * @return float
      */
     protected function asymmetricValleyFunction($arrayX){
         $result = 0;
-        $result = (($arrayX[0]-3)/100)**2-($arrayX[1]-$arrayX[0]+exp(20*($arrayX[1]-$arrayX[0])));
+        $result = (($arrayX[0]-3)/100)**2-($arrayX[1]-$arrayX[0])+exp(20*($arrayX[1]-$arrayX[0]));
         return $result;
     }
 
     /**
      * F4 = (x1+10x22)2+5(x3-x4)2+(x2-2x3)4+10(x1-x4)4;
      * @param array $arrayX
-     * @return int
+     * @return float
      */
     protected function powelFunction($arrayX){
         $result = 0;
         $result = ($arrayX[0] + $arrayX[1]**2)**2+5*($arrayX[2]-$arrayX[3])**2+($arrayX[1]-2*$arrayX[2])**4+10*($arrayX[0]-$arrayX[3])**4;
         return $result;
+    }
+
+    /**
+     * @param array $arrayX
+     * @return float
+     */
+    protected function experimentFunction($arrayX)
+    {
+        $a = [0, 0.000428, 0.001, 0.00161, 0.00209, 0.00348, 0.00525];
+        $b = [7.391, 11.18, 16.44, 16.20, 22.2, 24.02, 31.32];
+
+        $result = 0;
+        for($i = 0;$i<7;$i++){
+            $result += ((($arrayX[0]**2+$arrayX[1]**2*$a[$i]+$arrayX[2]**2*$a[$i]**2)/(1+$arrayX[3]**2*$a[$i])-$b[$i])/$b[$i])**2;
+        }
+        $result = 10**4*$result;
+
+        return $result;
+        
     }
 
 }

@@ -11,7 +11,9 @@
     {% endif %}
 
     {% block form %}
-        {% include '@App/MethodDecisionMaking/matrix_form.html.twig' with {'matrixModel': solution.matrixModel, 'method': method} %}
+        {% if solution.matrixModel %}
+            {% include '@App/MethodDecisionMaking/matrix_form.html.twig' with {'matrixModel': solution.matrixModel, 'method': method} %}
+        {% endif %}
     {% endblock %}
 
 {% endblock %}

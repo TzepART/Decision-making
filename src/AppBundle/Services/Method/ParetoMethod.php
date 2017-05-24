@@ -9,7 +9,6 @@
 namespace AppBundle\Services\Method;
 
 use AppBundle\Model\MethodModel\DecisionSolutionModel;
-use AppBundle\Model\ExtendMatrixModel;
 use AppBundle\Model\MethodModel\ParetoModel;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -49,9 +48,12 @@ class ParetoMethod extends AbstractMethod
 
         $arBadVariants = $this->getBadVariantsByCriteria($matrixModel);
 
+        /*
+         * TODO Исключить U2, U9
+         * */
         foreach ($matrixModel->getVectorRowName() as $index => $item) {
             if(!array_search($index,$arBadVariants)){
-                $select_variants[] = $item;
+                    $select_variants[] = $item;
             }
         }
 
@@ -68,12 +70,12 @@ class ParetoMethod extends AbstractMethod
 
     /**
      * @param Request $request
-     * @return ExtendMatrixModel
+     * @return ParetoModel
      * @internal param array $matrix
      * @internal param array $arCriteriaName
      * @internal param array $arVariantName
      */
-    protected function initalMatrixModel(Request $request): ExtendMatrixModel
+    protected function initalMatrixModel(Request $request)
     {
         $matrix = $request->get('matrix');
         $arCriteriaName = $request->get('columnName');
@@ -103,7 +105,7 @@ class ParetoMethod extends AbstractMethod
             arsort($arCriteria);
             //Получаем наихудший по критерию вариант
             $variantKeys = array_keys($arCriteria);
-            $badVariant =  array_pop($variantKeys);
+            $badVariant = array_pop($variantKeys);
 
             //Добавляем в массив, где ключ - id критерия
             $result[$index] = $badVariant;
