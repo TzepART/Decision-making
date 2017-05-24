@@ -29,6 +29,7 @@ class MethodDecisionMakingControllerTest extends WebTestCase
             ['/method/pareto/'],
             ['/method/common-criteria/'],
             ['/method/biased-ideal/'],
+            ['/method/optimization/'],
         ];
     }
 }
