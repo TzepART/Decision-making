@@ -38,7 +38,7 @@ class LoadCriteriaData extends AbstractFixture implements OrderedFixtureInterfac
      */
     public function load(ObjectManager $manager)
     {
-        $faker = Faker::create();
+        $faker = Faker::create('ru_RU');
 
         /** @var Task $task */
         $task = $this->getReference('example_task');

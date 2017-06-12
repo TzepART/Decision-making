@@ -1,24 +1,38 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ form_start(form) }}
-    {# render the task's only field: description #}
-    {{ form_row(form.name) }}
+    <div class="row">
+        {{ form_start(form) }}
+        {# render the task's only field: description #}
+        <div class="form-group">
+            {{ form_row(form.name) }}
+        </div>
 
-    <h3>Variants</h3>
-    <ul class="variants" data-prototype="{{ form_widget(form.variants.vars.prototype)|e('html_attr') }}">
-        {% for variant in form.variants %}
-            <li>{{ form_row(variant.name) }}</li>
-        {% endfor %}
-    </ul>
+        <h3>Variants</h3>
+        <div class="form-group">
+            <ul class="variants list-unstyled" data-prototype="{{ form_widget(form.variants.vars.prototype)|e('html_attr') }}">
+                {% for variant in form.variants %}
+                    <li>{{ form_row(variant.name) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
 
-    <h3>Criteria</h3>
-    <ul class="criterias" data-prototype="{{ form_widget(form.criteria.vars.prototype)|e('html_attr') }}">
-        {% for criter in form.criteria %}
-            <li>{{ form_row(criter.name) }} {{ form_row(criter.significance) }}</li>
-        {% endfor %}
-    </ul>
-    {{ form_end(form) }}
+
+        <h3>Criteria</h3>
+        <div class="form-group">
+            <ul class="criterias list-unstyled" data-prototype="{{ form_widget(form.criteria.vars.prototype)|e('html_attr') }}">
+                {% for criter in form.criteria %}
+                    <li>
+                        {{ form_row(criter.name) }}
+
+                        {{ form_row(criter.significance) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+
 
 
 {% endblock %}
@@ -31,7 +45,7 @@
 
         function addlinkForAdd(list_name) {
             var $collectionHolder;
-            var $addLink = $('<a href="#" class="add_'+list_name+'_link">Add</a>');
+            var $addLink = $('<a href="#" class="add_'+list_name+'_link btn btn-primary">Add</a>');
             var $newLinkLi = $('<li></li>').append($addLink);
 
             jQuery(document).ready(function() {

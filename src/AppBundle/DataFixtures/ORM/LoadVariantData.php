@@ -25,7 +25,7 @@ class LoadVariantData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        $faker = Faker::create();
+        $faker = Faker::create('ru_RU');
 
         /** @var Task $task */
         $task = $this->getReference('example_task');

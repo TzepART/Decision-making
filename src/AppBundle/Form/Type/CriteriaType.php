@@ -10,6 +10,7 @@ namespace AppBundle\Form\Type;
 
 use AppBundle\Entity\Criteria;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,8 +18,18 @@ class CriteriaType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')
-                ->add('significance');
+        $builder->add('name', TextType::class,[
+                    'attr' => [
+                        'class' => 'form-control'
+                    ],
+                    'label' => 'Название критерия'
+                ])
+                ->add('significance', TextType::class,[
+                    'attr' => [
+                        'class' => 'form-control'
+                    ],
+                    'label' => 'Значимость критерия'
+                ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
