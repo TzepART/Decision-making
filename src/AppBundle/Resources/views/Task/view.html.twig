@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ task.name }}
+    <h2>
+        {{ task.name }}
+    </h2>
     {% set variants = task.variants %}
 
     {% for form in criteria_forms %}
@@ -10,9 +12,11 @@
         <div class="row">
             <div class="col-md-6">
             {{ form_start(form) }}
-                <label for="criteria_significance">Significance:   </label><input type="text" id="criteria_significance" name="criteria[significance]" value="{{ criteria.significance }}">
-                <br>
-                <table class="table-bordered col-md-6 matrix">
+                <div class="form-group">
+                    <label for="criteria_significance">Значимость критерия:   </label>
+                    <input type="text" class="form-control" id="criteria_significance" name="criteria[significance]" value="{{ criteria.significance }}">
+                </div>
+                <table class="table table-condensed table-bordered col-md-6 matrix">
                     <tr>
                         <td></td>
                         {% for variant in variants %}
