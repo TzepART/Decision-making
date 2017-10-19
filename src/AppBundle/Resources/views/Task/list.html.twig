@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if tasks %}
-        <ul class="tasks_list">
+    <div class="row">
+        {% if tasks %}
             {% for task in tasks %}
-                <li><a href="{{ path('task.view', {id : task.id}) }}">{{ task.name }}</a></li>
+                <h3><a href="{{ path('task.view', {id : task.id}) }}">{{ task.name }}</a></h3>
             {% endfor %}
-        </ul>
-    {% endif %}
+        {% endif %}
+    </div>
 {% endblock %}
