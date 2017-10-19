@@ -6,6 +6,7 @@
     <title>{% block title %}Decision-making{% endblock %}</title>
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bootstrap/css/navbar-fixed-top.css') }}">
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
@@ -69,7 +70,7 @@
 <div class="container">
 
     <!-- Main component for a primary marketing message or call to action -->
-    <div class="jumbotron">
+    <div class="jumbotron" style="margin-top: 70px">
         {% block body %}
 
         {% endblock %}
