@@ -1,11 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <a href="{{ path('task.new') }}">Добавить задачу</a><br>
-    <a href="{{ path('task.list') }}">Список задач</a><br>
-    {% if(app.user) %}
-        <div>
-            {{ app.user.email }}
+    <div class="row">
+        <div class="col-md-4">
+            <p>Перейти к списку задача</p>
+            <a href="{{ path('task.list') }}" class="btn btn-lg btn-info">Список задач</a>
         </div>
-    {% endif %}
+        <div class="col-md-8">
+            <p>
+                Или можно создать новую задачу на принятие решения
+            </p>
+            <a href="{{ path('task.new') }}" class="btn btn-lg btn-info">Новая задача</a>
+        </div>
+    </div>
 {% endblock %}

@@ -3,7 +3,11 @@
 {% block body %}
     {{ form_start(form) }}
     {# render the task's only field: description #}
-    {{ form_row(form.name) }}
+    <div class="form-inline">
+        <div class="form-group">
+            {{ form_row(form.name) }}
+        </div>
+    </div>
 
     <h3>Варианты</h3>
     <div class="variants" data-prototype="{{ form_widget(form.variants.vars.prototype)|e('html_attr') }}">

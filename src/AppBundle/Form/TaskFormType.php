@@ -22,6 +22,9 @@ class TaskFormType extends AbstractType
     {
         $builder->add('name', TextType::class, [
                     'label' => 'Название ',
+                    'attr' => [
+                        'class' => 'form-control'
+                    ]
                  ])
                 ->add('variants', CollectionType::class, [
                     'label' => 'Варианты',
