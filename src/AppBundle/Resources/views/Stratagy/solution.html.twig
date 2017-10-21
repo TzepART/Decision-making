@@ -3,6 +3,9 @@
 
 {% block body %}
     <div class="row">
+        <a href="{{ referer }}">Назад</a>
+    </div>
+    <div class="row">
         {% include '@App/Stratagy/matrix.html.twig' with {'matrix': initial_matrix} %}
     </div>
     <br>
