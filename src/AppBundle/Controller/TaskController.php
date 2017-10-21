@@ -6,7 +6,6 @@ use AppBundle\Entity\Criteria;
 use AppBundle\Entity\Task;
 use AppBundle\Entity\Variant;
 use AppBundle\Form\TaskFormType;
-use AppBundle\Form\Type\CriteriaType;
 use AppBundle\Form\Type\ExtendCriteriaType;
 use AppBundle\Model\MatrixModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -36,6 +35,34 @@ class TaskController extends Controller
     }
 
     /**
+     * @Route("/new/", name="task.new")
+     * @Method("GET")
+     * @Template()
+     */
+    public function newAction()
+    {
+        $task = new Task();
+
+        $variant = new Variant();
+        $variant->setName('');
+        $task->getVariants()->add($variant);
+
+        $criteria = new Criteria();
+        $criteria->setName('');
+        $criteria->setSignificance(0.00);
+        $task->getCriteria()->add($criteria);
+
+        $form = $this->createForm(TaskFormType::class, $task, [
+            'action' => $this->generateUrl('task.create')
+        ]);
+
+        return [
+            'form' => $form->createView()
+        ];
+    }
+
+
+    /**
      * @Route("/view/{id}", name="task.view")
      * @Method("GET")
      * @Template()
@@ -62,31 +89,16 @@ class TaskController extends Controller
         ];
     }
 
+
     /**
-     * @Route("/new/", name="task.new")
+     * @Route("/edit/{id}", name="task.edit")
      * @Method("GET")
-     * @Template()
      */
-    public function newAction()
+    public function editAction(Task $task)
     {
-        $task = new Task();
+        $form = $this->createUpdateForm($task);
 
-        $variant = new Variant();
-        $variant->setName('');
-        $task->getVariants()->add($variant);
-
-        $criteria = new Criteria();
-        $criteria->setName('');
-        $criteria->setSignificance(0.00);
-        $task->getCriteria()->add($criteria);
-
-        $form = $this->createForm(TaskFormType::class, $task, [
-            'action' => $this->generateUrl('task.create')
-        ]);
-
-        return [
-            'form' => $form->createView()
-        ];
+        return $this->render('@App/Task/new.html.twig', ['form' => $form->createView()]);
     }
 
     /**
@@ -129,6 +141,47 @@ class TaskController extends Controller
             'form' => $form->createView()
         ];
     }
+
+    /**
+     * @Route("/update/{id}", name="task.update")
+     * @Method("POST")
+     * @Template("AppBundle:Task:new.html.twig")
+     * @ApiDoc(
+     *  description="Update task",
+     *  resource=true,
+     *  filters={
+     *      {"name"="name", "dataType"="string", "description"="Name of task"}
+     *  },
+     *  section="Task"
+     * )
+     * @param Task $task
+     * @param Request $request
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function updateAction(Task $task, Request $request)
+    {
+        $form = $this->createUpdateForm($task);
+
+        $form->handleRequest($request);
+
+        $user = $this->getUser();
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $task->setUser($user);
+            $em->persist($task);
+            $em->flush();
+
+            $this->saveVariantsAndCriteria($task, $form);
+
+            return $this->redirectToRoute('task.view', ['id' => $task->getId()]);
+        }
+
+        return [
+            'form' => $form->createView()
+        ];
+    }
+
 
     /**
      * @Route("/criteria/edit/{id}", name="task.save_bo_matrix")
@@ -179,6 +232,19 @@ class TaskController extends Controller
 
         $em->flush();
 
+    }
+
+    /**
+     * @param Task $task
+     * @return Form
+     */
+    protected function createUpdateForm(Task $task)
+    {
+        $form = $this->createForm(TaskFormType::class, $task, [
+            'action' => $this->generateUrl('task.update',['id' => $task->getId()]),
+            'method' => 'POST'
+        ]);
+        return $form;
     }
 
 }
