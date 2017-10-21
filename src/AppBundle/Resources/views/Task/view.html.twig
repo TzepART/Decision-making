@@ -9,7 +9,7 @@
     <div class="row">
         {% for form in criteria_forms %}
             {% set criteria = form.vars.value %}
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h3>{{ criteria.name }}</h3>
                 {{ form_start(form) }}
                     <label for="criteria_significance">Значимость:  </label><input type="text" id="criteria_significance" name="criteria[significance]" value="{{ criteria.significance }}">

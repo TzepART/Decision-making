@@ -40,6 +40,14 @@
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Задачи на критерии ПР <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('tasks.simple_strategy') }}">Критерии</a></li>
+                        <li><a href="{{ path('tasks.bl_strategy') }}">Байес-Лапласа Критерий</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">Задачи ПР <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ path('method.main-criteria') }}">Метод главного критерия</a></li>
@@ -47,14 +55,6 @@
                         <li><a href="{{ path('method.common-criteria') }}">Метод обобщенного критерия</a></li>
                         <li><a href="{{ path('method.biased-ideal') }}">Метод смещенного идеала</a></li>
                         <li><a href="{{ path('method.optimization') }}">Метод оптимизации</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">Задачи на критерии ПР <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ path('tasks.simple_strategy') }}">Критерии</a></li>
-                        <li><a href="{{ path('tasks.bl_strategy') }}">Байес-Лапласа Критерий</a></li>
                     </ul>
                 </li>
             </ul>
