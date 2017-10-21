@@ -39,7 +39,7 @@
                                 </td>
                                 {% for value in row %}
                                     <td>
-                                        <input type="text" id="criteria_matrix_{{ row_id }}_{{ loop.index0 }}" name="criteria[matrix][{{ row_id }}][{{ loop.index0 }}]" value="{{ value }}">
+                                        <input {{ row_id == loop.index0 ?'disabled':'' }} type="text" id="criteria_matrix_{{ row_id }}_{{ loop.index0 }}" name="criteria[matrix][{{ row_id }}][{{ loop.index0 }}]" value="{{ value }}">
                                     </td>
                                 {% endfor %}
                             </tr>
@@ -61,6 +61,9 @@
         }
         button{
             margin-left: 10px;
+        }
+        input[disabled]{
+            background-color: darkgray;
         }
     </style>
 {% endblock %}
