@@ -6,41 +6,42 @@
     </h2>
     {% set variants = task.variants %}
 
-    {% for form in criteria_forms %}
-        {% set criteria = form.vars.value %}
-        <div class="row">
-        <h3>{{ criteria.name }}</h3>
+    <div class="row">
+        {% for form in criteria_forms %}
+            {% set criteria = form.vars.value %}
             <div class="col-md-6">
-            {{ form_start(form) }}
-                <label for="criteria_significance">Значимость:  </label><input type="text" id="criteria_significance" name="criteria[significance]" value="{{ criteria.significance }}">
-                <br>
-                <table class="table-bordered col-md-6 matrix">
-                    <tr>
-                        <td></td>
-                        {% for variant in variants %}
-                            <td>
-                                {{ variant.name }}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                    {% for row in criteria.matrix.toArray %}
-                        {% set row_id = loop.index0 %}
+                <h3>{{ criteria.name }}</h3>
+                {{ form_start(form) }}
+                    <label for="criteria_significance">Значимость:  </label><input type="text" id="criteria_significance" name="criteria[significance]" value="{{ criteria.significance }}">
+                    <br>
+                    <table class="table-bordered col-md-6 matrix">
                         <tr>
-                            <td>
-                                {{ variants[row_id].name }}
-                            </td>
-                            {% for value in row %}
+                            <td></td>
+                            {% for variant in variants %}
                                 <td>
-                                    <input type="text" id="criteria_matrix_{{ row_id }}_{{ loop.index0 }}" name="criteria[matrix][{{ row_id }}][{{ loop.index0 }}]" value="{{ value }}">
+                                    {{ variant.name }}
                                 </td>
                             {% endfor %}
                         </tr>
-                    {% endfor %}
-                </table>
-            {{ form_end(form) }}
-            </div>
-        </div>
-    {% endfor %}
+                        {% for row in criteria.matrix.toArray %}
+                            {% set row_id = loop.index0 %}
+                            <tr>
+                                <td>
+                                    {{ variants[row_id].name }}
+                                </td>
+                                {% for value in row %}
+                                    <td>
+                                        <input type="text" id="criteria_matrix_{{ row_id }}_{{ loop.index0 }}" name="criteria[matrix][{{ row_id }}][{{ loop.index0 }}]" value="{{ value }}">
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {{ form_end(form) }}
+                </div>
+        {% endfor %}
+    </div>
+
 
 {% endblock %}
 
@@ -48,7 +49,10 @@
     {{ parent() }}
     <style>
         input{
-            margin: 5px;
+            margin: 10px;
+        }
+        button{
+            margin-left: 10px;
         }
     </style>
 {% endblock %}
