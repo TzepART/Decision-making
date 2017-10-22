@@ -36,13 +36,16 @@
                         </tr>
                         {% for row in criteria.matrix.toArray %}
                             {% set row_id = loop.index0 %}
+                            {% set variant_row_id = variants[row_id].id %}
                             <tr>
                                 <td>
                                     {{ variants[row_id].name }}
                                 </td>
                                 {% for value in row %}
+                                    {% set col_id = loop.index0 %}
+                                    {% set variant_col_id = variants[col_id].id %}
                                     <td>
-                                        <input class="{{ row_id == loop.index0 ?'disabled':'' }}" type="text" id="criteria_matrix_{{ row_id }}_{{ loop.index0 }}" name="criteria[matrix][{{ row_id }}][{{ loop.index0 }}]" value="{{ value }}">
+                                        <input class="{{ row_id == loop.index0 ?'disabled':'' }}" type="text" id="criteria_matrix_{{ variant_row_id }}_{{ variant_col_id }}" name="criteria[matrix][{{ variant_row_id }}][{{ variant_col_id }}]" value="{{ value }}">
                                     </td>
                                 {% endfor %}
                             </tr>

@@ -5,6 +5,7 @@ namespace AppBundle\Services\Task;
 
 use AppBundle\Entity\Criteria;
 use AppBundle\Entity\Task;
+use AppBundle\Entity\Variant;
 use AppBundle\Model\MatrixModel;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\Container;
@@ -35,18 +36,38 @@ class TaskManager
     /**
      * Преобразует Task в массив матриц БО
      * @param Task $task
-     * @return MatrixModel[]
+     * @return Variant[]
      */
-    public function getMatrixesByTask(Task $task)
+    public function getTournamentMechanismSolutionByTask(Task $task)
     {
-        $matrixesArray = [];
+        $arrResultVariants = [];
 
         /** @var Criteria $criterion */
         foreach($task->getCriteria() as $index => $criterion) {
-            $matrixesArray[] = $criterion->getMatrix();
+            /** @var MatrixModel $matrixBO */
+            $matrixBO = $criterion->getMatrix()->toArray();
+            $arVariantSumm = [];
+            foreach ($matrixBO as $i => $row){
+                $variantVal = 0;
+                foreach ($row as $j => $value){
+                    if($i != $j){
+                        if($matrixBO[$j][$i] == $matrixBO[$i][$j]){
+                            $variantVal += 0.5;
+                        }elseif ($matrixBO[$j][$i] > $matrixBO[$i][$j]){
+                            $variantVal += 1;
+                        }elseif ($matrixBO[$j][$i] < $matrixBO[$i][$j]){
+                            $variantVal += 0;
+                        }
+                    }
+                }
+                $arVariantSumm[$i] = $variantVal;
+            }
+            $arrResultVariants[$criterion->getId()] = $arVariantSumm;
         }
+        dump($arrResultVariants);
+        die();
 
-        return $matrixesArray;
+        return $arrResultVariants;
     }
 
 
