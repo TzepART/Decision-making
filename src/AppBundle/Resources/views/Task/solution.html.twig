@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <p>
+        <a href="{{ path('task.view', {id: task.id}) }}">Вернуться к редактированию</a>
+    </p>
+    <div class="row">
+        <h3>Метод Доминирования</h3>
+        <p>
+            {% if solutionByDomination.arSolutions is not empty %}
+                По методу доминирования лидируют:
+                {% for solutionId in solutionByDomination.arSolutions %}
+                    {{ variants[solutionId].name }}
+                {% endfor %}
+            {% else %}
+                Метод доминирования не дал результата
+            {% endif %}
+        </p>
+        {% include '@App/Task/solution_table.html.twig' with {'resultsArray': solutionByDomination.resultsArray} %}
+    </div>
+    <div class="row">
+        <h3>Метод Блокировки</h3>
+        <p>
+            {% if solutionByBlocked.arSolutions is not empty %}
+                По методу блокировки лидируют:
+                {% for solutionId in solutionByBlocked.arSolutions %}
+                    {{ variants[solutionId].name }}
+                {% endfor %}
+            {% else %}
+                Метод блокировки не дал результата
+            {% endif %}
+        </p>
+        {% include '@App/Task/solution_table.html.twig' with {'resultsArray': solutionByBlocked.resultsArray} %}
+    </div>
+    <div class="row">
+        <h3>Турнирный метод</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Вариант</th>
+                    <th>Суммарный коэффициент</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for variantId, value in tournamentMechanismSolution %}
+                        <tr>
+                            <td>{{ variants[variantId].name }}</td>
+                            <td>{{ value }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}
+

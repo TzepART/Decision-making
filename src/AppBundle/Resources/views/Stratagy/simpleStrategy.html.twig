@@ -2,23 +2,56 @@
 
 
 {% block body %}
-    <a href="{{ path('homepage') }}">Главная</a>
+    <div class="row">
+        <div class="col-md-2">
+            <a href="{{ path('homepage') }}">Главная</a>
+        </div>
+    </div>
 
     <div>
-        rowCount: <input id='rowCount' type='text' value='4' /><br />
-        colCount: <input id='colCount' type='text' value='5' /><br />
-        <button onclick="generate()">generate</button>
+        <div class="form-group">
+            <label for="rowCount" class="col-md-3 control-label">Количество строк</label>
+            <div class="col-md-2">
+                <input class="form-control" id="rowCount" value='4'>
+            </div>
+            <label for="colCount" class="col-md-3 control-label">Количество столбцов</label>
+            <div class="col-md-2">
+                <input class="form-control" id="colCount" value='5'>
+            </div>
+            <div class="col-md-2">
+                <button onclick="generate()" class="btn btn-success">Сгенерировать</button>
+            </div>
+        </div>
 
-        <form action="{{ path('tasks.simple_strategy') }}" method="post">
-            <div id="matrix-form"></div>
+        <form action="{{ path('tasks.simple_strategy') }}" method="post" class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-8" id="matrix-form"></div>
+            </div>
 
-            <select name="strategy" id="">
-                <option value="minimax">Минимакс</option>
-                <option value="savidg">Сэвидж</option>
-                <option value="hurwitz">Гурвица</option>
-            </select>
-            <input type="text" value="" name="coefficient" placeholder="Коэффициент">
-            <input type="submit" value="send">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <select name="strategy" id="select-strategy" class="form-control" onclick="hiddenCoefficientHurwitz(this)">
+                        <option value="minimax">Минимакс</option>
+                        <option value="savidg">Сэвидж</option>
+                        <option value="hurwitz">Гурвица</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" id="coefficient-hurwitz" style="display: none">
+                <div class="col-md-6">
+                    <input type="text" value="" class="form-control" name="coefficient" placeholder="Коэффициент">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-2">
+                    <input class="btn btn-info" type="submit" value="Вычислить">
+                </div>
+                <div class="col-md-2">
+                    <a href="{{ path('tasks.simple_strategy') }}" class="btn btn-success">Обновить</a>
+                </div>
+            </div>
+
         </form>
     </div>
 
@@ -39,11 +72,23 @@
                     var input = document.createElement('input');
                     input.id=input.name='matrix['+(i-1)+']['+(j-1)+']';
                     input.size = "5";
+                    input.classList.add("form-control");
                     tbl.tBodies[0].rows[i].insertCell(-1).appendChild(input);
                 }
             }
             document.getElementById('matrix-form').appendChild(tbl);
         }
+
+
+        function hiddenCoefficientHurwitz(e) {
+            var strategy = e.options[e.selectedIndex].value;
+            if(strategy === 'hurwitz'){
+              document.getElementById('coefficient-hurwitz').style.display="";
+            }else{
+              document.getElementById('coefficient-hurwitz').style.display="none";
+            }
+        }
+
     </script>
 {% endblock body %}
 

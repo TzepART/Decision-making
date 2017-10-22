@@ -3,21 +3,39 @@
 {% block body %}
     {{ form_start(form) }}
     {# render the task's only field: description #}
-    {{ form_row(form.name) }}
+    <div class="form-inline">
+        <div class="form-group">
+            {{ form_row(form.name) }}
+        </div>
+    </div>
 
-    <h3>Variants</h3>
-    <ul class="variants" data-prototype="{{ form_widget(form.variants.vars.prototype)|e('html_attr') }}">
+    <h3>Варианты</h3>
+    <div class="variants" data-prototype="{{ form_widget(form.variants.vars.prototype)|e('html_attr') }}">
         {% for variant in form.variants %}
-            <li>{{ form_row(variant.name) }}</li>
+            <div class="form-inline">
+                <div class="form-group">
+                    {{ form_row(variant.name) }}
+                </div>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
 
-    <h3>Criteria</h3>
-    <ul class="criterias" data-prototype="{{ form_widget(form.criteria.vars.prototype)|e('html_attr') }}">
+    <h3>Критерии</h3>
+    <div class="criterias" data-prototype="{{ form_widget(form.criteria.vars.prototype)|e('html_attr') }}">
         {% for criter in form.criteria %}
-            <li>{{ form_row(criter.name) }} {{ form_row(criter.significance) }}</li>
+            <div class="form-inline">
+                <div class="form-group">
+                    {{ form_row(criter.name) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(criter.significance) }}
+                </div>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
+    <p>
+        {{ form_row(form.save) }}
+    </p>
     {{ form_end(form) }}
 
 
@@ -25,51 +43,130 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <style>
+        input{
+            margin-left: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
     <script>
-        addlinkForAdd('variants');
-        addlinkForAdd('criterias');
+      addlinkForAddByDiv('variants');
+      addlinkForAddByDiv('criterias');
 
-        function addlinkForAdd(list_name) {
-            var $collectionHolder;
-            var $addLink = $('<a href="#" class="add_'+list_name+'_link">Add</a>');
-            var $newLinkLi = $('<li></li>').append($addLink);
+      $(document).ready(function() {
+        checkSignificancesSumm();
+      });
 
-            jQuery(document).ready(function() {
-                // Get the ul that holds the collection of variants
-                $collectionHolder = $('ul.'.concat(list_name));
+      $("[id$=_significance]").change(function() {
+        checkSignificancesSumm();
+      });
 
-                // add the "add a variant" anchor and li to the variants ul
-                $collectionHolder.append($newLinkLi);
+      function addlinkForAdd(list_name) {
+        var $collectionHolder;
+        var $addLink = $('<a href="#" class="add_' + list_name + '_link btn btn-primary">Add</a>');
+        var $newLinkLi = $('<li></li>').append($addLink);
 
-                // count the current form inputs we have (e.g. 2), use that as the new
-                // index when inserting a new item (e.g. 2)
-                $collectionHolder.data('index', $collectionHolder.find(':input').length);
+        jQuery(document).ready(function () {
+          // Get the ul that holds the collection of variants
+          $collectionHolder = $('ul.'.concat(list_name));
 
-                $addLink.on('click', function(e) {
-                    // prevent the link from creating a "#" on the URL
-                    e.preventDefault();
-                    addForm($collectionHolder, $newLinkLi);
-                });
-            });
+          // add the "add a variant" anchor and li to the variants ul
+          $collectionHolder.append($newLinkLi);
+
+          // count the current form inputs we have (e.g. 2), use that as the new
+          // index when inserting a new item (e.g. 2)
+          $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+          $addLink.on('click', function (e) {
+            // prevent the link from creating a "#" on the URL
+            e.preventDefault();
+            addForm($collectionHolder, $newLinkLi);
+          });
+        });
+      }
+
+      function addlinkForAddByDiv(list_name) {
+        var $collectionHolder;
+        var $addLink = $('<a href="#" class="add_' + list_name + '_link btn btn-primary">Add</a>');
+        var $newLinkLi = $addLink;
+
+        jQuery(document).ready(function () {
+          // Get the ul that holds the collection of variants
+          $collectionHolder = $('div.'.concat(list_name));
+
+          // add the "add a variant" anchor and li to the variants ul
+          $collectionHolder.append($newLinkLi);
+
+          // count the current form inputs we have (e.g. 2), use that as the new
+          // index when inserting a new item (e.g. 2)
+          $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+          $addLink.on('click', function (e) {
+            // prevent the link from creating a "#" on the URL
+            e.preventDefault();
+            addFormByDiv($collectionHolder, $newLinkLi);
+          });
+        });
+      }
+
+      function addForm($collectionHolder, $newLinkLi) {
+        // Get the data-prototype explained earlier
+        var prototype = $collectionHolder.data('prototype');
+
+        // get the new index
+        var index = $collectionHolder.data('index');
+
+        // Replace '__name__' in the prototype's HTML to
+        // instead be a number based on how many items we have
+        var newForm = prototype.replace(/__name__/g, index);
+
+        // increase the index with one for the next item
+        $collectionHolder.data('index', index + 1);
+
+        // Display the form in the page in an li, before the "Add a variant" link li
+        var $newFormLi = $('<li></li>').append(newForm);
+        $newLinkLi.before($newFormLi);
+      }
+
+      function addFormByDiv($collectionHolder, $newLinkLi) {
+        // Get the data-prototype explained earlier
+        var prototype = $collectionHolder.data('prototype');
+
+        // get the new index
+        var index = $collectionHolder.data('index');
+
+        // Replace '__name__' in the prototype's HTML to
+        // instead be a number based on how many items we have
+        var newForm = prototype.replace(/__name__/g, index);
+
+        // increase the index with one for the next item
+        $collectionHolder.data('index', index + 1);
+
+        newForm = $(newForm).children('div').addClass('form-group');
+        var $newFormDiv = $('<div class="form-inline"></div>').append(newForm);
+
+        $newLinkLi.before($newFormDiv);
+      }
+
+      function checkSignificancesSumm() {
+        var arrSignificance = $('input[id*=_significance]').map(function(){
+          return this.value;
+        }).get();
+
+        var summSignificance = 0;
+        arrSignificance.forEach(function(item, i, arrSignificance) {
+          summSignificance += Number(item);
+        });
+
+        var summSignificanceRound = Math.round(summSignificance*100)/100;
+
+        if(summSignificanceRound !== 1.00){
+          document.getElementById('app_bundle_task_form_type_save').disabled = true;
+          alert("Сумма коэффицентов должна быть равна 1!");
+        }else{
+          document.getElementById('app_bundle_task_form_type_save').disabled = false;
         }
-
-        function addForm($collectionHolder, $newLinkLi) {
-            // Get the data-prototype explained earlier
-            var prototype = $collectionHolder.data('prototype');
-
-            // get the new index
-            var index = $collectionHolder.data('index');
-
-            // Replace '__name__' in the prototype's HTML to
-            // instead be a number based on how many items we have
-            var newForm = prototype.replace(/__name__/g, index);
-
-            // increase the index with one for the next item
-            $collectionHolder.data('index', index + 1);
-
-            // Display the form in the page in an li, before the "Add a variant" link li
-            var $newFormLi = $('<li></li>').append(newForm);
-            $newLinkLi.before($newFormLi);
-        }
+      }
     </script>
 {% endblock %}

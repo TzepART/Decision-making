@@ -1,11 +1,22 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if tasks %}
-        <ul class="tasks_list">
-            {% for task in tasks %}
-                <li><a href="{{ path('task.view', {id : task.id}) }}">{{ task.name }}</a></li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <div class="row">
+        <div class="col-md-6">
+            <p>Список существующих задач по принятию решения</p>
+            {% if tasks %}
+                <ul>
+                    {% for task in tasks %}
+                        <li><h4><a href="{{ path('task.view', {id : task.id}) }}">{{ task.name }}</a></h4></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <p>
+                Можно создать новую задачу на принятие решения
+            </p>
+            <a href="{{ path('task.new') }}" class="btn btn-lg btn-info">Новая задача</a>
+        </div>
+    </div>
 {% endblock %}

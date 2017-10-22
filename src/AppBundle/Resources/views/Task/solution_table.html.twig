@@ -1,0 +1,31 @@
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>#</th>
+            {% set title = true %}
+            {% for creteria_id, creteriaArr in resultsArray if title == true %}
+                {% for variant_id, variantResult in creteriaArr %}
+                    <th>{{ variants[variant_id].name }}</th>
+                {% endfor %}
+                {% set title = false %}
+            {% endfor %}
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for creteria_id, creteriaArr in resultsArray %}
+            <tr>
+                <td>{{ criterias[creteria_id].name }}</td>
+                {% for variant_id, variantResult in creteriaArr %}
+                    {% if variantResult == true %}
+                        <td class="success">Положительно</td>
+                    {% else %}
+                        <td class="warning">Отрицательно</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

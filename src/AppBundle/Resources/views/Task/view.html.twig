@@ -1,44 +1,76 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ task.name }}
+    <div class="row">
+        <div class="col-md-3">
+          <p style="font-size: 30px">
+              <b>{{ task.name }}</b>
+          </p>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ path('task.edit', {id: task.id}) }}" class="btn btn-info">Редактировать задачу</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ path('task.solution', {id: task.id}) }}" class="btn btn-success">Получить результат</a>
+        </div>
+    </div>
+
     {% set variants = task.variants %}
 
-    {% for form in criteria_forms %}
-        {% set criteria = form.vars.value %}
-        <h3>{{ criteria.name }}</h3>
-        <div class="row">
-            <div class="col-md-6">
-            {{ form_start(form) }}
-                <label for="criteria_significance">Significance:   </label><input type="text" id="criteria_significance" name="criteria[significance]" value="{{ criteria.significance }}">
-                <br>
-                <table class="table-bordered col-md-6 matrix">
-                    <tr>
-                        <td></td>
-                        {% for variant in variants %}
-                            <td>
-                                {{ variant.name }}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                    {% for row in criteria.matrix.toArray %}
-                        {% set row_id = loop.index0 %}
+    <div class="row">
+        {% for form in criteria_forms %}
+            {% set criteria = form.vars.value %}
+            <div class="col-md-12">
+                <h3>{{ criteria.name }}</h3>
+                {{ form_start(form) }}
+                    <label for="criteria_significance">Значимость:  </label><input type="text" id="criteria_significance" name="criteria[significance]" value="{{ criteria.significance }}">
+                    <br>
+                    <table class="table-bordered col-md-6 matrix">
                         <tr>
-                            <td>
-                                {{ variants[row_id].name }}
-                            </td>
-                            {% for value in row %}
+                            <td></td>
+                            {% for variant in variants %}
                                 <td>
-                                    <input type="text" id="criteria_matrix_{{ row_id }}_{{ loop.index0 }}" name="criteria[matrix][{{ row_id }}][{{ loop.index0 }}]" value="{{ value }}">
+                                    {{ variant.name }}
                                 </td>
                             {% endfor %}
                         </tr>
-                    {% endfor %}
-                </table>
-            {{ form_end(form) }}
-            </div>
-        </div>
-    {% endfor %}
+                        {% for row in criteria.matrix.toArray %}
+                            {% set row_id = loop.index0 %}
+                            {% set variant_row_id = variants[row_id].id %}
+                            <tr>
+                                <td>
+                                    {{ variants[row_id].name }}
+                                </td>
+                                {% for value in row %}
+                                    {% set col_id = loop.index0 %}
+                                    {% set variant_col_id = variants[col_id].id %}
+                                    <td>
+                                        <input class="{{ row_id == loop.index0 ?'disabled':'' }}" type="text" id="criteria_matrix_{{ variant_row_id }}_{{ variant_col_id }}" name="criteria[matrix][{{ variant_row_id }}][{{ variant_col_id }}]" value="{{ value }}">
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {{ form_end(form) }}
+                </div>
+        {% endfor %}
+    </div>
 
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <style>
+        input{
+            margin: 10px;
+        }
+        button{
+            margin-left: 10px;
+        }
+        input.disabled{
+            background-color: darkgray;
+        }
+    </style>
+{% endblock %}
+
 
