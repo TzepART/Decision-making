@@ -14,3 +14,7 @@ services:
     app.matrix_manager:
         class: AppBundle\Services\MatrixManager
         arguments: ["@service_container"]
+
+    app.task_manager:
+        class: AppBundle\Services\Task\TaskManager
+        arguments: ['@service_container', '@doctrine.orm.entity_manager']

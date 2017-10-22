@@ -8,8 +8,6 @@
 
 namespace AppBundle\Model;
 
-use vermotr\Math\Matrix;
-
 
 /**
  * Class MatrixModel

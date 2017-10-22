@@ -110,6 +110,8 @@ class TaskController extends Controller
      */
     public function solutionAction(Task $task)
     {
+        $matrixesArray = $this->get('app.task_manager')->getMatrixesByTask($task);
+
         return [
             'task' => $task
         ];
