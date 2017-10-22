@@ -54,6 +54,14 @@
       addlinkForAddByDiv('variants');
       addlinkForAddByDiv('criterias');
 
+      $(document).ready(function() {
+        checkSignificancesSumm();
+      });
+
+      $("[id$=_significance]").change(function() {
+        checkSignificancesSumm();
+      });
+
       function addlinkForAdd(list_name) {
         var $collectionHolder;
         var $addLink = $('<a href="#" class="add_' + list_name + '_link btn btn-primary">Add</a>');
@@ -139,6 +147,26 @@
         var $newFormDiv = $('<div class="form-inline"></div>').append(newForm);
 
         $newLinkLi.before($newFormDiv);
+      }
+
+      function checkSignificancesSumm() {
+        var arrSignificance = $('input[id*=_significance]').map(function(){
+          return this.value;
+        }).get();
+
+        var summSignificance = 0;
+        arrSignificance.forEach(function(item, i, arrSignificance) {
+          summSignificance += Number(item);
+        });
+
+        var summSignificanceRound = Math.round(summSignificance*100)/100;
+
+        if(summSignificanceRound !== 1.00){
+          document.getElementById('app_bundle_task_form_type_save').disabled = true;
+          alert("Сумма коэффицентов должна быть равна 1!");
+        }else{
+          document.getElementById('app_bundle_task_form_type_save').disabled = false;
+        }
       }
     </script>
 {% endblock %}
