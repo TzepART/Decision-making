@@ -39,7 +39,7 @@
                                 </td>
                                 {% for value in row %}
                                     <td>
-                                        <input {{ row_id == loop.index0 ?'disabled':'' }} type="text" id="criteria_matrix_{{ row_id }}_{{ loop.index0 }}" name="criteria[matrix][{{ row_id }}][{{ loop.index0 }}]" value="{{ value }}">
+                                        <input class="{{ row_id == loop.index0 ?'disabled':'' }}" type="text" id="criteria_matrix_{{ row_id }}_{{ loop.index0 }}" name="criteria[matrix][{{ row_id }}][{{ loop.index0 }}]" value="{{ value }}">
                                     </td>
                                 {% endfor %}
                             </tr>
@@ -48,6 +48,11 @@
                 {{ form_end(form) }}
                 </div>
         {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <a href="{{ path('task.solution', {id: task.id}) }}" class="btn btn-success">Получить результат</a>
+        </div>
     </div>
 
 
@@ -62,7 +67,7 @@
         button{
             margin-left: 10px;
         }
-        input[disabled]{
+        input.disabled{
             background-color: darkgray;
         }
     </style>

@@ -102,6 +102,20 @@ class TaskController extends Controller
     }
 
     /**
+     * @Route("/solution/{id}", name="task.solution")
+     * @Method("GET")
+     * @Template()
+     * @param Task $task
+     * @return array
+     */
+    public function solutionAction(Task $task)
+    {
+        return [
+            'task' => $task
+        ];
+    }
+
+    /**
      * @Route("/new", name="task.create")
      * @Method("POST")
      * @Template("AppBundle:Task:new.html.twig")
