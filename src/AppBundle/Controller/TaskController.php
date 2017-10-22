@@ -110,8 +110,11 @@ class TaskController extends Controller
      */
     public function solutionAction(Task $task)
     {
-        //получим массив матриц БО по критериям
-        $matrixesArray = $this->get('app.task_manager')->getTournamentMechanismSolutionByTask($task);
+        //получим массив id вариантов отсортированных по коэфициентам
+//        $tournamentMechanismSolution = $this->get('app.task_manager')->getTournamentMechanismSolutionByTask($task);
+        $solutionByDomination = $this->get('app.task_manager')->getSolutionByDominationMethod($task);
+        $solutionByBlocked = $this->get('app.task_manager')->getSolutionByBlockedMethod($task);
+        dump($solutionByBlocked);
         die();
 
         return [

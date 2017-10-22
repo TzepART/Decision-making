@@ -55,9 +55,9 @@ class TaskManager
                         if($matrixBO[$col_variant_id][$row_variant_id] == $matrixBO[$row_variant_id][$col_variant_id]){
                             $variantVal += 0.5;
                         }elseif ($matrixBO[$col_variant_id][$row_variant_id] > $matrixBO[$row_variant_id][$col_variant_id]){
-                            $variantVal += 1;
-                        }elseif ($matrixBO[$col_variant_id][$row_variant_id] < $matrixBO[$row_variant_id][$col_variant_id]){
                             $variantVal += 0;
+                        }elseif ($matrixBO[$col_variant_id][$row_variant_id] < $matrixBO[$row_variant_id][$col_variant_id]){
+                            $variantVal += 1;
                         }
                     }
                 }
@@ -84,5 +84,66 @@ class TaskManager
         return $arrResultVariants;
     }
 
+    public function getSolutionByDominationMethod(Task $task)
+    {
+        $arrResultVariants = [];
+
+        /** @var Criteria $criterion */
+        foreach($task->getCriteria() as $index => $criterion) {
+            /** @var MatrixModel $matrixBO */
+            $matrixBO = $criterion->getMatrix()->toArray();
+            $arVariantDomination = [];
+            foreach ($matrixBO as $row_variant_id => $row){
+                $dominationResult = true;
+                foreach ($row as $col_variant_id => $value){
+                    if($row_variant_id != $col_variant_id){
+                        if(($matrixBO[$col_variant_id][$row_variant_id] > $matrixBO[$row_variant_id][$col_variant_id]) ||
+                            $matrixBO[$row_variant_id][$col_variant_id] == 0
+                        ){
+                            $dominationResult = false;
+                        }
+                    }
+                }
+                if($dominationResult){
+                    $arVariantDomination[$row_variant_id] = true;
+                }else{
+                    $arVariantDomination[$row_variant_id] = false;
+                }
+            }
+            $arrResultVariants[$criterion->getId()] = $arVariantDomination;
+        }
+
+        return $arrResultVariants;
+    }
+
+    public function getSolutionByBlockedMethod(Task $task)
+    {
+        $arrResultVariants = [];
+
+        /** @var Criteria $criterion */
+        foreach($task->getCriteria() as $index => $criterion) {
+            /** @var MatrixModel $matrixBO */
+            $matrixBO = $criterion->getMatrix()->toArray();
+            $arVariantBlocked = [];
+            foreach ($matrixBO as $row_variant_id => $row){
+                $blockedResult = true;
+                foreach ($row as $col_variant_id => $value){
+                    if($row_variant_id != $col_variant_id){
+                        if($matrixBO[$col_variant_id][$row_variant_id] == 1){
+                            $blockedResult = false;
+                        }
+                    }
+                }
+                if($blockedResult){
+                    $arVariantBlocked[$row_variant_id] = true;
+                }else{
+                    $arVariantBlocked[$row_variant_id] = false;
+                }
+            }
+            $arrResultVariants[$criterion->getId()] = $arVariantBlocked;
+        }
+
+        return $arrResultVariants;
+    }
 
 }
