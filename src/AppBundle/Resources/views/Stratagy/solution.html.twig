@@ -3,19 +3,21 @@
 
 {% block body %}
     <div class="row">
-        <a href="{{ referer }}">Назад</a>
+        <p>
+            <a href="{{ referer }}">Назад</a>
+        </p>
     </div>
+    {#<div class="row">#}
+        {#{% include '@App/Stratagy/matrix.html.twig' with {'matrix': initial_matrix} %}#}
+    {#</div>#}
+    {#<br>#}
+    {#{% if result.newMatrix %}#}
+        {#<div class="row">#}
+            {#{% include '@App/Stratagy/matrix.html.twig' with {'matrix': result.newMatrix} %}#}
+        {#</div>#}
+    {#{% endif %}#}
     <div class="row">
-        {% include '@App/Stratagy/matrix.html.twig' with {'matrix': initial_matrix} %}
-    </div>
-    <br>
-    {% if result.newMatrix %}
-        <div class="row">
-            {% include '@App/Stratagy/matrix.html.twig' with {'matrix': result.newMatrix} %}
-        </div>
-    {% endif %}
-    <div>
-        <p>Вариант: {{ result.solution }}</p>
+        <p>Исход: {{ result.solution }}</p>
         <p>Значение: {{ result.value }}</p>
     </div>
 {% endblock body %}
