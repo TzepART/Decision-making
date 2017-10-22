@@ -110,14 +110,32 @@ class TaskController extends Controller
      */
     public function solutionAction(Task $task)
     {
+        $variants = [];
+        $criterias = [];
+        foreach ($task->getCriteria() as $i => $criterion) {
+            /**
+             * @var Criteria $criterion
+             */
+            $criterias[$criterion->getId()] = $criterion;
+            foreach ($task->getVariants() as $j => $variant) {
+                $variants[$variant->getId()] = $variant;
+            }
+        }
         //получим массив id вариантов отсортированных по коэфициентам
-//        $tournamentMechanismSolution = $this->get('app.task_manager')->getTournamentMechanismSolutionByTask($task);
+        $tournamentMechanismSolution = $this->get('app.task_manager')->getTournamentMechanismSolutionByTask($task);
         $solutionByDomination = $this->get('app.task_manager')->getSolutionByDominationMethod($task);
         $solutionByBlocked = $this->get('app.task_manager')->getSolutionByBlockedMethod($task);
-        dump($solutionByBlocked);
-        die();
+//        dump($tournamentMechanismSolution);
+//        dump($solutionByDomination);
+//        dump($solutionByBlocked);
+//        die();
 
         return [
+            'tournamentMechanismSolution' => $tournamentMechanismSolution,
+            'solutionByDomination' => $solutionByDomination,
+            'solutionByBlocked' => $solutionByBlocked,
+            'variants' => $variants,
+            'criterias' => $criterias,
             'task' => $task
         ];
     }

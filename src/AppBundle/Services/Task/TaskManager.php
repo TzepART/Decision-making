@@ -84,6 +84,10 @@ class TaskManager
         return $arrResultVariants;
     }
 
+    /**
+     * @param Task $task
+     * @return array
+     */
     public function getSolutionByDominationMethod(Task $task)
     {
         $arrResultVariants = [];
@@ -91,14 +95,15 @@ class TaskManager
         /** @var Criteria $criterion */
         foreach($task->getCriteria() as $index => $criterion) {
             /** @var MatrixModel $matrixBO */
-            $matrixBO = $criterion->getMatrix()->toArray();
+            $matrixBO = $criterion->getMatrix();
+            $arMatrixBO = $matrixBO->toArray();
             $arVariantDomination = [];
-            foreach ($matrixBO as $row_variant_id => $row){
+            foreach ($arMatrixBO as $row_variant_id => $row){
                 $dominationResult = true;
                 foreach ($row as $col_variant_id => $value){
                     if($row_variant_id != $col_variant_id){
-                        if(($matrixBO[$col_variant_id][$row_variant_id] > $matrixBO[$row_variant_id][$col_variant_id]) ||
-                            $matrixBO[$row_variant_id][$col_variant_id] == 0
+                        if(($arMatrixBO[$col_variant_id][$row_variant_id] > $arMatrixBO[$row_variant_id][$col_variant_id]) ||
+                            $arMatrixBO[$row_variant_id][$col_variant_id] == 0
                         ){
                             $dominationResult = false;
                         }
@@ -113,9 +118,15 @@ class TaskManager
             $arrResultVariants[$criterion->getId()] = $arVariantDomination;
         }
 
-        return $arrResultVariants;
+        $arrSolution = $this->getSolutions($task, $arrResultVariants);
+
+        return $arrSolution;
     }
 
+    /**
+     * @param Task $task
+     * @return array
+     */
     public function getSolutionByBlockedMethod(Task $task)
     {
         $arrResultVariants = [];
@@ -123,13 +134,14 @@ class TaskManager
         /** @var Criteria $criterion */
         foreach($task->getCriteria() as $index => $criterion) {
             /** @var MatrixModel $matrixBO */
-            $matrixBO = $criterion->getMatrix()->toArray();
+            $matrixBO = $criterion->getMatrix();
+            $arMatrixBO = $matrixBO->toArray();
             $arVariantBlocked = [];
-            foreach ($matrixBO as $row_variant_id => $row){
+            foreach ($arMatrixBO as $row_variant_id => $row){
                 $blockedResult = true;
                 foreach ($row as $col_variant_id => $value){
                     if($row_variant_id != $col_variant_id){
-                        if($matrixBO[$col_variant_id][$row_variant_id] == 1){
+                        if($arMatrixBO[$col_variant_id][$row_variant_id] == 1){
                             $blockedResult = false;
                         }
                     }
@@ -143,7 +155,32 @@ class TaskManager
             $arrResultVariants[$criterion->getId()] = $arVariantBlocked;
         }
 
-        return $arrResultVariants;
+        $arrSolution = $this->getSolutions($task, $arrResultVariants);
+
+        return $arrSolution;
+    }
+
+    /**
+     * @param Task $task
+     * @param $arrResultVariants
+     * @return array
+     */
+    protected function getSolutions(Task $task, $arrResultVariants)
+    {
+        $arrSolution = [];
+        $arrSolution['resultsArray'] = $arrResultVariants;
+        $variantIds = $task->getVariantIds();
+        foreach ($arrResultVariants as $index => $arrResultCriteria) {
+            foreach ($arrResultCriteria as $variantId => $result) {
+                if (!$result) {
+                    if (($key = array_search($variantId, $variantIds)) !== false) {
+                        unset($variantIds[$key]);
+                    }
+                }
+            }
+        }
+        $arrSolution['arSolutions'] = $variantIds;
+        return $arrSolution;
     }
 
 }
