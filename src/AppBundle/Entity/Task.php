@@ -163,6 +163,17 @@ class Task
 
     }
 
+    /**
+     * @return array
+     */
+    public function getVariantIds()
+    {
+        $arVariantIds = [];
+        foreach ($this->variants as $index => $variant) {
+            $arVariantIds[] = $variant->getId();
+        }
+        return $arVariantIds;
+    }
 
 
 }

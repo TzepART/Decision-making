@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>{% block title %}Decision-making{% endblock %}</title>
+    <title>{% block title %}Принятие решения{% endblock %}</title>
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bootstrap/css/navbar-fixed-top.css') }}">
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
 
 
 <body>
+{% set referer = app.request.headers.get('referer')|default('/') %}
 
 <!-- Fixed navbar -->
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -31,14 +33,6 @@
                 <li class="active"><a href="{{ path('homepage') }}">Главная</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">Задачи на критерии ПР <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ path('tasks.simple_strategy') }}">Критерии</a></li>
-                        <li><a href="{{ path('tasks.bl_strategy') }}">Байес-Лапласа Критерий</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">Общая задача по ПР <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ path('task.list') }}">Список задач</a></li>
@@ -47,7 +41,15 @@
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">Задачи ПР <span class="caret"></span></a>
+                       aria-expanded="false">Задачи на критерии ПР <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('tasks.simple_strategy') }}">Критерии</a></li>
+                        <li><a href="{{ path('tasks.bl_strategy') }}">Байес-Лапласа Критерий</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Методы ПР <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ path('method.main-criteria') }}">Метод главного критерия</a></li>
                         <li><a href="{{ path('method.pareto') }}">Метод множества Парето</a></li>
@@ -66,10 +68,10 @@
     </div>
 </nav>
 
-<div class="container">
+<div class="container" style="width: 100%">
 
     <!-- Main component for a primary marketing message or call to action -->
-    <div class="jumbotron">
+    <div class="jumbotron" style="margin-top: 70px">
         {% block body %}
 
         {% endblock %}

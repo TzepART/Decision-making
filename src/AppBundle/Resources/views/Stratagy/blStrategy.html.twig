@@ -3,41 +3,69 @@
 
 {% block body %}
     <a href="{{ path('homepage') }}">Главная</a>
-    <div>
+    <div class="row">
         <form action="{{ path('tasks.bl_strategy') }}" method="post">
-            <table>
-                <tbody>
-                <tr>
-                    <td></td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
-                </tr>
-                <tr>
-                    <td>X</td>
-                    <td><input name="x[0]" size="5" value="100"></td>
-                    <td><input name="x[1]" size="5" value="150"></td>
-                    <td><input name="x[2]" size="5" value="200"></td>
-                    <td><input name="x[3]" size="5" value="300"></td>
-                    <td><input name="x[4]" size="5" value="400"></td>
-                </tr>
-                <tr>
-                    <td>P(X)</td>
-                    <td><input name="p[0]" size="5" value="0.2"></td>
-                    <td><input name="p[1]" size="5" value="0.1"></td>
-                    <td><input name="p[2]" size="5" value="0.4"></td>
-                    <td><input name="p[3]" size="5" value="0.2"></td>
-                    <td><input name="p[4]" size="5" value="0.1"></td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="form-group">
+                <table>
+                    <tbody>
+                    <tr>
+                        <td></td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td><b>X</b></td>
+                        <td><input class="form-control" name="x[0]" size="5" value="100"></td>
+                        <td><input class="form-control" name="x[1]" size="5" value="150"></td>
+                        <td><input class="form-control" name="x[2]" size="5" value="200"></td>
+                        <td><input class="form-control" name="x[3]" size="5" value="250"></td>
+                        <td><input class="form-control" name="x[4]" size="5" value="300"></td>
+                    </tr>
+                    <tr>
+                        <td><b>P(X)</b></td>
+                        <td><input class="form-control" name="p[0]" size="5" value="0.15"></td>
+                        <td><input class="form-control" name="p[1]" size="5" value="0.2"></td>
+                        <td><input class="form-control" name="p[2]" size="5" value="0.3"></td>
+                        <td><input class="form-control" name="p[3]" size="5" value="0.3"></td>
+                        <td><input class="form-control" name="p[4]" size="5" value="0.05"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-            <input type="text" value="1000" name="cost" placeholder="Расходы">
-            <input type="text" value="10000" name="good_price" placeholder="Цена в начале года">
-            <input type="text" value="3000" name="bad_price" placeholder="Цена в конце года">
-            <input type="submit" value="send">
+            <div class="row">
+                <label class="control-label col-md-2">Расходы</label>
+                <div class="col-md-4">
+                    <input class="form-control" value="25" name="cost" placeholder="Расходы">
+                </div>
+                <div class="col-md-6"></div>
+            </div>
+
+            <div class="row">
+                <label class="control-label col-md-2">Цена в начале года</label>
+                <div class="col-md-4">
+                    <input class="form-control" value="49" name="good_price" placeholder="Расходы">
+                </div>
+                <div class="col-md-6"></div>
+            </div>
+
+            <div class="row">
+                <label class="control-label col-md-2">Цена в конце года</label>
+                <div class="col-md-4">
+                    <input class="form-control" value="15" name="bad_price" placeholder="Цена в конце года">
+                </div>
+                <div class="col-md-6"></div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-2">
+                    <input class="form-control btn btn-success" type="submit" value="Расчитать" style="margin-top: 10px;">
+                </div>
+                <div class="col-md-10"></div>
+            </div>
         </form>
     </div>
 {% endblock body %}

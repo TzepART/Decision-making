@@ -43,11 +43,24 @@ class CommonCriteriaModel extends ExtendMatrixModel
             [2,5,3,1,5,7],
         ];
 
+        $matrixModel = self::initCommonCriteriaMatrix($matrix, $arCriteriaName, $arVariantName, $arSignificance);
+
+        return $matrixModel;
+    }
+
+    /**
+     * @param $matrix
+     * @param $arCriteriaName
+     * @param $arVariantName
+     * @param $arSignificance
+     * @return CommonCriteriaModel
+     */
+    static function initCommonCriteriaMatrix($matrix, $arCriteriaName, $arVariantName, $arSignificance)
+    {
         $matrixModel = new CommonCriteriaModel($matrix);
         $matrixModel->setVectorColumnName($arCriteriaName);
         $matrixModel->setVectorRowName($arVariantName);
         $matrixModel->setSignificance($arSignificance);
-
         return $matrixModel;
     }
 
